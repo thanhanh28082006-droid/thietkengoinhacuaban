@@ -1,98 +1,96 @@
 import streamlit as st
 import random
+import os
 
-# --- 1. CẤU HÌNH GIAO DIỆN WIDE & CSS ---
-st.set_page_config(page_title="Dream House Builder", layout="wide", initial_sidebar_state="collapsed")
+# --- 1. CẤU HÌNH GIAO DIỆN HIỆN ĐẠI (TỐI GIẢN & CHUYÊN NGHIỆP) ---
+st.set_page_config(page_title="Architecture Pro", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
-    /* Nền gradient */
+    /* Nền màu xám nhạt hiện đại (Minimalist UI) */
     .stApp {
-        background: linear-gradient(135deg, #F0F4FF 0%, #D9E2EC 100%);
+        background-color: #F8FAFC;
     }
     
     h1, h2, h3, h4 {
-        color: #102A43;
-        font-family: 'Segoe UI', sans-serif;
+        color: #0F172A;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        font-weight: 700;
     }
     
     /* Khung ảnh Bản vẽ và Ngôi nhà */
     .image-card {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        border: 2px solid white;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    
-    /* Bảng điều khiển */
-    .dashboard-panel {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        border-top: 5px solid #2563EB;
-    }
-
-    /* TAB CỬA SỔ KHỔNG LỒ (FULL SCREEN MODAL) */
-    .huge-modal {
-        background: #ffffff;
-        border-radius: 30px;
-        padding: 60px;
-        box-shadow: 0 0 50px rgba(37, 99, 235, 0.4);
-        border: 4px solid #3B82F6;
-        animation: zoomIn 0.4s;
-        text-align: center;
-        margin: 20px auto;
-        max-width: 1200px;
-    }
-    
-    @keyframes zoomIn {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
-    }
-    
-    /* Trang trí 2 bên viền màn hình */
-    .decor-left { position: fixed; left: 15px; top: 15%; font-size: 55px; line-height: 2; z-index: 100; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
-    .decor-right { position: fixed; right: 15px; top: 15%; font-size: 55px; line-height: 2; z-index: 100; text-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
-
-    /* Nút bấm chung */
-    .stButton>button {
-        background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
-        color: white;
+        background: #FFFFFF;
         border-radius: 12px;
-        font-weight: bold;
-        font-size: 16px;
-        padding: 15px 10px;
-        border: none;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        transition: 0.3s;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #E2E8F0;
+        text-align: center;
+    }
+    
+    /* Bảng điều khiển (Dashboard) */
+    .dashboard-panel {
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #E2E8F0;
+        border-top: 4px solid #0F172A;
+    }
+
+    /* TAB CỬA SỔ KHỔNG LỒ (MODAL HIỆN ĐẠI) */
+    .huge-modal {
+        background: #FFFFFF;
+        border-radius: 16px;
+        padding: 60px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border: 1px solid #CBD5E1;
+        animation: slideUp 0.3s ease-out;
+        text-align: center;
+        margin: 0 auto;
+        max-width: 1000px;
+    }
+    
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tùy chỉnh nút bấm hiện đại */
+    .stButton>button {
+        background-color: #0F172A;
+        color: #FFFFFF;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 12px 10px;
+        border: 1px solid #0F172A;
+        transition: all 0.2s;
         width: 100%;
     }
     .stButton>button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
-        color: white;
+        background-color: #334155;
+        border-color: #334155;
+        color: #FFFFFF;
     }
     
-    /* Style cho Radio button trong Cửa sổ to */
+    /* Nút đang khóa (Disabled) */
+    button[disabled] {
+        background-color: #F1F5F9 !important;
+        color: #94A3B8 !important;
+        border: 1px solid #E2E8F0 !important;
+    }
+    
+    /* Style cho Radio button */
     .stRadio label {
-        font-size: 24px !important;
-        color: #102A43 !important;
-        padding: 10px;
+        font-size: 20px !important;
+        color: #1E293B !important;
+        padding: 12px;
     }
     </style>
-    
-    <!-- Icon trang trí -->
-    <div class="decor-left">🌸<br>🚗<br>🌺<br>🚙<br>🌷</div>
-    <div class="decor-right">🌻<br>🏎️<br>🌼<br>🚕<br>🥀</div>
 """, unsafe_allow_html=True)
 
-# --- 2. DỮ LIỆU TRÒ CHƠI ---
-# Không có số thứ tự ở title để phục vụ màn sắp xếp
+# --- 2. DỮ LIỆU TRÒ CHƠI (Đã chuẩn hóa, bỏ icon thừa) ---
 game_data = [
     {
         "title": "Làm Móng (Foundation)",
@@ -168,7 +166,6 @@ game_data = [
     }
 ]
 
-# Danh sách chuẩn để so sánh
 CORRECT_SEQUENCE = [step["title"] for step in game_data]
 
 # --- 3. QUẢN LÝ TRẠNG THÁI ---
@@ -195,26 +192,27 @@ if 'shuffled_options' not in st.session_state:
         random.shuffle(opts)
         st.session_state.shuffled_options.append(opts)
 
-
-# --- KỊCH BẢN MỞ TAB KHỔNG LỒ CHỌN VẬT LIỆU (Ẩn hết mọi thứ khác) ---
+# =========================================================================
+# KỊCH BẢN MỞ TAB KHỔNG LỒ CHỌN VẬT LIỆU (CHIẾM TOÀN MÀN HÌNH)
+# =========================================================================
 if st.session_state.active_material_step is not None:
     idx = st.session_state.active_material_step
     current_data = game_data[idx]
     current_opts = st.session_state.shuffled_options[idx]
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='color: #2563EB; font-size: 50px;'>🛠️ CHỌN VẬT LIỆU:<br>{current_data['title']}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='color: #64748B;'>*{current_data['desc']}*</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='color: #0F172A; font-size: 40px;'>LỰA CHỌN VẬT LIỆU<br><span style='color: #2563EB;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color: #64748B; font-weight: 400;'>{current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
     option_texts = [opt["text"] for opt in current_opts]
-    choice = st.radio("👉 **Vật liệu nào đạt chuẩn kỹ thuật? (Which material is correct?)**", option_texts, index=None)
+    choice = st.radio("**Vật liệu nào đạt chuẩn kỹ thuật thi công? (Select correct material)**", option_texts, index=None)
     
     st.write("")
     st.write("")
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
     with col_btn2:
-        if st.button("✅ XÁC NHẬN VẬT LIỆU (CONFIRM)"):
+        if st.button("XÁC NHẬN (CONFIRM)"):
             if choice:
                 selected_opt = next(item for item in current_opts if item["text"] == choice)
                 if selected_opt["correct"]:
@@ -225,7 +223,6 @@ if st.session_state.active_material_step is not None:
                 st.session_state.completed_materials.append(idx)
                 st.session_state.active_material_step = None
                 
-                # Check nếu đủ 8 bước -> Sang Phase 3
                 if len(st.session_state.completed_materials) == 8:
                     st.session_state.phase = 3
                 st.rerun()
@@ -233,63 +230,71 @@ if st.session_state.active_material_step is not None:
                 st.error("⚠️ Vui lòng chọn 1 đáp án! (Please select an option!)")
     st.markdown("</div>", unsafe_allow_html=True)
 
-# --- GIAO DIỆN CHÍNH KHI KHÔNG MỞ TAB ---
+# =========================================================================
+# GIAO DIỆN CHÍNH (KHI KHÔNG MỞ TAB)
+# =========================================================================
 else:
-    st.markdown("<h1 style='text-align: center; font-size: 45px; margin-bottom: 30px;'>🏡 DREAM HOUSE BUILDER 🏡</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 36px; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>Architecture Pro Simulator</h1>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([4, 6], gap="large")
     
-    # CỘT 1: HÌNH ẢNH
+    # --- CỘT 1: HÌNH ẢNH (Logic thay đổi theo Phase) ---
     with col1:
         st.markdown("<div class='image-card'>", unsafe_allow_html=True)
-        st.markdown("### 📐 Bản vẽ thiết kế (Blueprint)")
-        st.image("https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True)
-        st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
-        st.markdown("### 🏠 Phối cảnh hoàn thiện (Final House)")
-        st.image("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True)
+        
+        if st.session_state.phase in [1, 2]:
+            # Đang trong quy trình xếp kỹ thuật hoặc chọn vật liệu -> Chỉ hiện bản vẽ
+            st.markdown("<h3 style='color: #334155; margin-bottom: 15px;'>Bản vẽ kỹ thuật (Blueprint)</h3>", unsafe_allow_html=True)
+            # Ưu tiên load file local của bạn, nếu không có sẽ dùng ảnh mạng phác thảo thay thế để không bị văng lỗi
+            try:
+                st.image("image_b6d7a4.png", use_container_width=True)
+            except:
+                st.image("https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True)
+        
+        elif st.session_state.phase == 3:
+            # Xây xong toàn bộ -> Hiện nhà thật có màu sắc
+            st.markdown("<h3 style='color: #10B981; margin-bottom: 15px;'>Phối cảnh hoàn thiện (Final Result)</h3>", unsafe_allow_html=True)
+            st.image("https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", use_container_width=True)
+            
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # CỘT 2: KHU VỰC CHƠI (Tùy Phase)
+    # --- CỘT 2: KHU VỰC TƯƠNG TÁC ---
     with col2:
-        # ==========================================
+        # -----------------------------------------------------
         # PHASE 1: SẮP XẾP QUY TRÌNH (SEQUENCE MATCHING)
-        # ==========================================
+        # -----------------------------------------------------
         if st.session_state.phase == 1:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
-            st.markdown("## 🧩 BƯỚC 1: SẮP XẾP QUY TRÌNH XÂY DỰNG")
-            st.write("Hãy chọn các quy trình theo đúng thứ tự từ lúc khởi công đến lúc hoàn thiện.")
+            st.markdown("## BƯỚC 1: QUY TRÌNH THI CÔNG")
+            st.write("Sắp xếp các bước xây dựng theo trình tự chuẩn xác.")
             
             # Khung hiển thị quy trình người chơi đã xếp
-            st.markdown("#### Thứ tự bạn đã chọn (Your Sequence):")
+            st.markdown("#### Trình tự của bạn (Your Sequence):")
             if not st.session_state.user_sequence:
-                st.info("Chưa chọn quy trình nào... (Empty)")
+                st.info("Chưa có dữ liệu...")
             else:
                 for i, p in enumerate(st.session_state.user_sequence):
-                    st.success(f"**{i+1}.** {p}")
+                    st.markdown(f"<div style='padding: 10px; background: #F1F5F9; border-left: 4px solid #3B82F6; margin-bottom: 8px; border-radius: 4px;'><b>Bước {i+1}:</b> {p}</div>", unsafe_allow_html=True)
                     
-            # Nếu người chơi đã chọn đủ 8 bước -> Tiến hành kiểm tra
             if len(st.session_state.user_sequence) == 8:
                 st.markdown("---")
-                # Đếm số quy trình đúng vị trí
                 correct_count = sum(1 for i in range(8) if st.session_state.user_sequence[i] == CORRECT_SEQUENCE[i])
                 
                 if correct_count == 8:
-                    st.success("🎉 TUYỆT VỜI! ĐÚNG 8/8 QUY TRÌNH! (Perfect 8/8!)")
-                    st.write("Bạn đã nắm rõ kỹ thuật thi công. Bây giờ hãy tiến hành chọn vật liệu.")
-                    if st.button("🚀 BẮT ĐẦU CHỌN VẬT LIỆU XÂY NHÀ"):
+                    st.success("✅ CHUẨN XÁC 8/8 QUY TRÌNH! (Perfect Sequence!)")
+                    st.write("Đã duyệt bản vẽ kỹ thuật. Chuyển sang giai đoạn xuất kho vật tư.")
+                    if st.button("TIẾN HÀNH CHỌN VẬT LIỆU ->"):
                         st.session_state.phase = 2
                         st.rerun()
                 else:
                     st.error(f"❌ Bạn đã xếp đúng {correct_count}/8 quy trình! (Correct {correct_count}/8)")
-                    st.warning("Trình tự xây dựng sai sẽ gây hậu quả nghiêm trọng. Vui lòng xếp lại!")
-                    if st.button("🔄 SẮP XẾP LẠI (TRY AGAIN)"):
+                    st.warning("Trình tự sai kỹ thuật. Vui lòng sắp xếp lại!")
+                    if st.button("SẮP XẾP LẠI (RESET)"):
                         st.session_state.user_sequence = []
                         st.rerun()
-            
-            # Bảng chọn các quy trình còn lại
             else:
                 st.markdown("---")
-                st.markdown("#### Các quy trình còn lại (Remaining steps):")
+                st.markdown("#### Các hạng mục chờ xử lý:")
                 remaining = [p for p in st.session_state.shuffled_processes if p not in st.session_state.user_sequence]
                 
                 cols = st.columns(2)
@@ -299,60 +304,56 @@ else:
                             st.session_state.user_sequence.append(proc)
                             st.rerun()
                             
-                # Nút Reset nếu lỡ chọn sai giữa chừng
                 st.write("")
                 if len(st.session_state.user_sequence) > 0:
-                    if st.button("⏪ Xóa chọn lại từ đầu (Clear all)"):
+                    if st.button("Xóa làm lại (Clear)"):
                         st.session_state.user_sequence = []
                         st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
             
-        # ==========================================
+        # -----------------------------------------------------
         # PHASE 2: BẢNG LỰA CHỌN VẬT LIỆU
-        # ==========================================
+        # -----------------------------------------------------
         elif st.session_state.phase == 2:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
-            st.markdown("## 🛒 BƯỚC 2: KHO VẬT LIỆU (MATERIALS)")
-            st.write("Nhấp vào từng quy trình để mở Tab chọn vật liệu (Click to select materials).")
+            st.markdown("## BƯỚC 2: QUẢN LÝ VẬT TƯ (MATERIALS)")
+            st.write("Mở từng hạng mục để phê duyệt vật liệu thi công.")
             st.write("")
             
-            # Tạo Grid hiển thị 8 quy trình (theo thứ tự chuẩn)
             btn_cols = st.columns(2)
             for i, step_data in enumerate(game_data):
                 with btn_cols[i % 2]:
                     if i in st.session_state.completed_materials:
-                        st.button(f"✅ ĐÃ XONG: {step_data['title']}", key=f"btn_p2_{i}", disabled=True)
+                        st.button(f"Đã duyệt: {step_data['title']}", key=f"btn_p2_{i}", disabled=True)
                     else:
-                        # Bấm vào đây sẽ set active_material_step và kích hoạt Tab khổng lồ ở đầu code
-                        if st.button(f"⚙️ {step_data['title']}", key=f"btn_p2_{i}"):
+                        if st.button(f"Xử lý: {step_data['title']}", key=f"btn_p2_{i}"):
                             st.session_state.active_material_step = i
                             st.rerun()
                             
             st.markdown("</div>", unsafe_allow_html=True)
 
-        # ==========================================
+        # -----------------------------------------------------
         # PHASE 3: KẾT QUẢ NGHIỆM THU
-        # ==========================================
+        # -----------------------------------------------------
         elif st.session_state.phase == 3:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
-            st.markdown("## 🎯 BÀN GIAO CÔNG TRÌNH (FINAL RESULT)")
-            st.markdown(f"### Điểm An toàn: <span style='color: #EF4444; font-size: 45px;'>{st.session_state.score}/80</span>", unsafe_allow_html=True)
+            st.markdown("## HỒ SƠ BÀN GIAO (FINAL REPORT)")
+            st.markdown(f"### Đánh giá chất lượng: <span style='color: #2563EB;'>{st.session_state.score}/80 Điểm</span>", unsafe_allow_html=True)
             
             if st.session_state.score == 80:
-                st.success("🎉 HOÀN HẢO! Một công trình vĩ đại vững chắc trăm năm! (Perfect Architecture!)")
-                st.balloons()
+                st.success("✅ ĐẠT CHUẨN QUỐC TẾ. Công trình hoàn hảo không tì vết. (Perfect Architecture!)")
             elif st.session_state.score >= 50:
-                st.warning("⚠️ Form nhà lên rất đẹp nhưng bên trong là 'bom nổ chậm'. Bạn phải chi bộn tiền để sửa lỗi! (Many flaws inside!)")
+                st.warning("⚠️ ĐẠT YÊU CẦU CƠ BẢN. Kiến trúc bề ngoài ổn nhưng ẩn chứa nhiều rủi ro vật liệu. (Many flaws inside!)")
             else:
-                st.error("🚨 THẢM HỌA KIẾN TRÚC! Ngôi nhà vi phạm nghiêm trọng kỹ thuật, nguy cơ sập đổ rất cao! (Disaster!)")
+                st.error("🚨 KHÔNG ĐẠT. Vi phạm nghiêm trọng an toàn kỹ thuật. Yêu cầu tháo dỡ! (Disaster!)")
             
             if st.session_state.issues:
-                st.markdown("#### 🛠️ BÁO CÁO HẬU QUẢ SAI VẬT LIỆU (CONSTRUCTION ISSUES):")
+                st.markdown("#### BÁO CÁO SỰ CỐ VẬT LIỆU (INCIDENT LOGS):")
                 for issue in st.session_state.issues:
-                    st.markdown(f"<p style='color: #B91C1C; font-weight: bold;'>{issue}</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='color: #DC2626; padding-left: 10px; border-left: 3px solid #DC2626;'>{issue}</p>", unsafe_allow_html=True)
 
             st.write("")
-            if st.button("🔄 ĐẬP ĐI XÂY LẠI TỪ ĐẦU (PLAY AGAIN)"):
+            if st.button("BẮT ĐẦU DỰ ÁN MỚI (PLAY AGAIN)"):
                 st.session_state.clear()
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
