@@ -1,52 +1,61 @@
 import streamlit as st
 import random
 
-# --- 1. CẤU HÌNH GIAO DIỆN ĐỎ HIỆN ĐẠI (DARK NEON RED UI - CHỮ TRẮNG) ---
-st.set_page_config(page_title="Architecture Pro", layout="wide", initial_sidebar_state="collapsed")
+# --- 1. CẤU HÌNH GIAO DIỆN (DARK NEON WHITE - SANG TRỌNG) ---
+st.set_page_config(page_title="Design Your House", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
-    /* Nền Gradient Đỏ Đen Tối để làm nổi bật chữ trắng */
+    /* Nền Gradient Đỏ Đen Tối để làm nổi bật khung trắng */
     .stApp {
         background: linear-gradient(135deg, #0a0000 0%, #2a0000 50%, #6e0b17 100%);
     }
     
-    /* Ép toàn bộ chữ thành màu trắng */
-    h1, h2, h3, h4, p, span, div {
+    /* Ép toàn bộ chữ thành màu trắng có độ bóng/phát sáng (Shiny White) */
+    h1, h2, h3, h4, p, span, div, label {
         color: #FFFFFF !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.3);
     }
     
     h2, h3, h4 {
         font-weight: 800;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
     }
     
-    /* Các bảng Panel đổi sang nền tối trong suốt để chữ trắng dễ đọc */
+    /* Tiêu đề chính to và sáng rực rỡ */
+    h1.main-title {
+        font-weight: 900;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.7) !important;
+        letter-spacing: 4px;
+    }
+    
+    /* KHUNG MÀU TRẮNG PHÁT SÁNG */
     .image-card {
-        background: rgba(20, 0, 0, 0.8);
+        background: rgba(20, 0, 0, 0.6);
         border-radius: 20px;
         padding: 25px;
-        box-shadow: 0 0 25px rgba(255, 75, 43, 0.4);
-        border: 2px solid #FF416C;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3); /* Bóng trắng */
+        border: 2px solid rgba(255, 255, 255, 0.7); /* Khung trắng */
         text-align: center;
     }
     
     .dashboard-panel {
-        background: rgba(20, 0, 0, 0.85);
+        background: rgba(20, 0, 0, 0.7);
         border-radius: 20px;
         padding: 35px;
-        box-shadow: 0 0 25px rgba(255, 75, 43, 0.4);
-        border: 1px solid #FF416C;
-        border-top: 6px solid #FF416C;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3); /* Bóng trắng */
+        border: 2px solid rgba(255, 255, 255, 0.7); /* Khung trắng */
+        border-top: 6px solid #FFFFFF;
     }
 
     /* TAB CỬA SỔ KHỔNG LỒ (MODAL) */
     .huge-modal {
-        background: rgba(20, 0, 0, 0.95);
+        background: rgba(15, 0, 0, 0.95);
         border-radius: 24px;
         padding: 50px;
-        box-shadow: 0 0 60px rgba(255, 65, 108, 0.8);
-        border: 3px solid #FF4B2B;
+        box-shadow: 0 0 60px rgba(255, 255, 255, 0.6);
+        border: 3px solid #FFFFFF;
         animation: slideUp 0.3s ease-out;
         text-align: center;
         margin: 0 auto;
@@ -58,32 +67,35 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Nút bấm thủy tinh trắng (Glassy White Button) */
     .stButton>button {
-        background: linear-gradient(90deg, #FF416C 0%, #FF4B2B 100%);
+        background: rgba(255, 255, 255, 0.1);
         color: #FFFFFF !important;
         border-radius: 10px;
         font-weight: 800;
         font-size: 15px;
         padding: 12px 10px;
-        border: none;
+        border: 1px solid rgba(255, 255, 255, 0.8);
         transition: all 0.3s;
         width: 100%;
         text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
         margin-top: 5px;
     }
     .stButton>button:hover {
-        background: linear-gradient(90deg, #FF4B2B 0%, #FF416C 100%);
+        background: rgba(255, 255, 255, 0.3);
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 75, 43, 0.6);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5);
+        border-color: #FFFFFF;
     }
     
     button[disabled] {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: #94A3B8 !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: rgba(255, 255, 255, 0.3) !important;
         box-shadow: none !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         transform: none !important;
+        text-shadow: none !important;
     }
     
     .stRadio label {
@@ -93,16 +105,17 @@ st.markdown("""
         font-weight: 600;
     }
     
+    /* Ô quy trình đang xếp (Khung trắng sáng) */
     .selected-step-box {
-        background: rgba(255, 65, 108, 0.15);
-        border: 2px solid #FF416C;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid #FFFFFF;
         border-radius: 8px;
         padding: 15px 10px;
         text-align: center;
         font-weight: bold;
         color: #FFFFFF !important;
         margin-bottom: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         height: 70px;
         display: flex;
         align-items: center;
@@ -110,7 +123,7 @@ st.markdown("""
         font-size: 15px;
     }
 
-    /* Style cho danh sách vật liệu hoàn hảo 80/80 */
+    /* Style cho danh sách vật liệu hoàn hảo 80/80 (Phát sáng xanh lá nhẹ) */
     .perfect-material-box {
         background: rgba(16, 185, 129, 0.15);
         border: 2px solid #10B981;
@@ -123,12 +136,12 @@ st.markdown("""
         display: flex;
         align-items: center;
         text-align: left;
-        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. DỮ LIỆU TRÒ CHƠI (ĐÃ CẬP NHẬT 3 CÂU BẪY) ---
+# --- 2. DỮ LIỆU TRÒ CHƠI ---
 game_data = [
     {
         "title": "🏗️ Làm Móng",
@@ -239,7 +252,7 @@ if st.session_state.active_material_step is not None:
     current_opts = st.session_state.shuffled_options[idx]
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1>LỰA CHỌN VẬT LIỆU<br><span style='color: #FF416C !important;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1>LỰA CHỌN VẬT LIỆU<br><span>{current_data['title']}</span></h1>", unsafe_allow_html=True)
     st.markdown(f"<h3>{current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
@@ -272,13 +285,8 @@ if st.session_state.active_material_step is not None:
 # GIAO DIỆN CHÍNH
 # =========================================================================
 else:
-    # HIỂN THỊ ẢNH TITLE THAY VÌ CHỮ
-    st.markdown("<div style='text-align: center; margin-bottom: 30px;'>", unsafe_allow_html=True)
-    try:
-        st.image("image_04e8c0.png", use_container_width=True)
-    except:
-        st.markdown("<h1>Architecture Pro Simulator</h1>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    # HIỂN THỊ TIÊU ĐỀ DESIGN YOUR HOUSE RỰC RỠ BẰNG TEXT
+    st.markdown("<h1 class='main-title' style='text-align: center; margin-bottom: 40px;'>DESIGN YOUR HOUSE</h1>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([3, 7], gap="large")
     
@@ -370,22 +378,22 @@ else:
         elif st.session_state.phase == 3:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
             st.markdown("<h2>🎯 HỒ SƠ NGHIỆM THU CÔNG TRÌNH</h2>")
-            st.markdown(f"<h3>Điểm An toàn: <span style='color: #FF416C !important; font-size: 40px;'>{st.session_state.score}/80 Điểm</span></h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Điểm An toàn: <span style='font-size: 40px;'>{st.session_state.score}/80 Điểm</span></h3>", unsafe_allow_html=True)
             
             if st.session_state.score == 80:
                 st.success("✅ ĐẠT CHUẨN QUỐC TẾ. Công trình hoàn hảo tuyệt đối!")
                 st.balloons()
                 
                 st.markdown("---")
-                st.markdown("<h3 style='color: #10B981 !important; text-align: center; margin-bottom: 20px;'>🏆 BẢNG VẬT LIỆU CHUẨN ĐÃ SỬ DỤNG</h3>", unsafe_allow_html=True)
+                st.markdown("<h3 style='text-align: center; margin-bottom: 20px;'>🏆 BẢNG VẬT LIỆU CHUẨN ĐÃ SỬ DỤNG</h3>", unsafe_allow_html=True)
                 
                 # IN RA HÀNG DỌC CÁC VẬT LIỆU ĐÚNG CỰC KỲ NỔI BẬT
                 for item in game_data:
                     correct_material = next(opt["text"] for opt in item["options"] if opt["correct"])
                     st.markdown(f"""
                     <div class='perfect-material-box'>
-                        <span style='width: 30%; color: #10B981 !important;'>{item['title']}</span> 
-                        <span style='width: 70%; border-left: 2px solid rgba(255,255,255,0.2); padding-left: 15px;'>{correct_material}</span>
+                        <span style='width: 35%;'>{item['title']}</span> 
+                        <span style='width: 65%; border-left: 2px solid rgba(255,255,255,0.4); padding-left: 15px;'>{correct_material}</span>
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -397,7 +405,7 @@ else:
             if st.session_state.issues:
                 st.markdown("#### 🛠️ BÁO CÁO SỰ CỐ VẬT LIỆU:")
                 for issue in st.session_state.issues:
-                    st.markdown(f"<p style='color: #FF4B2B !important; padding-left: 10px; border-left: 3px solid #FF4B2B;'>{issue}</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='padding-left: 10px; border-left: 3px solid #FFFFFF;'>{issue}</p>", unsafe_allow_html=True)
 
             st.write("")
             if st.button("🔄 BẮT ĐẦU DỰ ÁN MỚI (PLAY AGAIN)"):
