@@ -34,7 +34,7 @@ st.markdown("""
     [data-testid="stVerticalBlockBorderWrapper"] {
         background: rgba(255, 255, 255, 0.15) !important;
         backdrop-filter: blur(10px);
-        border: 2px solid #FFD700 !important; /* Viền màu Vàng Gold */
+        border: 2px solid #FFD700 !important;
         border-radius: 20px !important;
         box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2) !important;
     }
@@ -43,7 +43,7 @@ st.markdown("""
     .huge-modal {
         background: rgba(3, 39, 89, 0.95);
         border-radius: 24px;
-        padding: 50px;
+        padding: 60px;
         box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
         border: 3px solid #FFD700;
         animation: slideUp 0.3s ease-out;
@@ -59,18 +59,18 @@ st.markdown("""
 
     /* Nút bấm (Buttons) */
     .stButton>button {
-        background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%); /* Nút màu Vàng/Cam */
-        color: #000000 !important; /* Chữ đen trên nền vàng */
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+        color: #000000 !important;
         border-radius: 10px;
         font-weight: 800;
-        font-size: 15px;
-        padding: 12px 10px;
+        font-size: 18px;
+        padding: 15px 10px;
         border: none;
         transition: all 0.3s;
         width: 100%;
         text-transform: uppercase;
         box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-        margin-top: 5px;
+        margin-top: 15px;
         text-shadow: none !important;
     }
     .stButton>button:hover {
@@ -87,14 +87,16 @@ st.markdown("""
         transform: none !important;
     }
     
-    .stRadio label {
-        font-size: 22px !important;
+    /* CSS Phóng to chữ của các đáp án Radio */
+    .stRadio p {
+        font-size: 26px !important;
+        font-weight: bold !important;
         color: #FFFFFF !important;
-        padding: 12px;
-        font-weight: 600;
+        padding-left: 10px;
+        margin-bottom: 10px;
     }
     
-    /* Ô quy trình đang xếp (Khung vàng sáng) */
+    /* Ô quy trình đang xếp */
     .selected-step-box {
         background: rgba(255, 215, 0, 0.15);
         border: 2px solid #FFD700;
@@ -112,7 +114,7 @@ st.markdown("""
         font-size: 15px;
     }
 
-    /* Style cho danh sách vật liệu hoàn hảo 80/80 */
+    /* Danh sách vật liệu hoàn hảo 80/80 */
     .perfect-material-box {
         background: rgba(255, 215, 0, 0.15);
         border: 2px solid #FFD700;
@@ -130,14 +132,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. DỮ LIỆU TRÒ CHƠI ---
+# --- 2. DỮ LIỆU TRÒ CHƠI (Đã xáo trộn vị trí đáp án đúng trong Source Code) ---
 game_data = [
     {
         "title": "🏗️ Làm Móng",
         "desc": "Nền tảng vững chắc quyết định tuổi thọ của cả công trình.",
         "options": [
-            {"text": "🧱 Bê tông cốt thép chuẩn (Reinforced concrete)", "correct": True, "error": ""},
             {"text": "🪙 Hợp kim nhôm nguyên khối (Solid aluminum)", "correct": False, "error": "- Móng Nhôm: Chịu nén kém, oxy hóa ngầm làm sập nhà."},
+            {"text": "🧱 Bê tông cốt thép chuẩn (Reinforced concrete)", "correct": True, "error": ""},
             {"text": "🪨 Bê tông đúc chuẩn (Standard cast concrete)", "correct": False, "error": "- Móng Bê tông đúc: Thiếu lõi thép sẽ rất giòn, không chịu được lực uốn, gây gãy nứt móng."}
         ]
     },
@@ -145,9 +147,9 @@ game_data = [
         "title": "⛓️ Đổ Khung Cột",
         "desc": "Hệ xương sống chống chịu mọi bão tố và tải trọng.",
         "options": [
-            {"text": "📌 Thép vằn cường độ cao (High-strength steel)", "correct": True, "error": ""},
+            {"text": "🔲 Sắt non dập hộp (Soft iron box)", "correct": False, "error": "- Cột Sắt non: Chịu tải kém, móp méo và gãy gập ngay khi gánh sức nặng tầng trên."},
             {"text": "〰️ Thép trơn siêu dẻo (Flexible smooth steel)", "correct": False, "error": "- Cột Thép dẻo: Không bám dính bê tông, rung lắc là gãy."},
-            {"text": "🔲 Sắt non dập hộp (Soft iron box)", "correct": False, "error": "- Cột Sắt non: Chịu tải kém, móp méo và gãy gập ngay khi gánh sức nặng tầng trên."}
+            {"text": "📌 Thép vằn cường độ cao (High-strength steel)", "correct": True, "error": ""}
         ]
     },
     {
@@ -163,17 +165,17 @@ game_data = [
         "title": "🏠 Làm Mái",
         "desc": "Lá chắn che chở tổ ấm khỏi nắng mưa.",
         "options": [
-            {"text": "🏠 Bê tông & Ngói tráng men (Concrete & glazed tiles)", "correct": True, "error": ""},
             {"text": "🛸 Mái nhôm đúc nguyên tấm (Cast aluminum roof)", "correct": False, "error": "- Mái Nhôm: Hấp thụ nhiệt siêu tốc, áp mái nóng như lò bát quái."},
-            {"text": "🎨 Ngói xi măng ép màu (Color pressed cement)", "correct": False, "error": "- Ngói ép: Phơi nắng 1 năm là nứt rạn, dột tong tỏng."}
+            {"text": "🎨 Ngói xi măng ép màu (Color pressed cement)", "correct": False, "error": "- Ngói ép: Phơi nắng 1 năm là nứt rạn, dột tong tỏng."},
+            {"text": "🏠 Bê tông & Ngói tráng men (Concrete & glazed tiles)", "correct": True, "error": ""}
         ]
     },
     {
         "title": "⚡ Điện Nước Âm",
         "desc": "Mạch máu ngầm cung cấp tiện nghi cho ngôi nhà.",
         "options": [
-            {"text": "⚡ Dây đồng & Ống nhựa PPR (Copper wire & PPR pipe)", "correct": True, "error": ""},
             {"text": "🚿 Ống nước Inox mạ bạc (Silver-plated Inox pipe)", "correct": False, "error": "- Ống Inox ngầm: Trở thành bẫy giật điện chết người nếu rò điện."},
+            {"text": "⚡ Dây đồng & Ống nhựa PPR (Copper wire & PPR pipe)", "correct": True, "error": ""},
             {"text": "🔌 Dây điện lõi nhôm (Aluminum core wire)", "correct": False, "error": "- Dây Nhôm: Sinh nhiệt cao, chập cháy ngầm trong tường."}
         ]
     },
@@ -181,9 +183,9 @@ game_data = [
         "title": "⏳ Trát Tường",
         "desc": "Làm phẳng và chuẩn bị bề mặt cho bước trang trí.",
         "options": [
-            {"text": "⏳ Vữa xi măng trộn cát mịn (Cement & fine sand)", "correct": True, "error": ""},
             {"text": "🧪 Keo Epoxy pha bột đá (Epoxy with stone powder)", "correct": False, "error": "- Trát Epoxy: Tường không thở được, mồ hôi ướt nhẹp khi nồm."},
-            {"text": "💨 Xi măng nguyên chất (Pure cement without sand)", "correct": False, "error": "- Xi măng nguyên chất: Co ngót cực mạnh, nứt toác chân chim."}
+            {"text": "💨 Xi măng nguyên chất (Pure cement without sand)", "correct": False, "error": "- Xi măng nguyên chất: Co ngót cực mạnh, nứt toác chân chim."},
+            {"text": "⏳ Vữa xi măng trộn cát mịn (Cement & fine sand)", "correct": True, "error": ""}
         ]
     },
     {
@@ -199,9 +201,9 @@ game_data = [
         "title": "🛋️ Nội Thất",
         "desc": "Hoàn thiện không gian sống tiện nghi, sang trọng.",
         "options": [
-            {"text": "🛋️ Gỗ MDF chống ẩm & Sứ Nano (MDF & Nano porcelain)", "correct": True, "error": ""},
             {"text": "✈️ Bồn cầu đúc Nhôm hàng không (Aluminum toilet)", "correct": False, "error": "- Bồn cầu Nhôm: Kỵ hóa chất, xịt tẩy bồn cầu là sùi bọt trắng."},
-            {"text": "🍴 Tủ bếp bọc Bạc nguyên miếng (Solid silver cabinets)", "correct": False, "error": "- Tủ bếp Bạc: Phản ứng muối mắm, xỉn đen thui cực kỳ bẩn."}
+            {"text": "🍴 Tủ bếp bọc Bạc nguyên miếng (Solid silver cabinets)", "correct": False, "error": "- Tủ bếp Bạc: Phản ứng muối mắm, xỉn đen thui cực kỳ bẩn."},
+            {"text": "🛋️ Gỗ MDF chống ẩm & Sứ Nano (MDF & Nano porcelain)", "correct": True, "error": ""}
         ]
     }
 ]
@@ -241,12 +243,16 @@ if st.session_state.active_material_step is not None:
     current_opts = st.session_state.shuffled_options[idx]
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1>LỰA CHỌN VẬT LIỆU<br><span style='color: #FFD700 !important;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3>{current_data['desc']}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h1>LỰA CHỌN VẬT LIỆU<br><span style='color: #FFD700 !important; font-size: 50px;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='font-size: 24px; color: rgba(255,255,255,0.8);'>{current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
+    # In đậm và làm to câu hỏi bằng Markdown
+    st.markdown("<h2 style='font-size: 35px; color: #FFFFFF; font-weight: 900; margin-bottom: 20px;'>👉 VẬT LIỆU NÀO ĐẠT TIÊU CHUẨN KỸ THUẬT?</h2>", unsafe_allow_html=True)
+    
     option_texts = [opt["text"] for opt in current_opts]
-    choice = st.radio("👉 **Vật liệu nào đạt tiêu chuẩn kỹ thuật?**", option_texts, index=None)
+    # label_visibility="collapsed" để ẩn cái label mặc định bé xíu của Streamlit
+    choice = st.radio("Chọn vật liệu", option_texts, index=None, label_visibility="collapsed")
     
     st.write("")
     st.write("")
@@ -279,7 +285,7 @@ else:
     
     col1, col2 = st.columns([3, 7], gap="large")
     
-    # CỘT 1: THƯ VIỆN NHÀ MẪU (Sử dụng st.container viền vàng)
+    # CỘT 1: THƯ VIỆN NHÀ MẪU
     with col1:
         with st.container(border=True):
             st.markdown("<h3 style='text-align: center;'>Mẫu Nhà Hiện Đại</h3>", unsafe_allow_html=True)
@@ -358,12 +364,12 @@ else:
                                 st.rerun()
 
         # -----------------------------------------------------
-        # PHASE 3: KẾT QUẢ NGHIỆM THU ĐẶC BIỆT
+        # PHASE 3: KẾT QUẢ NGHIỆM THU
         # -----------------------------------------------------
         elif st.session_state.phase == 3:
             with st.container(border=True):
                 st.markdown("<h2>🎯 HỒ SƠ NGHIỆM THU CÔNG TRÌNH</h2>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Điểm An toàn: <span style='color: #FFD700 !important; font-size: 40px;'>{st.session_state.score}/80 Điểm</span></h3>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Điểm An toàn: <span style='color: #FFD700 !important; font-size: 50px;'>{st.session_state.score}/80 Điểm</span></h3>", unsafe_allow_html=True)
                 
                 if st.session_state.score == 80:
                     st.success("✅ ĐẠT CHUẨN QUỐC TẾ. Công trình hoàn hảo tuyệt đối!")
@@ -389,7 +395,7 @@ else:
                 if st.session_state.issues:
                     st.markdown("#### 🛠️ BÁO CÁO SỰ CỐ VẬT LIỆU:")
                     for issue in st.session_state.issues:
-                        st.markdown(f"<p style='padding-left: 10px; border-left: 3px solid #FFD700;'>{issue}</p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='padding-left: 10px; border-left: 3px solid #FFD700; font-size: 18px;'>{issue}</p>", unsafe_allow_html=True)
 
                 st.write("")
                 if st.button("🔄 BẮT ĐẦU DỰ ÁN MỚI (PLAY AGAIN)"):
