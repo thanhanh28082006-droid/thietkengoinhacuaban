@@ -136,8 +136,7 @@ st.title("🏡 THIẾT KẾ NHÀ CỦA BẠN")
 st.subheader("(Design Your House)")
 
 # Hình ảnh ngôi nhà hiện đại xuyên suốt
-st.image("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", use_column_width=True)
-
+st.image("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", use_container_width=True)
 # Nếu trò chơi chưa kết thúc
 if st.session_state.step < len(game_data):
     current_idx = st.session_state.step
