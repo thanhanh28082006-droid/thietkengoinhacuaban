@@ -1,49 +1,48 @@
 import streamlit as st
 import random
 
-# --- 1. CẤU HÌNH GIAO DIỆN ĐỎ HIỆN ĐẠI (NEON RED UI) ---
+# --- 1. CẤU HÌNH GIAO DIỆN ĐỎ HIỆN ĐẠI (DARK NEON RED UI - CHỮ TRẮNG) ---
 st.set_page_config(page_title="Architecture Pro", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
+    /* Nền Gradient Đỏ Đen Tối để làm nổi bật chữ trắng */
     .stApp {
-        background: linear-gradient(135deg, #1A0000 0%, #4A0000 50%, #B91327 100%);
+        background: linear-gradient(135deg, #0a0000 0%, #2a0000 50%, #6e0b17 100%);
     }
     
-    h1.main-title {
-        color: #FEF2F2 !important;
+    /* Ép toàn bộ chữ thành màu trắng */
+    h1, h2, h3, h4, p, span, div {
+        color: #FFFFFF !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
-        font-weight: 900;
-        text-shadow: 0 0 15px rgba(255, 65, 108, 0.8);
     }
     
-    h1, h2, h3, h4 {
-        color: #1A0000;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+    h2, h3, h4 {
         font-weight: 800;
     }
     
+    /* Các bảng Panel đổi sang nền tối trong suốt để chữ trắng dễ đọc */
     .image-card {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(20, 0, 0, 0.8);
         border-radius: 20px;
         padding: 25px;
-        box-shadow: 0 0 25px rgba(255, 75, 43, 0.5);
+        box-shadow: 0 0 25px rgba(255, 75, 43, 0.4);
         border: 2px solid #FF416C;
         text-align: center;
     }
     
     .dashboard-panel {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(20, 0, 0, 0.85);
         border-radius: 20px;
         padding: 35px;
-        box-shadow: 0 0 25px rgba(255, 75, 43, 0.5);
-        border: 1px solid #FFE4E6;
+        box-shadow: 0 0 25px rgba(255, 75, 43, 0.4);
+        border: 1px solid #FF416C;
         border-top: 6px solid #FF416C;
     }
 
-    /* TAB CỬA SỔ KHỔNG LỒ (MODAL) CHO VẬT LIỆU */
+    /* TAB CỬA SỔ KHỔNG LỒ (MODAL) */
     .huge-modal {
-        background: #FFFFFF;
+        background: rgba(20, 0, 0, 0.95);
         border-radius: 24px;
         padding: 50px;
         box-shadow: 0 0 60px rgba(255, 65, 108, 0.8);
@@ -80,39 +79,56 @@ st.markdown("""
     }
     
     button[disabled] {
-        background: #F1F5F9 !important;
+        background: rgba(255, 255, 255, 0.1) !important;
         color: #94A3B8 !important;
         box-shadow: none !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         transform: none !important;
     }
     
     .stRadio label {
         font-size: 22px !important;
-        color: #4A0000 !important;
+        color: #FFFFFF !important;
         padding: 12px;
         font-weight: 600;
     }
     
     .selected-step-box {
-        background: #FFF1F2;
+        background: rgba(255, 65, 108, 0.15);
         border: 2px solid #FF416C;
         border-radius: 8px;
         padding: 15px 10px;
         text-align: center;
         font-weight: bold;
-        color: #B91327;
+        color: #FFFFFF !important;
         margin-bottom: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.5);
         height: 70px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 15px;
     }
+
+    /* Style cho danh sách vật liệu hoàn hảo 80/80 */
+    .perfect-material-box {
+        background: rgba(16, 185, 129, 0.15);
+        border: 2px solid #10B981;
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. DỮ LIỆU TRÒ CHƠI (CÓ ICON CHO VẬT LIỆU VÀ QUY TRÌNH) ---
+# --- 2. DỮ LIỆU TRÒ CHƠI (ĐÃ CẬP NHẬT 3 CÂU BẪY) ---
 game_data = [
     {
         "title": "🏗️ Làm Móng",
@@ -120,7 +136,7 @@ game_data = [
         "options": [
             {"text": "🧱 Bê tông cốt thép chuẩn (Reinforced concrete)", "correct": True, "error": ""},
             {"text": "🪙 Hợp kim nhôm nguyên khối (Solid aluminum)", "correct": False, "error": "- Móng Nhôm: Chịu nén kém, oxy hóa ngầm làm sập nhà."},
-            {"text": "🪨 Đá Granite nguyên tảng (Solid Granite)", "correct": False, "error": "- Móng Đá: Thiếu liên kết khối, gây lún nứt đôi nhà."}
+            {"text": "🪨 Bê tông đúc chuẩn (Standard cast concrete)", "correct": False, "error": "- Móng Bê tông đúc: Thiếu lõi thép sẽ rất giòn, không chịu được lực uốn, gây gãy nứt móng."}
         ]
     },
     {
@@ -129,7 +145,7 @@ game_data = [
         "options": [
             {"text": "📌 Thép vằn cường độ cao (High-strength steel)", "correct": True, "error": ""},
             {"text": "〰️ Thép trơn siêu dẻo (Flexible smooth steel)", "correct": False, "error": "- Cột Thép dẻo: Không bám dính bê tông, rung lắc là gãy."},
-            {"text": "🔲 Sắt non dập hộp rỗng (Hollow soft iron)", "correct": False, "error": "- Cột Sắt rỗng: Móp méo gãy gập ngay khi chịu tải mái nhà."}
+            {"text": "🔲 Sắt non dập hộp (Soft iron box)", "correct": False, "error": "- Cột Sắt non: Chịu tải kém, móp méo và gãy gập ngay khi gánh sức nặng tầng trên."}
         ]
     },
     {
@@ -138,7 +154,7 @@ game_data = [
         "options": [
             {"text": "🧱 Gạch đất nung / Gạch AAC (Fired brick / AAC)", "correct": True, "error": ""},
             {"text": "🌑 Gạch xỉ than tái chế (Recycled cinder block)", "correct": False, "error": "- Tường Xỉ than: Hút nước như bọt biển, ngập ngụa khi mưa."},
-            {"text": "✨ Gạch lát nền Granite (Granite floor tiles)", "correct": False, "error": "- Tường Granite: Trơn tuột, vữa không bám, đẩy nhẹ là sập."}
+            {"text": "🧱 Gạch block xi măng tự trộn (Hand-mixed cement block)", "correct": False, "error": "- Tường Xi măng tự trộn: Trộn thủ công sai tỷ lệ khiến gạch bở rạc, ngấm nước và nứt toác sau 1 mùa mưa."}
         ]
     },
     {
@@ -215,7 +231,7 @@ if 'shuffled_options' not in st.session_state:
         st.session_state.shuffled_options.append(opts)
 
 # =========================================================================
-# KỊCH BẢN 2 & PHẦN CHỌN VẬT LIỆU (TAB KHỔNG LỒ TRÀN MÀN HÌNH)
+# KỊCH BẢN MỞ TAB KHỔNG LỒ CHỌN VẬT LIỆU (CHIẾM TOÀN MÀN HÌNH)
 # =========================================================================
 if st.session_state.active_material_step is not None:
     idx = st.session_state.active_material_step
@@ -223,8 +239,8 @@ if st.session_state.active_material_step is not None:
     current_opts = st.session_state.shuffled_options[idx]
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='color: #4A0000; font-size: 40px;'>LỰA CHỌN VẬT LIỆU<br><span style='color: #FF416C;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='color: #64748B; font-weight: 400;'>{current_data['desc']}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h1>LỰA CHỌN VẬT LIỆU<br><span style='color: #FF416C !important;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3>{current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
     option_texts = [opt["text"] for opt in current_opts]
@@ -256,14 +272,20 @@ if st.session_state.active_material_step is not None:
 # GIAO DIỆN CHÍNH
 # =========================================================================
 else:
-    st.markdown("<h1 class='main-title' style='text-align: center; font-size: 40px; margin-bottom: 30px; text-transform: uppercase;'>Architecture Pro Simulator</h1>", unsafe_allow_html=True)
+    # HIỂN THỊ ẢNH TITLE THAY VÌ CHỮ
+    st.markdown("<div style='text-align: center; margin-bottom: 30px;'>", unsafe_allow_html=True)
+    try:
+        st.image("image_04e8c0.png", use_container_width=True)
+    except:
+        st.markdown("<h1>Architecture Pro Simulator</h1>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([3, 7], gap="large")
     
     # CỘT 1: THƯ VIỆN NHÀ MẪU
     with col1:
         st.markdown("<div class='image-card'>", unsafe_allow_html=True)
-        st.markdown("<h3 style='color: #FF416C; margin-bottom: 15px;'>Mẫu Nhà Hiện Đại</h3>", unsafe_allow_html=True)
+        st.markdown("<h3>Mẫu Nhà Hiện Đại</h3>", unsafe_allow_html=True)
         st.image("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True, caption="Modern Villa")
         st.markdown("<br>", unsafe_allow_html=True)
         st.image("https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True, caption="Luxury Mansion")
@@ -276,7 +298,7 @@ else:
         # -----------------------------------------------------
         if st.session_state.phase == 1:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
-            st.markdown("## BƯỚC 1: SẮP XẾP QUY TRÌNH THI CÔNG")
+            st.markdown("<h2>BƯỚC 1: SẮP XẾP QUY TRÌNH THI CÔNG</h2>")
             st.write("Bấm chọn các mục quy trình bên dưới để đưa vào bảng theo đúng trình tự chuẩn.")
             
             st.markdown("#### 📋 Bảng thứ tự của bạn:")
@@ -307,7 +329,6 @@ else:
                 st.markdown("#### 🗂️ Danh sách quy trình (Click để đưa vào bảng):")
                 remaining = [p for p in st.session_state.shuffled_processes if p not in st.session_state.user_sequence]
                 
-                # Hiển thị bảng chọn dạng lưới 4 cột ngang
                 grid_cols = st.columns(4)
                 for i, proc in enumerate(remaining):
                     with grid_cols[i % 4]:
@@ -327,7 +348,7 @@ else:
         # -----------------------------------------------------
         elif st.session_state.phase == 2:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
-            st.markdown("## BƯỚC 2: QUẢN LÝ VẬT TƯ (MATERIALS)")
+            st.markdown("<h2>BƯỚC 2: QUẢN LÝ VẬT TƯ (MATERIALS)</h2>")
             st.write("Bấm vào các hạng mục quy trình bên dưới để mở bảng chọn vật liệu chi tiết.")
             st.write("")
             
@@ -344,16 +365,30 @@ else:
             st.markdown("</div>", unsafe_allow_html=True)
 
         # -----------------------------------------------------
-        # PHASE 3: KẾT QUẢ NGHIỆM THU
+        # PHASE 3: KẾT QUẢ NGHIỆM THU ĐẶC BIỆT
         # -----------------------------------------------------
         elif st.session_state.phase == 3:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
-            st.markdown("## 🎯 HỒ SƠ NGHIỆM THU CÔNG TRÌNH")
-            st.markdown(f"### Điểm An toàn: <span style='color: #FF416C;'>{st.session_state.score}/80 Điểm</span>", unsafe_allow_html=True)
+            st.markdown("<h2>🎯 HỒ SƠ NGHIỆM THU CÔNG TRÌNH</h2>")
+            st.markdown(f"<h3>Điểm An toàn: <span style='color: #FF416C !important; font-size: 40px;'>{st.session_state.score}/80 Điểm</span></h3>", unsafe_allow_html=True)
             
             if st.session_state.score == 80:
                 st.success("✅ ĐẠT CHUẨN QUỐC TẾ. Công trình hoàn hảo tuyệt đối!")
                 st.balloons()
+                
+                st.markdown("---")
+                st.markdown("<h3 style='color: #10B981 !important; text-align: center; margin-bottom: 20px;'>🏆 BẢNG VẬT LIỆU CHUẨN ĐÃ SỬ DỤNG</h3>", unsafe_allow_html=True)
+                
+                # IN RA HÀNG DỌC CÁC VẬT LIỆU ĐÚNG CỰC KỲ NỔI BẬT
+                for item in game_data:
+                    correct_material = next(opt["text"] for opt in item["options"] if opt["correct"])
+                    st.markdown(f"""
+                    <div class='perfect-material-box'>
+                        <span style='width: 30%; color: #10B981 !important;'>{item['title']}</span> 
+                        <span style='width: 70%; border-left: 2px solid rgba(255,255,255,0.2); padding-left: 15px;'>{correct_material}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
             elif st.session_state.score >= 50:
                 st.warning("⚠️ ĐẠT YÊU CẦU CƠ BẢN. Kiến trúc ổn nhưng tồn tại một số rủi ro vật liệu bên trong.")
             else:
@@ -362,7 +397,7 @@ else:
             if st.session_state.issues:
                 st.markdown("#### 🛠️ BÁO CÁO SỰ CỐ VẬT LIỆU:")
                 for issue in st.session_state.issues:
-                    st.markdown(f"<p style='color: #DC2626; padding-left: 10px; border-left: 3px solid #DC2626;'>{issue}</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p style='color: #FF4B2B !important; padding-left: 10px; border-left: 3px solid #FF4B2B;'>{issue}</p>", unsafe_allow_html=True)
 
             st.write("")
             if st.button("🔄 BẮT ĐẦU DỰ ÁN MỚI (PLAY AGAIN)"):
