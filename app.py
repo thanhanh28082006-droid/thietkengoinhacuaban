@@ -11,7 +11,6 @@ st.markdown("""
         background: linear-gradient(135deg, #1A0000 0%, #4A0000 50%, #B91327 100%);
     }
     
-    /* Màu chữ tiêu đề tổng: Trắng pha ánh đỏ */
     h1.main-title {
         color: #FEF2F2 !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
@@ -19,14 +18,12 @@ st.markdown("""
         text-shadow: 0 0 15px rgba(255, 65, 108, 0.8);
     }
     
-    /* Chữ bên trong các bảng màu trắng */
     h1, h2, h3, h4 {
         color: #1A0000;
         font-family: 'Inter', 'Segoe UI', sans-serif;
         font-weight: 800;
     }
     
-    /* Khung ảnh (Bo góc, viền đỏ phát sáng) */
     .image-card {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 20px;
@@ -36,7 +33,6 @@ st.markdown("""
         text-align: center;
     }
     
-    /* Bảng điều khiển (Dashboard) */
     .dashboard-panel {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 20px;
@@ -46,7 +42,6 @@ st.markdown("""
         border-top: 6px solid #FF416C;
     }
 
-    /* TAB CỬA SỔ KHỔNG LỒ (MODAL) */
     .huge-modal {
         background: #FFFFFF;
         border-radius: 24px;
@@ -64,7 +59,6 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Tùy chỉnh nút bấm (Gradient Đỏ) */
     .stButton>button {
         background: linear-gradient(90deg, #FF416C 0%, #FF4B2B 100%);
         color: #FFFFFF !important;
@@ -85,7 +79,6 @@ st.markdown("""
         box-shadow: 0 8px 25px rgba(255, 75, 43, 0.6);
     }
     
-    /* Nút đang khóa (Disabled) */
     button[disabled] {
         background: #F1F5F9 !important;
         color: #94A3B8 !important;
@@ -93,7 +86,6 @@ st.markdown("""
         transform: none !important;
     }
     
-    /* Style cho Radio button */
     .stRadio label {
         font-size: 22px !important;
         color: #4A0000 !important;
@@ -101,20 +93,38 @@ st.markdown("""
         font-weight: 600;
     }
     
-    /* Style khung ảnh quy trình */
     .step-img-container {
         border-radius: 8px;
         overflow: hidden;
         border: 2px solid #FFE4E6;
         margin-bottom: 5px;
+        background: white;
+    }
+    
+    /* Thiết kế riêng cho các box quy trình đã chọn (Nằm ngang) */
+    .selected-step-box {
+        background: #FFF1F2;
+        border: 2px solid #FF416C;
+        border-radius: 8px;
+        padding: 15px 10px;
+        text-align: center;
+        font-weight: bold;
+        color: #B91327;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. DỮ LIỆU TRÒ CHƠI CÓ KÈM HÌNH ẢNH TRỰC QUAN ---
+# --- 2. DỮ LIỆU TRÒ CHƠI CÓ ICON & HÌNH ẢNH TRỰC QUAN ---
 game_data = [
     {
-        "title": "Làm Móng (Foundation)",
+        "title": "🏗️ Làm Móng",
         "desc": "Nền tảng vững chắc quyết định tuổi thọ của cả công trình.",
         "img": "https://images.unsplash.com/photo-1541888087405-f3900fb3033f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -124,7 +134,7 @@ game_data = [
         ]
     },
     {
-        "title": "Đổ Khung Cột (Frame)",
+        "title": "⛓️ Đổ Khung Cột",
         "desc": "Hệ xương sống chống chịu mọi bão tố và tải trọng.",
         "img": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -134,7 +144,7 @@ game_data = [
         ]
     },
     {
-        "title": "Xây Tường (Walls)",
+        "title": "🧱 Xây Tường",
         "desc": "Lớp áo giáp bảo vệ không gian sống khỏi thời tiết.",
         "img": "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -144,7 +154,7 @@ game_data = [
         ]
     },
     {
-        "title": "Làm Mái (Roof)",
+        "title": "🏠 Làm Mái",
         "desc": "Lá chắn che chở tổ ấm khỏi nắng mưa.",
         "img": "https://images.unsplash.com/photo-1632759145351-1d592919f522?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -154,7 +164,7 @@ game_data = [
         ]
     },
     {
-        "title": "Điện Nước Âm (MEP System)",
+        "title": "⚡ Điện Nước Âm",
         "desc": "Mạch máu ngầm cung cấp tiện nghi cho ngôi nhà.",
         "img": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -164,7 +174,7 @@ game_data = [
         ]
     },
     {
-        "title": "Trát Tường (Plastering)",
+        "title": "⏳ Trát Tường",
         "desc": "Làm phẳng và chuẩn bị bề mặt cho bước trang trí.",
         "img": "https://images.unsplash.com/photo-1588854337221-4cf9fa968114?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -174,7 +184,7 @@ game_data = [
         ]
     },
     {
-        "title": "Lát Gạch & Sơn (Tiling)",
+        "title": "🎨 Lát Gạch & Sơn",
         "desc": "Khoác lên ngôi nhà vẻ đẹp thẩm mỹ lộng lẫy.",
         "img": "https://images.unsplash.com/photo-1521193089946-b338fa7419f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -184,7 +194,7 @@ game_data = [
         ]
     },
     {
-        "title": "Nội Thất (Interior)",
+        "title": "🛋️ Nội Thất",
         "desc": "Hoàn thiện không gian sống tiện nghi, sang trọng.",
         "img": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
         "options": [
@@ -197,7 +207,6 @@ game_data = [
 
 CORRECT_SEQUENCE = [step["title"] for step in game_data]
 
-# Hàm tiện ích lấy URL ảnh từ tên quy trình
 def get_img_by_title(title):
     for item in game_data:
         if item["title"] == title:
@@ -278,15 +287,12 @@ else:
     with col1:
         st.markdown("<div class='image-card'>", unsafe_allow_html=True)
         st.markdown("<h3 style='color: #FF416C; margin-bottom: 15px;'>Mẫu Nhà Hiện Đại</h3>", unsafe_allow_html=True)
-        
-        # Hiển thị nhiều mẫu nhà thay vì bản vẽ
         st.image("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True, caption="Modern Villa")
         st.markdown("<br>", unsafe_allow_html=True)
         st.image("https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True, caption="Luxury Mansion")
-        
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- CỘT 2: KHU VỰC TƯƠNG TÁC (CHIA 4 CỘT) ---
+    # --- CỘT 2: KHU VỰC TƯƠNG TÁC ---
     with col2:
         # -----------------------------------------------------
         # PHASE 1: SẮP XẾP QUY TRÌNH
@@ -294,14 +300,17 @@ else:
         if st.session_state.phase == 1:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
             st.markdown("## BƯỚC 1: SẮP XẾP QUY TRÌNH")
-            st.write("Chọn các bước thi công theo đúng trình tự xây dựng thực tế.")
+            st.write("Nhấp vào các quy trình bên dưới để xếp vào bảng thi công theo đúng trình tự.")
             
-            st.markdown("#### Trình tự của bạn (Your Sequence):")
+            st.markdown("#### Bảng thi công của bạn (Your Sequence):")
             if not st.session_state.user_sequence:
-                st.info("Chưa có dữ liệu...")
+                st.info("Chưa có dữ liệu. Vui lòng chọn từ lưới bên dưới...")
             else:
+                # Trình bày các bước đã chọn dưới dạng lưới ngang 4 cột
+                chosen_cols = st.columns(4)
                 for i, p in enumerate(st.session_state.user_sequence):
-                    st.markdown(f"<div style='padding: 10px; background: #FFF1F2; border-left: 5px solid #FF416C; margin-bottom: 8px; border-radius: 6px;'><b>Bước {i+1}:</b> {p}</div>", unsafe_allow_html=True)
+                    with chosen_cols[i % 4]:
+                        st.markdown(f"<div class='selected-step-box'>B. {i+1}<br>{p}</div>", unsafe_allow_html=True)
                     
             if len(st.session_state.user_sequence) == 8:
                 st.markdown("---")
@@ -319,10 +328,10 @@ else:
                         st.rerun()
             else:
                 st.markdown("---")
-                st.markdown("#### Các hạng mục chờ xử lý:")
+                st.markdown("#### Bảng chờ xử lý (Nhấp để chọn):")
                 remaining = [p for p in st.session_state.shuffled_processes if p not in st.session_state.user_sequence]
                 
-                # CHIA LƯỚI 4 CỘT ĐỂ HIỂN THỊ HÌNH ẢNH
+                # CHIA LƯỚI 4 CỘT HIỂN THỊ HÌNH ẢNH HÀNG NGANG
                 cols = st.columns(4)
                 for i, proc in enumerate(remaining):
                     with cols[i % 4]:
