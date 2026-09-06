@@ -1,59 +1,58 @@
 import streamlit as st
 import random
-import os
 
-# --- 1. CẤU HÌNH GIAO DIỆN SANG TRỌNG (LUXURY & PREMIUM UI) ---
+# --- 1. CẤU HÌNH GIAO DIỆN XANH PHÁT SÁNG (SHINY BLUE UI) ---
 st.set_page_config(page_title="Architecture Pro", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
-    /* Nền Gradient màu sắc sang trọng (Xanh Royal Đậm -> Xám Đen) */
+    /* Nền Gradient Xanh Dương Phát Sáng */
     .stApp {
-        background: linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
+        background: linear-gradient(135deg, #0F2027 0%, #1A2980 50%, #26D0CE 100%);
     }
     
-    /* Màu chữ tiêu đề tổng: Vàng Gold (Champagne) sang trọng */
+    /* Màu chữ tiêu đề tổng: Trắng pha ánh xanh */
     h1.main-title {
-        color: #D4AF37 !important;
+        color: #E0F2FE !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
-        font-weight: 800;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        font-weight: 900;
+        text-shadow: 0 0 15px rgba(38, 208, 206, 0.8);
     }
     
     /* Chữ bên trong các bảng màu trắng */
     h1, h2, h3, h4 {
         color: #0F172A;
         font-family: 'Inter', 'Segoe UI', sans-serif;
-        font-weight: 700;
+        font-weight: 800;
     }
     
-    /* Khung ảnh Bản vẽ và Ngôi nhà (Nền trắng để nổi bật nét vẽ đen) */
+    /* Khung ảnh Bản vẽ và Ngôi nhà (Bo góc, viền xanh phát sáng) */
     .image-card {
-        background: #FFFFFF;
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
         padding: 25px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        border: 2px solid #D4AF37; /* Viền vàng gold */
+        box-shadow: 0 0 25px rgba(38, 208, 206, 0.5);
+        border: 2px solid #00F2FE;
         text-align: center;
     }
     
     /* Bảng điều khiển (Dashboard) */
     .dashboard-panel {
-        background: #FFFFFF;
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
         padding: 35px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        border: 1px solid #E2E8F0;
-        border-top: 6px solid #D4AF37; /* Điểm nhấn viền trên màu Vàng Gold */
+        box-shadow: 0 0 25px rgba(38, 208, 206, 0.5);
+        border: 1px solid #E0F2FE;
+        border-top: 6px solid #00F2FE;
     }
 
     /* TAB CỬA SỔ KHỔNG LỒ (MODAL) */
     .huge-modal {
         background: #FFFFFF;
-        border-radius: 20px;
+        border-radius: 24px;
         padding: 60px;
-        box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
-        border: 2px solid #D4AF37;
+        box-shadow: 0 0 60px rgba(0, 198, 255, 0.6);
+        border: 3px solid #0072FF;
         animation: slideUp 0.4s ease-out;
         text-align: center;
         margin: 0 auto;
@@ -65,33 +64,31 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Tùy chỉnh nút bấm sang trọng */
+    /* Tùy chỉnh nút bấm (Gradient Xanh Neon) */
     .stButton>button {
-        background: linear-gradient(90deg, #1F2937 0%, #111827 100%);
-        color: #D4AF37 !important; /* Chữ vàng trên nền đen */
-        border-radius: 10px;
-        font-weight: 700;
+        background: linear-gradient(90deg, #0072FF 0%, #00C6FF 100%);
+        color: #FFFFFF !important;
+        border-radius: 12px;
+        font-weight: 800;
         font-size: 16px;
         padding: 15px 10px;
-        border: 1px solid #D4AF37;
+        border: none;
         transition: all 0.3s;
         width: 100%;
         text-transform: uppercase;
         letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(0, 198, 255, 0.4);
     }
     .stButton>button:hover {
-        background: #D4AF37;
-        border-color: #D4AF37;
-        color: #111827 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        background: linear-gradient(90deg, #00C6FF 0%, #0072FF 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 198, 255, 0.6);
     }
     
     /* Nút đang khóa (Disabled) */
     button[disabled] {
         background: #F1F5F9 !important;
         color: #94A3B8 !important;
-        border: 1px solid #E2E8F0 !important;
         box-shadow: none !important;
         transform: none !important;
     }
@@ -101,7 +98,7 @@ st.markdown("""
         font-size: 22px !important;
         color: #1E293B !important;
         padding: 12px;
-        font-weight: 500;
+        font-weight: 600;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -217,7 +214,7 @@ if st.session_state.active_material_step is not None:
     current_opts = st.session_state.shuffled_options[idx]
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='color: #0F172A; font-size: 40px;'>PHÊ DUYỆT VẬT LIỆU<br><span style='color: #D4AF37;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='color: #0F172A; font-size: 45px;'>PHÊ DUYỆT VẬT LIỆU<br><span style='color: #0072FF;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='color: #64748B; font-weight: 400;'>{current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
@@ -250,7 +247,7 @@ if st.session_state.active_material_step is not None:
 # GIAO DIỆN CHÍNH (KHI KHÔNG MỞ TAB)
 # =========================================================================
 else:
-    st.markdown("<h1 class='main-title' style='text-align: center; font-size: 40px; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>Architecture Pro Simulator</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title' style='text-align: center; font-size: 42px; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>Architecture Pro Simulator</h1>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([4, 6], gap="large")
     
@@ -259,15 +256,15 @@ else:
         st.markdown("<div class='image-card'>", unsafe_allow_html=True)
         
         if st.session_state.phase in [1, 2]:
-            st.markdown("<h3 style='color: #334155; margin-bottom: 15px;'>Bản vẽ kỹ thuật (Blueprint)</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='color: #0072FF; margin-bottom: 15px;'>Bản vẽ kỹ thuật (Blueprint)</h3>", unsafe_allow_html=True)
             try:
-                # Đã cập nhật đúng tên file bạn gửi
-                st.image("image_b6e2a5.png", use_container_width=True)
+                # Cập nhật hình ảnh kỹ sư thiết kế mới nhất
+                st.image("image_c0c4c8.png", use_container_width=True)
             except:
                 st.image("https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True)
         
         elif st.session_state.phase == 3:
-            st.markdown("<h3 style='color: #D4AF37; margin-bottom: 15px;'>Phối cảnh hoàn thiện (Final Result)</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='color: #00C6FF; margin-bottom: 15px;'>Phối cảnh hoàn thiện (Final Result)</h3>", unsafe_allow_html=True)
             st.image("https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80", use_container_width=True)
             
         st.markdown("</div>", unsafe_allow_html=True)
@@ -287,7 +284,7 @@ else:
                 st.info("Chưa có dữ liệu...")
             else:
                 for i, p in enumerate(st.session_state.user_sequence):
-                    st.markdown(f"<div style='padding: 12px; background: #F8FAFC; border-left: 5px solid #D4AF37; margin-bottom: 10px; border-radius: 6px;'><b>Bước {i+1}:</b> {p}</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='padding: 12px; background: #F8FAFC; border-left: 5px solid #00C6FF; margin-bottom: 10px; border-radius: 6px;'><b>Bước {i+1}:</b> {p}</div>", unsafe_allow_html=True)
                     
             if len(st.session_state.user_sequence) == 8:
                 st.markdown("---")
@@ -351,7 +348,7 @@ else:
         elif st.session_state.phase == 3:
             st.markdown("<div class='dashboard-panel'>", unsafe_allow_html=True)
             st.markdown("## HỒ SƠ BÀN GIAO (FINAL REPORT)")
-            st.markdown(f"### Đánh giá chất lượng: <span style='color: #D4AF37;'>{st.session_state.score}/80 Điểm</span>", unsafe_allow_html=True)
+            st.markdown(f"### Đánh giá chất lượng: <span style='color: #0072FF;'>{st.session_state.score}/80 Điểm</span>", unsafe_allow_html=True)
             
             if st.session_state.score == 80:
                 st.success("✅ ĐẠT CHUẨN QUỐC TẾ. Công trình hoàn hảo không tì vết. (Perfect Architecture!)")
