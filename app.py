@@ -37,12 +37,24 @@ st.markdown("""
         border-top: 4px solid #3B82F6;
     }
     
-    /* Decor hoa lá xe cộ */
-    .decor-bar {
-        text-align: center;
-        font-size: 32px;
-        margin-top: 15px;
-        letter-spacing: 15px;
+    /* Hoa hòe và ô tô trang trí bay xung quanh (Cố định 2 bên viền) */
+    .decor-left {
+        position: fixed;
+        left: 20px;
+        top: 20%;
+        font-size: 45px;
+        line-height: 2;
+        z-index: 100;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+    .decor-right {
+        position: fixed;
+        right: 20px;
+        top: 20%;
+        font-size: 45px;
+        line-height: 2;
+        z-index: 100;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     }
 
     /* Tùy chỉnh Nút bấm */
@@ -72,6 +84,10 @@ st.markdown("""
         border: 2px dashed #93C5FD;
     }
     </style>
+    
+    <!-- HTML chứa các icon bay xung quanh -->
+    <div class="decor-left">🌸<br>🚗<br>🌺<br>🚙<br>🌷</div>
+    <div class="decor-right">🌻<br>🏎️<br>🌼<br>🚕<br>🥀</div>
 """, unsafe_allow_html=True)
 
 # --- 2. DỮ LIỆU TRÒ CHƠI ---
@@ -150,13 +166,17 @@ game_data = [
     }
 ]
 
-# --- 3. QUẢN LÝ TRẠNG THÁI ---
+# --- 3. QUẢN LÝ TRẠNG THÁI (Đã sửa lỗi AttributeError) ---
+# Tách riêng biệt từng biến để tránh lỗi khi reload app trên Streamlit Cloud
 if 'step' not in st.session_state:
     st.session_state.step = 0
+if 'score' not in st.session_state:
     st.session_state.score = 0
+if 'issues' not in st.session_state:
     st.session_state.issues = []
-    st.session_state.is_selecting_material = False # True = Mở form chọn vật liệu
-    
+if 'is_selecting_material' not in st.session_state:
+    st.session_state.is_selecting_material = False
+if 'shuffled_options' not in st.session_state:
     st.session_state.shuffled_options = []
     for step in game_data:
         opts = step["options"].copy()
@@ -164,15 +184,14 @@ if 'step' not in st.session_state:
         st.session_state.shuffled_options.append(opts)
 
 # --- 4. GIAO DIỆN CHIA CỘT ---
-st.markdown("<h1 style='text-align: center; margin-bottom: 30px;'>✨ DREAM HOUSE BUILDER ✨</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; margin-bottom: 30px; font-size: 45px;'>✨ DREAM HOUSE BUILDER ✨</h1>", unsafe_allow_html=True)
 
 col1, col2 = st.columns([4, 6], gap="large")
 
-# Cột 1: Hiển thị nhà, cảnh quan màu mè
+# Cột 1: Hiển thị nhà
 with col1:
     st.markdown("<div class='house-card'>", unsafe_allow_html=True)
     st.image("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True)
-    st.markdown("<div class='decor-bar'>🌳🌺🚗🏡🌸🚙🌲</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Cột 2: Bảng điều khiển Quy trình & Vật liệu
@@ -230,6 +249,7 @@ with col2:
         
         if st.session_state.score == 80:
             st.success("🎉 TUYỆT VỜI! Một siêu phẩm kiến trúc hoàn hảo. Đội thầu rất nể phục tư duy của bạn!")
+            st.balloons() # Thêm bóng bay chúc mừng của Streamlit
         elif st.session_state.score >= 50:
             st.warning("⚠️ Nhà đã xây xong, form dáng đẹp nhưng bên trong chứa nhiều 'bom nổ chậm'. Xem báo cáo lỗi bên dưới!")
         else:
@@ -243,7 +263,16 @@ with col2:
 
         st.write("")
         if st.button("🔄 PHÁ DỠ VÀ XÂY LẠI TỪ ĐẦU"):
-            st.session_state.clear()
+            st.session_state.step = 0
+            st.session_state.score = 0
+            st.session_state.issues = []
+            st.session_state.is_selecting_material = False
+            # Trộn lại đáp án cho lần chơi mới
+            st.session_state.shuffled_options = []
+            for step in game_data:
+                opts = step["options"].copy()
+                random.shuffle(opts)
+                st.session_state.shuffled_options.append(opts)
             st.rerun()
             
     st.markdown("</div>", unsafe_allow_html=True)
