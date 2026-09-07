@@ -1,18 +1,15 @@
 import streamlit as st
 import random
 
-# --- 1. CẤU HÌNH GIAO DIỆN (GLASSMORPHISM LIGHT BLUE - SANG TRỌNG BÓNG BẨY) ---
 st.set_page_config(page_title="Design Your House", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
-    /* Nền Gradient Xanh Dương pha Trắng bóng bẩy, sang trọng */
     .stApp {
         background: linear-gradient(135deg, #e3f2fd, #e8eaf6, #bbdefb);
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* Chữ màu Xanh Đậm (Deep Blue) với hiệu ứng bóng kính */
     h1, h2, h3, h4, p, span, div, label {
         color: #0D47A1 !important;
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
@@ -22,7 +19,6 @@ st.markdown("""
         font-weight: 800;
     }
     
-    /* Tiêu đề chính to, đổ gradient chữ và sáng rực rỡ */
     h1.main-title {
         font-weight: 900;
         background: linear-gradient(to right, #1565C0, #0288D1, #1565C0);
@@ -33,7 +29,6 @@ st.markdown("""
         text-transform: uppercase;
     }
     
-    /* TÙY CHỈNH KHUNG CHỨA (CONTAINER) THÀNH KÍNH TRẮNG TRONG SUỐT (GLASSMORPHISM) */
     [data-testid="stVerticalBlockBorderWrapper"] {
         background: rgba(255, 255, 255, 0.75) !important;
         backdrop-filter: blur(15px);
@@ -42,7 +37,6 @@ st.markdown("""
         box-shadow: 0 15px 35px rgba(21, 101, 192, 0.12) !important;
     }
 
-    /* TAB CỬA SỔ KHỔNG LỒ (MODAL) ĐẸP MẮT CHO BƯỚC CHỌN VẬT LIỆU */
     .huge-modal {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(25px);
@@ -61,7 +55,6 @@ st.markdown("""
         100% { transform: scale(1); opacity: 1; }
     }
 
-    /* Nút bấm (Buttons) hiệu ứng Bóng nổi (Glossy 3D) */
     .stButton>button {
         background: linear-gradient(to bottom, #ffffff, #e3f2fd);
         color: #1565C0 !important;
@@ -92,7 +85,6 @@ st.markdown("""
         transform: none !important;
     }
     
-    /* CSS Phóng to chữ của các đáp án Radio */
     .stRadio p {
         font-size: 26px !important;
         font-weight: bold !important;
@@ -101,7 +93,6 @@ st.markdown("""
         margin-bottom: 10px;
     }
     
-    /* Ô quy trình đang xếp - Hiệu ứng phím cơ 3D */
     .selected-step-box {
         background: linear-gradient(145deg, #ffffff, #f0f7ff);
         border: 2px solid #64B5F6;
@@ -119,7 +110,6 @@ st.markdown("""
         font-size: 15px;
     }
 
-    /* Danh sách vật liệu hoàn hảo 80/80 */
     .perfect-material-box {
         background: linear-gradient(145deg, #ffffff, #e8f5e9);
         border: 2px solid #81c784;
@@ -137,7 +127,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. DỮ LIỆU TRÒ CHƠI (Đã xáo trộn vị trí đáp án đúng trong Source Code) ---
 game_data = [
     {
         "title": "🏗️ Làm Móng",
@@ -239,9 +228,8 @@ if 'shuffled_options' not in st.session_state:
         random.shuffle(opts)
         st.session_state.shuffled_options.append(opts)
 
-# =========================================================================
-# KỊCH BẢN MỞ TAB KHỔNG LỒ CHỌN VẬT LIỆU (CHIẾM TOÀN MÀN HÌNH)
-# =========================================================================
+
+
 if st.session_state.active_material_step is not None:
     idx = st.session_state.active_material_step
     current_data = game_data[idx]
@@ -252,7 +240,6 @@ if st.session_state.active_material_step is not None:
     st.markdown(f"<h3 style='font-size: 24px; color: #1565C0;'>{current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
-    # In đậm và làm to câu hỏi bằng Markdown
     st.markdown("<h2 style='font-size: 35px; color: #0D47A1; font-weight: 900; margin-bottom: 20px;'>👉 VẬT LIỆU NÀO ĐẠT TIÊU CHUẨN KỸ THUẬT?</h2>", unsafe_allow_html=True)
     
     option_texts = [opt["text"] for opt in current_opts]
