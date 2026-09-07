@@ -1,89 +1,94 @@
 import streamlit as st
 import random
 
-# --- 1. CẤU HÌNH GIAO DIỆN (GLOSSY BLUE & WHITE - KHUNG VÀNG/TRẮNG) ---
+# --- 1. CẤU HÌNH GIAO DIỆN (GLASSMORPHISM LIGHT BLUE - SANG TRỌNG BÓNG BẨY) ---
 st.set_page_config(page_title="Design Your House", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
-    /* Nền Gradient Xanh Dương pha Trắng bóng bẩy */
+    /* Nền Gradient Xanh Dương pha Trắng bóng bẩy, sang trọng */
     .stApp {
-        background: linear-gradient(135deg, #E0F2FE 0%, #0284C7 50%, #032759 100%);
+        background: linear-gradient(135deg, #e3f2fd, #e8eaf6, #bbdefb);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* Chữ màu trắng với hiệu ứng đổ bóng để dễ đọc trên nền sáng/tối */
+    /* Chữ màu Xanh Đậm (Deep Blue) với hiệu ứng bóng kính */
     h1, h2, h3, h4, p, span, div, label {
-        color: #FFFFFF !important;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
-        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        color: #0D47A1 !important;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
     }
     
     h2, h3, h4 {
         font-weight: 800;
     }
     
-    /* Tiêu đề chính to và sáng rực rỡ */
+    /* Tiêu đề chính to, đổ gradient chữ và sáng rực rỡ */
     h1.main-title {
         font-weight: 900;
-        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(0, 198, 255, 0.8) !important;
+        background: linear-gradient(to right, #1565C0, #0288D1, #1565C0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 3px 3px 8px rgba(0, 100, 255, 0.2) !important;
         letter-spacing: 4px;
         text-transform: uppercase;
     }
     
-    /* TÙY CHỈNH KHUNG CHỨA (CONTAINER) CỦA STREAMLIT THÀNH MÀU VÀNG/TRẮNG */
+    /* TÙY CHỈNH KHUNG CHỨA (CONTAINER) THÀNH KÍNH TRẮNG TRONG SUỐT (GLASSMORPHISM) */
     [data-testid="stVerticalBlockBorderWrapper"] {
-        background: rgba(255, 255, 255, 0.15) !important;
-        backdrop-filter: blur(10px);
-        border: 2px solid #FFD700 !important;
+        background: rgba(255, 255, 255, 0.75) !important;
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.9) !important;
         border-radius: 20px !important;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 15px 35px rgba(21, 101, 192, 0.12) !important;
     }
 
-    /* TAB CỬA SỔ KHỔNG LỒ (MODAL) CHO BƯỚC CHỌN VẬT LIỆU */
+    /* TAB CỬA SỔ KHỔNG LỒ (MODAL) ĐẸP MẮT CHO BƯỚC CHỌN VẬT LIỆU */
     .huge-modal {
-        background: rgba(3, 39, 89, 0.95);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(25px);
         border-radius: 24px;
         padding: 60px;
-        box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
-        border: 3px solid #FFD700;
-        animation: slideUp 0.3s ease-out;
+        box-shadow: 0 25px 60px rgba(13, 71, 161, 0.25);
+        border: 3px solid #90caf9;
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         text-align: center;
         margin: 0 auto;
         max-width: 1000px;
     }
     
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes popIn {
+        0% { transform: scale(0.9); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
     }
 
-    /* Nút bấm (Buttons) */
+    /* Nút bấm (Buttons) hiệu ứng Bóng nổi (Glossy 3D) */
     .stButton>button {
-        background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
-        color: #000000 !important;
-        border-radius: 10px;
-        font-weight: 800;
+        background: linear-gradient(to bottom, #ffffff, #e3f2fd);
+        color: #1565C0 !important;
+        border-radius: 15px;
+        font-weight: 900;
         font-size: 18px;
         padding: 15px 10px;
-        border: none;
-        transition: all 0.3s;
+        border: 2px solid #90caf9;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         width: 100%;
         text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 6px 15px rgba(21, 101, 192, 0.15);
         margin-top: 15px;
-        text-shadow: none !important;
     }
     .stButton>button:hover {
-        background: linear-gradient(90deg, #FFFFFF 0%, #FFD700 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.6);
+        border-color: #1565C0;
+        background: linear-gradient(145deg, #1E88E5, #0D47A1);
+        color: #ffffff !important;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(13, 71, 161, 0.4);
     }
     
     button[disabled] {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: rgba(255, 255, 255, 0.4) !important;
+        background: rgba(255, 255, 255, 0.5) !important;
+        color: rgba(13, 71, 161, 0.3) !important;
         box-shadow: none !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(144, 202, 249, 0.3) !important;
         transform: none !important;
     }
     
@@ -91,23 +96,23 @@ st.markdown("""
     .stRadio p {
         font-size: 26px !important;
         font-weight: bold !important;
-        color: #FFFFFF !important;
+        color: #0D47A1 !important;
         padding-left: 10px;
         margin-bottom: 10px;
     }
     
-    /* Ô quy trình đang xếp */
+    /* Ô quy trình đang xếp - Hiệu ứng phím cơ 3D */
     .selected-step-box {
-        background: rgba(255, 215, 0, 0.15);
-        border: 2px solid #FFD700;
-        border-radius: 8px;
+        background: linear-gradient(145deg, #ffffff, #f0f7ff);
+        border: 2px solid #64B5F6;
+        border-radius: 12px;
         padding: 15px 10px;
         text-align: center;
         font-weight: bold;
-        color: #FFFFFF !important;
+        color: #1565C0 !important;
         margin-bottom: 15px;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-        height: 70px;
+        box-shadow: inset 0px 3px 6px rgba(255,255,255,1), 0 5px 15px rgba(30, 136, 229, 0.15);
+        height: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -116,18 +121,18 @@ st.markdown("""
 
     /* Danh sách vật liệu hoàn hảo 80/80 */
     .perfect-material-box {
-        background: rgba(255, 215, 0, 0.15);
-        border: 2px solid #FFD700;
-        border-radius: 12px;
+        background: linear-gradient(145deg, #ffffff, #e8f5e9);
+        border: 2px solid #81c784;
+        border-radius: 15px;
         padding: 15px 20px;
-        margin-bottom: 12px;
+        margin-bottom: 15px;
         font-size: 18px;
         font-weight: bold;
-        color: #FFFFFF;
+        color: #00796B !important;
         display: flex;
         align-items: center;
         text-align: left;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        box-shadow: inset 0px 3px 6px rgba(255,255,255,1), 0 5px 15px rgba(56, 142, 60, 0.15);
     }
     </style>
 """, unsafe_allow_html=True)
@@ -243,12 +248,12 @@ if st.session_state.active_material_step is not None:
     current_opts = st.session_state.shuffled_options[idx]
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1>LỰA CHỌN VẬT LIỆU<br><span style='color: #FFD700 !important; font-size: 50px;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='font-size: 24px; color: rgba(255,255,255,0.8);'>{current_data['desc']}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h1>LỰA CHỌN VẬT LIỆU<br><span style='color: #1E88E5 !important; font-size: 50px;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='font-size: 24px; color: #1565C0;'>{current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
     # In đậm và làm to câu hỏi bằng Markdown
-    st.markdown("<h2 style='font-size: 35px; color: #FFFFFF; font-weight: 900; margin-bottom: 20px;'>👉 VẬT LIỆU NÀO ĐẠT TIÊU CHUẨN KỸ THUẬT?</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='font-size: 35px; color: #0D47A1; font-weight: 900; margin-bottom: 20px;'>👉 VẬT LIỆU NÀO ĐẠT TIÊU CHUẨN KỸ THUẬT?</h2>", unsafe_allow_html=True)
     
     option_texts = [opt["text"] for opt in current_opts]
     # label_visibility="collapsed" để ẩn cái label mặc định bé xíu của Streamlit
@@ -369,21 +374,21 @@ else:
         elif st.session_state.phase == 3:
             with st.container(border=True):
                 st.markdown("<h2>🎯 HỒ SƠ NGHIỆM THU CÔNG TRÌNH</h2>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Điểm An toàn: <span style='color: #FFD700 !important; font-size: 50px;'>{st.session_state.score}/80 Điểm</span></h3>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Điểm An toàn: <span style='color: #1E88E5 !important; font-size: 50px;'>{st.session_state.score}/80 Điểm</span></h3>", unsafe_allow_html=True)
                 
                 if st.session_state.score == 80:
                     st.success("✅ ĐẠT CHUẨN QUỐC TẾ. Công trình hoàn hảo tuyệt đối!")
                     st.balloons()
                     
                     st.markdown("---")
-                    st.markdown("<h3 style='text-align: center; margin-bottom: 20px; color: #FFD700 !important;'>🏆 BẢNG VẬT LIỆU CHUẨN ĐÃ SỬ DỤNG</h3>", unsafe_allow_html=True)
+                    st.markdown("<h3 style='text-align: center; margin-bottom: 20px; color: #0288D1 !important;'>🏆 BẢNG VẬT LIỆU CHUẨN ĐÃ SỬ DỤNG</h3>", unsafe_allow_html=True)
                     
                     for item in game_data:
                         correct_material = next(opt["text"] for opt in item["options"] if opt["correct"])
                         st.markdown(f"""
                         <div class='perfect-material-box'>
-                            <span style='width: 35%;'>{item['title']}</span> 
-                            <span style='width: 65%; border-left: 2px solid rgba(255,255,255,0.4); padding-left: 15px;'>{correct_material}</span>
+                            <span style='width: 35%; color: #00796B !important;'>{item['title']}</span> 
+                            <span style='width: 65%; border-left: 2px solid rgba(0, 121, 107, 0.3); padding-left: 15px; color: #004D40 !important;'>{correct_material}</span>
                         </div>
                         """, unsafe_allow_html=True)
                         
@@ -395,7 +400,7 @@ else:
                 if st.session_state.issues:
                     st.markdown("#### 🛠️ BÁO CÁO SỰ CỐ VẬT LIỆU:")
                     for issue in st.session_state.issues:
-                        st.markdown(f"<p style='padding-left: 10px; border-left: 3px solid #FFD700; font-size: 18px;'>{issue}</p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='padding-left: 10px; border-left: 3px solid #1E88E5; font-size: 18px;'>{issue}</p>", unsafe_allow_html=True)
 
                 st.write("")
                 if st.button("🔄 BẮT ĐẦU DỰ ÁN MỚI (PLAY AGAIN)"):
