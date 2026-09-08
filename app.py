@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 
-# --- 1. CẤU HÌNH GIAO DIỆN (XANH TRẮNG NƯỚC BIỂN NHẠT - KHÔNG LẤP LÁNH) ---
+# --- 1. CẤU HÌNH GIAO DIỆN (XANH TRẮNG NƯỚC BIỂN NHẠT - TOÀN BỘ CHỮ IN ĐẬM) ---
 st.set_page_config(page_title="Design Your House", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
@@ -11,15 +11,16 @@ st.markdown("""
         background: linear-gradient(135deg, #F4FDFF 0%, #E0F7FA 45%, #81D4FA 100%);
     }
     
-    /* Chữ đổi sang màu Xanh Đen (Navy/Slate) để dễ đọc trên nền sáng */
-    h1, h2, h3, h4, p, span, div, label {
+    /* TOÀN BỘ CHỮ ÉP IN ĐẬM (Font-weight: 800/900) VÀ ĐỔI MÀU XANH ĐEN SẮC NÉT */
+    h1, h2, h3, h4, h5, h6, p, span, div, label, li, a {
         color: #0F172A !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
+        font-weight: 800 !important; /* Ép đậm toàn bộ chữ */
     }
     
     h2 { font-size: 30px !important; font-weight: 900 !important; color: #0284C7 !important; }
-    h3 { font-size: 24px !important; font-weight: 800 !important; color: #0369A1 !important; }
-    h4 { font-size: 20px !important; font-weight: 700 !important; }
+    h3 { font-size: 24px !important; font-weight: 900 !important; color: #0369A1 !important; }
+    h4 { font-size: 20px !important; font-weight: 900 !important; }
     
     /* TÙY CHỈNH KHUNG CHỨA BẢNG ĐIỀU KHIỂN (Trong suốt mờ) */
     [data-testid="stVerticalBlockBorderWrapper"] {
@@ -54,7 +55,7 @@ st.markdown("""
         background: linear-gradient(90deg, #0284C7 0%, #0EA5E9 100%);
         color: #FFFFFF !important;
         border-radius: 12px;
-        font-weight: 800;
+        font-weight: 900 !important; /* Nút bấm siêu đậm */
         font-size: 16px !important; 
         padding: 15px 10px !important; 
         border: none;
@@ -88,7 +89,7 @@ st.markdown("""
     /* CSS Chữ của các đáp án Radio */
     .stRadio p {
         font-size: 20px !important; 
-        font-weight: 700 !important;
+        font-weight: 900 !important; /* Đáp án siêu đậm */
         color: #0F172A !important;
         padding-left: 10px;
         margin-bottom: 10px;
@@ -102,7 +103,7 @@ st.markdown("""
         border-radius: 10px;
         padding: 10px 10px;
         text-align: center;
-        font-weight: 800;
+        font-weight: 900 !important; /* Chữ ô chọn siêu đậm */
         color: #0369A1 !important;
         margin-bottom: 15px;
         box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
@@ -121,7 +122,7 @@ st.markdown("""
         padding: 15px 20px;
         margin-bottom: 12px;
         font-size: 18px; 
-        font-weight: 800;
+        font-weight: 900 !important; /* Chữ kết quả siêu đậm */
         color: #047857 !important;
         display: flex;
         align-items: center;
@@ -130,6 +131,7 @@ st.markdown("""
     }
     .perfect-material-box span {
         color: #047857 !important;
+        font-weight: 900 !important;
     }
     </style>
 """, unsafe_allow_html=True)
