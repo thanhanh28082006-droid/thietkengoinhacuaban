@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 
-# --- 1. CẤU HÌNH GIAO DIỆN (XANH TRẮNG NƯỚC BIỂN NHẠT - TOÀN BỘ CHỮ IN ĐẬM) ---
+# --- 1. CẤU HÌNH GIAO DIỆN (XANH TRẮNG NƯỚC BIỂN NHẠT - CHỮ TO, IN ĐẬM) ---
 st.set_page_config(page_title="Design Your House", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
@@ -11,16 +11,17 @@ st.markdown("""
         background: linear-gradient(135deg, #F4FDFF 0%, #E0F7FA 45%, #81D4FA 100%);
     }
     
-    /* TOÀN BỘ CHỮ ÉP IN ĐẬM (Font-weight: 800/900) VÀ ĐỔI MÀU XANH ĐEN SẮC NÉT */
+    /* TOÀN BỘ CHỮ ÉP IN ĐẬM VÀ ĐỔI MÀU XANH ĐEN */
     h1, h2, h3, h4, h5, h6, p, span, div, label, li, a {
         color: #0F172A !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
         font-weight: 800 !important;
     }
     
-    h2 { font-size: 30px !important; font-weight: 900 !important; color: #0284C7 !important; }
-    h3 { font-size: 24px !important; font-weight: 900 !important; color: #0369A1 !important; }
-    h4 { font-size: 20px !important; font-weight: 900 !important; }
+    /* TĂNG KÍCH THƯỚC CHỮ TỔNG THỂ */
+    h2 { font-size: 36px !important; font-weight: 900 !important; color: #0284C7 !important; }
+    h3 { font-size: 28px !important; font-weight: 900 !important; color: #0369A1 !important; }
+    h4 { font-size: 24px !important; font-weight: 900 !important; }
     
     /* TÙY CHỈNH KHUNG CHỨA BẢNG ĐIỀU KHIỂN (Trong suốt mờ) */
     [data-testid="stVerticalBlockBorderWrapper"] {
@@ -29,7 +30,7 @@ st.markdown("""
         border: 2px solid #38BDF8 !important;
         border-radius: 20px !important;
         box-shadow: 0 5px 15px rgba(2, 132, 199, 0.1) !important;
-        padding: 10px;
+        padding: 15px;
     }
 
     /* TAB CỬA SỔ KHỔNG LỒ (MODAL CHỌN VẬT LIỆU) */
@@ -50,14 +51,14 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Nút bấm (Buttons) Xanh Dương Biển */
+    /* Nút bấm (Buttons) Xanh Dương Biển - PHÓNG TO */
     .stButton>button {
         background: linear-gradient(90deg, #0284C7 0%, #0EA5E9 100%);
         color: #FFFFFF !important;
-        border-radius: 12px;
+        border-radius: 15px;
         font-weight: 900 !important;
-        font-size: 16px !important; 
-        padding: 15px 10px !important; 
+        font-size: 22px !important; /* Tăng size chữ nút */
+        padding: 20px 15px !important; 
         border: none;
         transition: all 0.3s;
         width: 100%;
@@ -67,7 +68,7 @@ st.markdown("""
         white-space: normal !important; 
         word-wrap: break-word;
         height: auto !important;
-        min-height: 80px; 
+        min-height: 100px; /* Tăng chiều cao nút */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -78,15 +79,6 @@ st.markdown("""
         box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
     }
     
-    /* Nút bỏ qua bước (Nổi bật) */
-    .btn-skip > button {
-        background: linear-gradient(90deg, #F59E0B 0%, #FCD34D 100%) !important;
-        color: #78350F !important;
-        border: 2px solid #F59E0B !important;
-        min-height: 50px !important;
-        margin-top: 0px !important;
-    }
-    
     button[disabled] {
         background: rgba(15, 23, 42, 0.05) !important;
         color: rgba(15, 23, 42, 0.4) !important;
@@ -95,32 +87,32 @@ st.markdown("""
         transform: none !important;
     }
     
-    /* CSS Chữ của các đáp án Radio */
+    /* CSS Chữ của các đáp án Radio - TĂNG SIZE */
     .stRadio p {
-        font-size: 20px !important; 
+        font-size: 24px !important; 
         font-weight: 900 !important;
         color: #0F172A !important;
         padding-left: 10px;
-        margin-bottom: 10px;
-        line-height: 1.4;
+        margin-bottom: 12px;
+        line-height: 1.5;
     }
     
-    /* Ô quy trình đang xếp */
+    /* Ô quy trình đang xếp - TĂNG KÍCH THƯỚC */
     .selected-step-box {
         background: #F0F9FF;
-        border: 2px solid #38BDF8;
-        border-radius: 10px;
-        padding: 10px 10px;
+        border: 3px solid #38BDF8;
+        border-radius: 12px;
+        padding: 10px 15px;
         text-align: center;
         font-weight: 900 !important;
         color: #0369A1 !important;
         margin-bottom: 15px;
         box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
-        height: 80px; 
+        height: 100px; /* Ô to hơn */
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 16px; 
+        font-size: 20px; /* Chữ to hơn */
     }
 
     /* Danh sách vật liệu hoàn hảo 80/80 */
@@ -128,9 +120,9 @@ st.markdown("""
         background: #ECFDF5;
         border: 2px solid #10B981;
         border-radius: 12px;
-        padding: 15px 20px;
-        margin-bottom: 12px;
-        font-size: 18px; 
+        padding: 20px 25px;
+        margin-bottom: 15px;
+        font-size: 22px; 
         font-weight: 900 !important;
         color: #047857 !important;
         display: flex;
@@ -141,6 +133,7 @@ st.markdown("""
     .perfect-material-box span {
         color: #047857 !important;
         font-weight: 900 !important;
+        font-size: 20px !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -223,13 +216,13 @@ game_data = [
 
 CORRECT_SEQUENCE = [step["title"] for step in game_data]
 
-# --- 3. QUẢN LÝ TRẠNG THÁI (ĐÃ FIX LỖI CACHE 0/8) ---
+# --- 3. QUẢN LÝ TRẠNG THÁI ---
 if 'phase' not in st.session_state:
     st.session_state.phase = 1 
 if 'user_sequence' not in st.session_state:
     st.session_state.user_sequence = []
 
-# Xóa cache nếu phát hiện chỉnh sửa source code
+# Logic xóa cache
 if 'shuffled_processes' not in st.session_state or set(st.session_state.shuffled_processes) != set(CORRECT_SEQUENCE):
     temp = CORRECT_SEQUENCE.copy()
     random.shuffle(temp)
@@ -249,11 +242,11 @@ if st.session_state.active_material_step is not None:
     current_opts = current_data["options"] 
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='font-size: 38px;'>LỰA CHỌN VẬT LIỆU<br><span style='color: #0284C7 !important;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='font-size: 20px; color: #475569 !important; margin-bottom: 20px;'>💡 {current_data['desc']}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='font-size: 42px;'>LỰA CHỌN VẬT LIỆU<br><span style='color: #0284C7 !important;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='font-size: 24px; color: #475569 !important; margin-bottom: 20px;'>💡 {current_data['desc']}</h3>", unsafe_allow_html=True)
     st.write("---")
     
-    st.markdown("<h2 style='font-size: 28px; margin-bottom: 20px;'>👉 VẬT LIỆU NÀO ĐẠT TIÊU CHUẨN KỸ THUẬT? 🧐</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='font-size: 32px; margin-bottom: 20px;'>👉 VẬT LIỆU NÀO ĐẠT TIÊU CHUẨN KỸ THUẬT? 🧐</h2>", unsafe_allow_html=True)
     
     option_texts = [opt["text"] for opt in current_opts]
     choice = st.radio("Chọn vật liệu", option_texts, index=None, label_visibility="collapsed")
@@ -288,7 +281,7 @@ else:
     try:
         st.image("image_04e8c0.png", use_container_width=True)
     except:
-        st.markdown("<h1 style='font-size: 45px; font-weight: 900; color: #0369A1 !important;'>🏡 DESIGN YOUR HOUSE 🏡</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='font-size: 55px; font-weight: 900; color: #0369A1 !important;'>🏡 DESIGN YOUR HOUSE 🏡</h1>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([3, 7], gap="large")
@@ -307,18 +300,7 @@ else:
         if st.session_state.phase == 1:
             with st.container(border=True):
                 st.markdown("<h2>📌 BƯỚC 1: SẮP XẾP QUY TRÌNH</h2>", unsafe_allow_html=True)
-                
-                # Cột này dùng để chứa Hướng dẫn và Nút SKIP
-                col_hd, col_skip = st.columns([7, 3])
-                with col_hd:
-                    st.markdown("<p style='font-size: 16px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm chọn các khối bên dưới để ghép vào bảng thi công theo trình tự chuẩn!</p>", unsafe_allow_html=True)
-                with col_skip:
-                    st.markdown("<div class='btn-skip'>", unsafe_allow_html=True)
-                    if st.button("⏭️ QUA BƯỚC 2 LUÔN"):
-                        st.session_state.user_sequence = CORRECT_SEQUENCE.copy()
-                        st.session_state.phase = 2
-                        st.rerun()
-                    st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size: 20px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm chọn các khối bên dưới để ghép vào bảng thi công theo trình tự chuẩn!</p>", unsafe_allow_html=True)
                 
                 st.markdown("<h4 style='margin-top: 15px;'>📋 BẢNG THỨ TỰ CỦA BẠN:</h4>", unsafe_allow_html=True)
                 if not st.session_state.user_sequence:
@@ -356,9 +338,18 @@ else:
                                 st.rerun()
                                 
                     st.write("")
-                    if len(st.session_state.user_sequence) > 0:
-                        if st.button("⏪ XÓA LÀM LẠI TỪ ĐẦU ⏪"):
-                            st.session_state.user_sequence = []
+                    st.markdown("---")
+                    # ĐẶT 2 NÚT DƯỚI CÙNG LÀ XÓA VÀ BỎ QUA QUA BƯỚC 2
+                    col_clear, col_skip = st.columns(2)
+                    with col_clear:
+                        if len(st.session_state.user_sequence) > 0:
+                            if st.button("⏪ XÓA LÀM LẠI TỪ ĐẦU ⏪"):
+                                st.session_state.user_sequence = []
+                                st.rerun()
+                    with col_skip:
+                        if st.button("⏭️ QUA BƯỚC 2"):
+                            st.session_state.user_sequence = CORRECT_SEQUENCE.copy()
+                            st.session_state.phase = 2
                             st.rerun()
             
         # -----------------------------------------------------
@@ -367,7 +358,7 @@ else:
         elif st.session_state.phase == 2:
             with st.container(border=True):
                 st.markdown("<h2>🛒 BƯỚC 2: QUẢN LÝ VẬT TƯ</h2>", unsafe_allow_html=True)
-                st.markdown("<p style='font-size: 16px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm vào các hạng mục bên dưới để phê duyệt vật liệu xây dựng!</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size: 20px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm vào các hạng mục bên dưới để phê duyệt vật liệu xây dựng!</p>", unsafe_allow_html=True)
                 st.write("")
                 
                 btn_cols = st.columns(4) 
@@ -386,7 +377,7 @@ else:
         elif st.session_state.phase == 3:
             with st.container(border=True):
                 st.markdown("<h2>🎯 HỒ SƠ NGHIỆM THU CÔNG TRÌNH 🏆</h2>", unsafe_allow_html=True)
-                st.markdown(f"<h3>ĐIỂM AN TOÀN KỸ THUẬT: <br><span style='color: #0284C7 !important; font-size: 55px;'>{st.session_state.score} / 80 ĐIỂM</span></h3>", unsafe_allow_html=True)
+                st.markdown(f"<h3>ĐIỂM AN TOÀN KỸ THUẬT: <br><span style='color: #0284C7 !important; font-size: 60px;'>{st.session_state.score} / 80 ĐIỂM</span></h3>", unsafe_allow_html=True)
                 
                 if st.session_state.score == 80:
                     st.success("✅ ĐẠT CHUẨN QUỐC TẾ! CÔNG TRÌNH HOÀN HẢO TUYỆT ĐỐI! 🎉")
@@ -399,8 +390,8 @@ else:
                         correct_material = next(opt["text"] for opt in item["options"] if opt["correct"])
                         st.markdown(f"""
                         <div class='perfect-material-box'>
-                            <span style='width: 35%; font-size: 16px;'>{item['title']}</span> 
-                            <span style='width: 65%; border-left: 2px solid rgba(4,120,87,0.3); padding-left: 15px; font-size: 16px;'>{correct_material}</span>
+                            <span style='width: 35%; font-size: 20px;'>{item['title']}</span> 
+                            <span style='width: 65%; border-left: 3px solid rgba(4,120,87,0.3); padding-left: 15px; font-size: 20px;'>{correct_material}</span>
                         </div>
                         """, unsafe_allow_html=True)
                         
@@ -412,7 +403,7 @@ else:
                 if st.session_state.issues:
                     st.markdown("<h4 style='margin-top: 20px;'>🛠️ BÁO CÁO SỰ CỐ VẬT LIỆU:</h4>", unsafe_allow_html=True)
                     for issue in st.session_state.issues:
-                        st.markdown(f"<p style='padding-left: 15px; border-left: 4px solid #EF4444; font-size: 16px; font-weight: bold;'>{issue}</p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='padding-left: 15px; border-left: 4px solid #EF4444; font-size: 18px; font-weight: bold;'>{issue}</p>", unsafe_allow_html=True)
 
                 st.write("")
                 if st.button("🔄 BẮT ĐẦU DỰ ÁN MỚI 🔄"):
