@@ -15,7 +15,7 @@ st.markdown("""
     h1, h2, h3, h4, h5, h6, p, span, div, label, li, a {
         color: #0F172A !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
-        font-weight: 800 !important; /* Ép đậm toàn bộ chữ */
+        font-weight: 800 !important;
     }
     
     h2 { font-size: 30px !important; font-weight: 900 !important; color: #0284C7 !important; }
@@ -55,7 +55,7 @@ st.markdown("""
         background: linear-gradient(90deg, #0284C7 0%, #0EA5E9 100%);
         color: #FFFFFF !important;
         border-radius: 12px;
-        font-weight: 900 !important; /* Nút bấm siêu đậm */
+        font-weight: 900 !important;
         font-size: 16px !important; 
         padding: 15px 10px !important; 
         border: none;
@@ -78,6 +78,15 @@ st.markdown("""
         box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
     }
     
+    /* Nút bỏ qua bước (Nổi bật) */
+    .btn-skip > button {
+        background: linear-gradient(90deg, #F59E0B 0%, #FCD34D 100%) !important;
+        color: #78350F !important;
+        border: 2px solid #F59E0B !important;
+        min-height: 50px !important;
+        margin-top: 0px !important;
+    }
+    
     button[disabled] {
         background: rgba(15, 23, 42, 0.05) !important;
         color: rgba(15, 23, 42, 0.4) !important;
@@ -89,7 +98,7 @@ st.markdown("""
     /* CSS Chữ của các đáp án Radio */
     .stRadio p {
         font-size: 20px !important; 
-        font-weight: 900 !important; /* Đáp án siêu đậm */
+        font-weight: 900 !important;
         color: #0F172A !important;
         padding-left: 10px;
         margin-bottom: 10px;
@@ -103,7 +112,7 @@ st.markdown("""
         border-radius: 10px;
         padding: 10px 10px;
         text-align: center;
-        font-weight: 900 !important; /* Chữ ô chọn siêu đậm */
+        font-weight: 900 !important;
         color: #0369A1 !important;
         margin-bottom: 15px;
         box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
@@ -122,7 +131,7 @@ st.markdown("""
         padding: 15px 20px;
         margin-bottom: 12px;
         font-size: 18px; 
-        font-weight: 900 !important; /* Chữ kết quả siêu đậm */
+        font-weight: 900 !important;
         color: #047857 !important;
         display: flex;
         align-items: center;
@@ -158,7 +167,7 @@ game_data = [
     },
     {
         "title": "🧱 XÂY TƯỜNG",
-        "desc": "Lớp áo giáp bảo vệ không gian sống khỏi thời tiết.",
+        "desc": "Lớp áo bảo vệ không gian sống khỏi thời tiết.",
         "options": [
             {"text": "🧱 Gạch đất nung / Gạch AAC (Fired brick / AAC)", "correct": True, "error": ""},
             {"text": "🌑 Gạch xỉ than tái chế (Recycled cinder block)", "correct": False, "error": "- Tường Xỉ than: Hút nước như bọt biển, ngập ngụa khi mưa."},
@@ -298,7 +307,18 @@ else:
         if st.session_state.phase == 1:
             with st.container(border=True):
                 st.markdown("<h2>📌 BƯỚC 1: SẮP XẾP QUY TRÌNH</h2>", unsafe_allow_html=True)
-                st.markdown("<p style='font-size: 16px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm chọn các khối bên dưới để ghép vào bảng thi công theo trình tự chuẩn!</p>", unsafe_allow_html=True)
+                
+                # Cột này dùng để chứa Hướng dẫn và Nút SKIP
+                col_hd, col_skip = st.columns([7, 3])
+                with col_hd:
+                    st.markdown("<p style='font-size: 16px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm chọn các khối bên dưới để ghép vào bảng thi công theo trình tự chuẩn!</p>", unsafe_allow_html=True)
+                with col_skip:
+                    st.markdown("<div class='btn-skip'>", unsafe_allow_html=True)
+                    if st.button("⏭️ QUA BƯỚC 2 LUÔN"):
+                        st.session_state.user_sequence = CORRECT_SEQUENCE.copy()
+                        st.session_state.phase = 2
+                        st.rerun()
+                    st.markdown("</div>", unsafe_allow_html=True)
                 
                 st.markdown("<h4 style='margin-top: 15px;'>📋 BẢNG THỨ TỰ CỦA BẠN:</h4>", unsafe_allow_html=True)
                 if not st.session_state.user_sequence:
