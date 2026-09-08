@@ -1,65 +1,43 @@
 import streamlit as st
 import random
 
-# --- 1. CẤU HÌNH GIAO DIỆN (XANH NHẠT LẤP LÁNH - CHỮ ĐẬM SẮC NÉT) ---
+# --- 1. CẤU HÌNH GIAO DIỆN (XANH TRẮNG NƯỚC BIỂN NHẠT - KHÔNG LẤP LÁNH) ---
 st.set_page_config(page_title="Design Your House", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
-    /* Nền Gradient Xanh Nhạt (Baby Blue) siêu dịu mắt */
+    /* Nền Gradient Xanh Trắng Nước Biển Nhạt (Light Ocean Blue) */
     .stApp {
-        background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #BAE6FD 100%);
-        position: relative;
+        background: linear-gradient(135deg, #F4FDFF 0%, #E0F7FA 45%, #81D4FA 100%);
     }
     
-    /* Lớp phủ hạt lấp lánh (Sparkles) mờ ảo đằng sau */
-    .sparkles-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-        pointer-events: none;
-        z-index: 0;
-        animation: twinkle 4s infinite alternate;
-        opacity: 0.4;
-    }
-    
-    @keyframes twinkle {
-        0% { opacity: 0.2; transform: scale(1); }
-        100% { opacity: 0.6; transform: scale(1.03); }
-    }
-    
-    .main .block-container {
-        z-index: 10;
-        position: relative;
-    }
-    
-    /* Đổi toàn bộ chữ sang Xanh Đen (Navy) để tương phản tốt trên nền sáng */
+    /* Chữ đổi sang màu Xanh Đen (Navy/Slate) để dễ đọc trên nền sáng */
     h1, h2, h3, h4, p, span, div, label {
         color: #0F172A !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
     }
     
-    h2 { font-size: 32px !important; font-weight: 900 !important; color: #0284C7 !important; }
-    h3 { font-size: 26px !important; font-weight: 800 !important; color: #0369A1 !important; }
-    h4 { font-size: 22px !important; font-weight: 700 !important; }
+    h2 { font-size: 30px !important; font-weight: 900 !important; color: #0284C7 !important; }
+    h3 { font-size: 24px !important; font-weight: 800 !important; color: #0369A1 !important; }
+    h4 { font-size: 20px !important; font-weight: 700 !important; }
     
-    /* KHUNG BẢNG ĐIỀU KHIỂN (Trong suốt mờ) */
+    /* TÙY CHỈNH KHUNG CHỨA BẢNG ĐIỀU KHIỂN (Trong suốt mờ) */
     [data-testid="stVerticalBlockBorderWrapper"] {
-        background: rgba(255, 255, 255, 0.6) !important;
-        backdrop-filter: blur(12px);
-        border: 2px solid #7DD3FC !important;
+        background: rgba(255, 255, 255, 0.75) !important;
+        backdrop-filter: blur(10px);
+        border: 2px solid #38BDF8 !important;
         border-radius: 20px !important;
-        box-shadow: 0 8px 20px rgba(2, 132, 199, 0.1) !important;
-        padding: 15px;
+        box-shadow: 0 5px 15px rgba(2, 132, 199, 0.1) !important;
+        padding: 10px;
     }
 
-    /* TAB CỬA SỔ KHỔNG LỒ (MODAL) */
+    /* TAB CỬA SỔ KHỔNG LỒ (MODAL CHỌN VẬT LIỆU) */
     .huge-modal {
         background: rgba(255, 255, 255, 0.98);
         border-radius: 24px;
         padding: 40px 50px;
-        box-shadow: 0 15px 50px rgba(2, 132, 199, 0.25);
-        border: 3px solid #38BDF8;
+        box-shadow: 0 10px 40px rgba(2, 132, 199, 0.25);
+        border: 3px solid #0EA5E9;
         animation: slideUp 0.3s ease-out;
         text-align: center;
         margin: 0 auto;
@@ -71,7 +49,7 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Nút bấm (Buttons) Xanh Dương Biển Bóng Bẩy */
+    /* Nút bấm (Buttons) Xanh Dương Biển */
     .stButton>button {
         background: linear-gradient(90deg, #0284C7 0%, #0EA5E9 100%);
         color: #FFFFFF !important;
@@ -83,7 +61,7 @@ st.markdown("""
         transition: all 0.3s;
         width: 100%;
         text-transform: uppercase;
-        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
         margin-top: 10px;
         white-space: normal !important; 
         word-wrap: break-word;
@@ -96,7 +74,7 @@ st.markdown("""
     .stButton>button:hover {
         background: linear-gradient(90deg, #0369A1 0%, #0284C7 100%);
         transform: translateY(-3px);
-        box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4);
+        box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
     }
     
     button[disabled] {
@@ -107,34 +85,35 @@ st.markdown("""
         transform: none !important;
     }
     
-    /* Text trong Radio Button (Khi chọn vật liệu) */
+    /* CSS Chữ của các đáp án Radio */
     .stRadio p {
-        font-size: 22px !important; 
+        font-size: 20px !important; 
         font-weight: 700 !important;
         color: #0F172A !important;
         padding-left: 10px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
+        line-height: 1.4;
     }
     
-    /* Ô quy trình đang xếp - Style gọn gàng sang trọng */
+    /* Ô quy trình đang xếp */
     .selected-step-box {
-        background: #FFFFFF;
+        background: #F0F9FF;
         border: 2px solid #38BDF8;
-        border-radius: 12px;
-        padding: 10px;
+        border-radius: 10px;
+        padding: 10px 10px;
         text-align: center;
         font-weight: 800;
-        color: #0284C7 !important;
+        color: #0369A1 !important;
         margin-bottom: 15px;
-        box-shadow: 0 4px 10px rgba(2, 132, 199, 0.08);
-        height: 85px; 
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
+        height: 80px; 
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 16px; 
     }
 
-    /* Bảng vật liệu hoàn hảo 80/80 */
+    /* Danh sách vật liệu hoàn hảo 80/80 */
     .perfect-material-box {
         background: #ECFDF5;
         border: 2px solid #10B981;
@@ -147,13 +126,12 @@ st.markdown("""
         display: flex;
         align-items: center;
         text-align: left;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
     }
-    .perfect-material-box span { color: #047857 !important; }
+    .perfect-material-box span {
+        color: #047857 !important;
+    }
     </style>
-    
-    <!-- Lớp phủ lấp lánh -->
-    <div class="sparkles-overlay"></div>
 """, unsafe_allow_html=True)
 
 # --- 2. DỮ LIỆU TRÒ CHƠI ---
@@ -240,12 +218,12 @@ if 'phase' not in st.session_state:
 if 'user_sequence' not in st.session_state:
     st.session_state.user_sequence = []
 
-# ĐOẠN NÀY LÀ CHÌA KHÓA: Nếu phát hiện dữ liệu cũ bị lưu cache, lập tức xóa sạch và tạo mới
+# Xóa cache nếu phát hiện chỉnh sửa source code
 if 'shuffled_processes' not in st.session_state or set(st.session_state.shuffled_processes) != set(CORRECT_SEQUENCE):
     temp = CORRECT_SEQUENCE.copy()
     random.shuffle(temp)
     st.session_state.shuffled_processes = temp
-    st.session_state.user_sequence = [] # Xóa sạch chuỗi bị sai cũ
+    st.session_state.user_sequence = [] 
     st.session_state.completed_materials = []
     st.session_state.score = 0
     st.session_state.issues = []
@@ -257,7 +235,7 @@ if 'shuffled_processes' not in st.session_state or set(st.session_state.shuffled
 if st.session_state.active_material_step is not None:
     idx = st.session_state.active_material_step
     current_data = game_data[idx]
-    current_opts = current_data["options"] # Tùy chọn cố định, không xáo trộn lung tung nữa
+    current_opts = current_data["options"] 
     
     st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
     st.markdown(f"<h1 style='font-size: 38px;'>LỰA CHỌN VẬT LIỆU<br><span style='color: #0284C7 !important;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
@@ -318,7 +296,7 @@ else:
         if st.session_state.phase == 1:
             with st.container(border=True):
                 st.markdown("<h2>📌 BƯỚC 1: SẮP XẾP QUY TRÌNH</h2>", unsafe_allow_html=True)
-                st.markdown("<p style='font-size: 16px;'>✨ Hướng dẫn: Bấm chọn các khối bên dưới để ghép vào bảng thi công theo trình tự chuẩn!</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size: 16px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm chọn các khối bên dưới để ghép vào bảng thi công theo trình tự chuẩn!</p>", unsafe_allow_html=True)
                 
                 st.markdown("<h4 style='margin-top: 15px;'>📋 BẢNG THỨ TỰ CỦA BẠN:</h4>", unsafe_allow_html=True)
                 if not st.session_state.user_sequence:
@@ -367,7 +345,7 @@ else:
         elif st.session_state.phase == 2:
             with st.container(border=True):
                 st.markdown("<h2>🛒 BƯỚC 2: QUẢN LÝ VẬT TƯ</h2>", unsafe_allow_html=True)
-                st.markdown("<p style='font-size: 16px;'>✨ Hướng dẫn: Bấm vào các hạng mục bên dưới để phê duyệt vật liệu xây dựng!</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size: 16px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm vào các hạng mục bên dưới để phê duyệt vật liệu xây dựng!</p>", unsafe_allow_html=True)
                 st.write("")
                 
                 btn_cols = st.columns(4) 
@@ -416,6 +394,5 @@ else:
 
                 st.write("")
                 if st.button("🔄 BẮT ĐẦU DỰ ÁN MỚI 🔄"):
-                    # Reset hoàn toàn state để chơi lại từ đầu sạch sẽ
                     st.session_state.clear()
                     st.rerun()
