@@ -4,49 +4,53 @@ import time
 # --- CẤU HÌNH TRANG ---
 st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
 
-# --- DỮ LIỆU 11 CÂU HỎI TRUNG THU ---
+# --- DỮ LIỆU 11 CÂU HỎI TRUNG THU (4 Hình ảnh, 4 Video) ---
 QUESTIONS = [
     {
         "id": 1,
         "word": "CHÚC",
-        "question": "Hình ảnh dưới đây gợi nhớ đến loại bánh truyền thống nào của dịp Tết Trung Thu?",
-        "image": "https://images.unsplash.com/photo-1600832345595-5c1dfa0d9b4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", # Bạn có thể thay bằng file ảnh của bạn ví dụ "banh_trung_thu.jpg"
-        "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh dẻo", "D. Bánh gai"],
-        "answer": "C. Bánh dẻo"
+        "question": "Hình ảnh dưới đây gợi nhớ đến loại bánh truyền thống nào không thể thiếu của dịp Tết Trung Thu?",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Mooncakes.jpg/800px-Mooncakes.jpg", # Bạn có thể thay bằng "hinh_1.jpg"
+        "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh nướng, bánh dẻo", "D. Bánh gai"],
+        "answer": "C. Bánh nướng, bánh dẻo"
     },
     {
         "id": 2,
         "word": "CÔ",
-        "question": "Lắng nghe đoạn nhạc sau. Theo sự tích dân gian Việt Nam, bài hát nhắc đến ai phải ngồi dưới gốc cây đa?",
-        "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", # Bạn có thể để file nhạc của bạn vào cùng thư mục, ví dụ "nhac_cuoi.mp3"
+        "question": "Lắng nghe đoạn video sau. Theo sự tích dân gian Việt Nam, nhân vật này là ai?",
+        "video": "https://www.youtube.com/watch?v=o04iK0nZomE", # Thay bằng link YouTube bài Thằng Cuội hoặc "video_2.mp4"
         "options": ["A. Hậu Nghệ", "B. Chú Cuội", "C. Thiên Lôi", "D. Ngọc Hoàng"],
         "answer": "B. Chú Cuội"
     },
     {
         "id": 3,
         "word": "VÀ",
-        "question": "Món đồ chơi rực rỡ làm từ tre và giấy bóng kính đỏ, gắn liền với tuổi thơ đêm rằm là gì?",
+        "question": "Đây là món đồ chơi rực rỡ làm từ tre và giấy bóng kính đỏ, gắn liền với tuổi thơ đêm rằm. Tên của nó là gì?",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Den_ong_sao.jpg/800px-Den_ong_sao.jpg", # Bạn có thể thay bằng "hinh_3.jpg"
         "options": ["A. Tò he", "B. Đèn kéo quân", "C. Mặt nạ giấy bồi", "D. Đèn ông sao"],
         "answer": "D. Đèn ông sao"
     },
     {
         "id": 4,
         "word": "CẢ",
-        "question": "Con vật thiêng liêng nào thường dẫn đầu đoàn múa rộn ràng trong tiếng trống đêm Trung thu?",
+        "question": "Xem đoạn video sau: Con vật thiêng liêng nào thường dẫn đầu đoàn múa rộn ràng trong tiếng trống đêm Trung thu?",
+        "video": "https://www.youtube.com/watch?v=QxV-4fXJ-6U", # Thay bằng link YouTube Múa lân hoặc "video_4.mp4"
         "options": ["A. Con lân", "B. Con rồng", "C. Con cá chép", "D. Con phượng hoàng"],
         "answer": "A. Con lân"
     },
     {
         "id": 5,
         "word": "LỚP",
-        "question": "Ngoài tên gọi 'Tết Thiếu nhi', Tết Trung thu còn được biết đến với tên gọi vô cùng ý nghĩa nào?",
+        "question": "Hình ảnh mâm cỗ này mang ý nghĩa gia đình đoàn tụ. Ngoài tên gọi 'Tết Thiếu nhi', Tết Trung thu còn được biết đến với tên gọi nào?",
+        "image": "https://file1.dangcongsan.vn/data/0/images/2021/09/21/haianh/mam-co-trung-thu-3-16321287950941916374945-0-0-721-1153-crop-16321288079021021469033.jpg", # Bạn có thể thay bằng "hinh_5.jpg"
         "options": ["A. Tết Trùng Cửu", "B. Tết Thanh Minh", "C. Tết Đoàn viên", "D. Tết Đoan Ngọ"],
         "answer": "C. Tết Đoàn viên"
     },
     {
         "id": 6,
         "word": "MỘT",
-        "question": "Truyền thuyết dân gian kể rằng, chú Cuội đã bay lên trời cùng với loài cây nào?",
+        "question": "Đoạn video hoạt hình này kể về truyền thuyết gì? Chú Cuội đã bay lên trời cùng với loài cây nào?",
+        "video": "https://www.youtube.com/watch?v=F55_yK4xJzw", # Bạn có thể thay bằng "video_6.mp4"
         "options": ["A. Cây khế", "B. Cây đa", "C. Cây tre", "D. Cây bồ đề"],
         "answer": "B. Cây đa"
     },
@@ -60,23 +64,25 @@ QUESTIONS = [
     {
         "id": 8,
         "word": "TRUNG",
-        "question": "Nhân vật nữ xinh đẹp, dịu dàng cai quản cung trăng cùng Thỏ Ngọc là ai?",
+        "question": "Xem hình ảnh nhân vật hóa trang này. Nhân vật nữ xinh đẹp, dịu dàng cai quản cung trăng là ai?",
+        "image": "https://nld.mediacdn.vn/291774122806476800/2023/9/28/ngocthanhtam18-16958863674681650392341.jpg", # Bạn có thể thay bằng "hinh_8.jpg"
         "options": ["A. Công chúa Bạch Tuyết", "B. Tiên nữ Giáng Hương", "C. Chị Hằng Nga", "D. Mẫu Thượng Ngàn"],
         "answer": "C. Chị Hằng Nga"
     },
     {
         "id": 9,
         "word": "THU",
-        "question": "Hoạt động trẻ em quây quần bên mâm quả, bánh kẹo và cùng nhau ăn uống đêm rằm gọi là gì?",
-        "options": ["A. Hái lộc", "B. Phá cỗ", "C. Du xuân", "D. Lì xì"],
-        "answer": "B. Phá cỗ"
+        "question": "Đoạn video này mô tả hoạt động gì mà trẻ em rất thích thú vào đêm rằm tháng 8?",
+        "video": "https://www.youtube.com/watch?v=O15d9yH2m-Y", # Bạn có thể thay bằng "video_9.mp4"
+        "options": ["A. Hái lộc", "B. Phá cỗ", "C. Du xuân", "D. Rước đèn"],
+        "answer": "D. Rước đèn"
     },
     {
         "id": 10,
         "word": "TỐT",
         "question": "Điệu múa Lân - Sư - Rồng trong đêm rằm tháng Tám mang ý nghĩa cầu mong điều gì?",
-        "options": ["A. Mưa thuận gió hòa", "B. May mắn và thịnh vượng", "C. Trúng mùa vụ", "D. Xua đuổi thú dữ"],
-        "answer": "B. May mắn và thịnh vượng"
+        "options": ["A. Mưa thuận gió hòa", "B. May mắn, thịnh vượng và bình an", "C. Trúng mùa vụ", "D. Xua đuổi thú dữ"],
+        "answer": "B. May mắn, thịnh vượng và bình an"
     },
     {
         "id": 11,
@@ -106,15 +112,21 @@ def show_question_modal(idx):
     
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # ---------------- THÊM HÌNH ẢNH / ÂM THANH ----------------
-    # Nếu câu hỏi có hình ảnh, hiển thị hình ảnh
+    # ---------------- THÊM HÌNH ẢNH / VIDEO VÀO ĐÂY ----------------
+    # Nếu câu hỏi có hình ảnh
     if "image" in q_data and q_data["image"]:
-        st.image(q_data["image"], use_container_width=True)
+        try:
+            st.image(q_data["image"], use_container_width=True)
+        except Exception as e:
+            st.error(f"⚠️ Lỗi tải hình ảnh: Không tìm thấy file '{q_data['image']}'. Hãy chắc chắn file ảnh nằm cùng thư mục với code.")
         st.markdown("<br>", unsafe_allow_html=True)
         
-    # Nếu câu hỏi có âm thanh, hiển thị trình phát nhạc
-    if "audio" in q_data and q_data["audio"]:
-        st.audio(q_data["audio"])
+    # Nếu câu hỏi có video (Có thể là link Youtube hoặc file .mp4)
+    if "video" in q_data and q_data["video"]:
+        try:
+            st.video(q_data["video"])
+        except Exception as e:
+            st.error(f"⚠️ Lỗi tải video: Không tìm thấy file '{q_data['video']}'. Hãy chắc chắn file video nằm cùng thư mục với code.")
         st.markdown("<br>", unsafe_allow_html=True)
     # ----------------------------------------------------------
     
