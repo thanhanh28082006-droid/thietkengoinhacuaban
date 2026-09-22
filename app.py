@@ -9,14 +9,16 @@ QUESTIONS = [
     {
         "id": 1,
         "word": "CHÚC",
-        "question": "Bánh trung thu truyền thống có hai loại phổ biến nhất là bánh nướng và bánh gì?",
+        "question": "Hình ảnh dưới đây gợi nhớ đến loại bánh truyền thống nào của dịp Tết Trung Thu?",
+        "image": "https://images.unsplash.com/photo-1600832345595-5c1dfa0d9b4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", # Bạn có thể thay bằng file ảnh của bạn ví dụ "banh_trung_thu.jpg"
         "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh dẻo", "D. Bánh gai"],
         "answer": "C. Bánh dẻo"
     },
     {
         "id": 2,
         "word": "CÔ",
-        "question": "Theo sự tích dân gian Việt Nam, ai là người phải ngồi dưới gốc cây đa trên cung trăng?",
+        "question": "Lắng nghe đoạn nhạc sau. Theo sự tích dân gian Việt Nam, bài hát nhắc đến ai phải ngồi dưới gốc cây đa?",
+        "audio": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", # Bạn có thể để file nhạc của bạn vào cùng thư mục, ví dụ "nhac_cuoi.mp3"
         "options": ["A. Hậu Nghệ", "B. Chú Cuội", "C. Thiên Lôi", "D. Ngọc Hoàng"],
         "answer": "B. Chú Cuội"
     },
@@ -103,6 +105,18 @@ def show_question_modal(idx):
         st.session_state[status_key] = "playing"
     
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
+    
+    # ---------------- THÊM HÌNH ẢNH / ÂM THANH ----------------
+    # Nếu câu hỏi có hình ảnh, hiển thị hình ảnh
+    if "image" in q_data and q_data["image"]:
+        st.image(q_data["image"], use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+    # Nếu câu hỏi có âm thanh, hiển thị trình phát nhạc
+    if "audio" in q_data and q_data["audio"]:
+        st.audio(q_data["audio"])
+        st.markdown("<br>", unsafe_allow_html=True)
+    # ----------------------------------------------------------
     
     error_msg_placeholder = st.empty()
     
