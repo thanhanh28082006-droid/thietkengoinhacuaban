@@ -10,7 +10,7 @@ QUESTIONS = [
         "id": 1,
         "word": "CHÚC",
         "question": "Hình ảnh dưới đây gợi nhớ đến loại bánh truyền thống nào không thể thiếu của dịp Tết Trung Thu?",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Mooncakes.jpg/800px-Mooncakes.jpg", # Bạn có thể thay bằng "hinh_1.jpg"
+        "image": "hinh_1.jpg", # Tên file hình ảnh nằm trong máy của bạn
         "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh nướng, bánh dẻo", "D. Bánh gai"],
         "answer": "C. Bánh nướng, bánh dẻo"
     },
@@ -18,7 +18,7 @@ QUESTIONS = [
         "id": 2,
         "word": "CÔ",
         "question": "Lắng nghe đoạn video sau. Theo sự tích dân gian Việt Nam, nhân vật này là ai?",
-        "video": "https://www.youtube.com/watch?v=o04iK0nZomE", # Thay bằng link YouTube bài Thằng Cuội hoặc "video_2.mp4"
+        "video": "video_2.mp4", # Tên file video nằm trong máy của bạn
         "options": ["A. Hậu Nghệ", "B. Chú Cuội", "C. Thiên Lôi", "D. Ngọc Hoàng"],
         "answer": "B. Chú Cuội"
     },
@@ -26,7 +26,7 @@ QUESTIONS = [
         "id": 3,
         "word": "VÀ",
         "question": "Đây là món đồ chơi rực rỡ làm từ tre và giấy bóng kính đỏ, gắn liền với tuổi thơ đêm rằm. Tên của nó là gì?",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Den_ong_sao.jpg/800px-Den_ong_sao.jpg", # Bạn có thể thay bằng "hinh_3.jpg"
+        "image": "hinh_3.jpg", 
         "options": ["A. Tò he", "B. Đèn kéo quân", "C. Mặt nạ giấy bồi", "D. Đèn ông sao"],
         "answer": "D. Đèn ông sao"
     },
@@ -34,7 +34,7 @@ QUESTIONS = [
         "id": 4,
         "word": "CẢ",
         "question": "Xem đoạn video sau: Con vật thiêng liêng nào thường dẫn đầu đoàn múa rộn ràng trong tiếng trống đêm Trung thu?",
-        "video": "https://www.youtube.com/watch?v=QxV-4fXJ-6U", # Thay bằng link YouTube Múa lân hoặc "video_4.mp4"
+        "video": "video_4.mp4", 
         "options": ["A. Con lân", "B. Con rồng", "C. Con cá chép", "D. Con phượng hoàng"],
         "answer": "A. Con lân"
     },
@@ -42,7 +42,7 @@ QUESTIONS = [
         "id": 5,
         "word": "LỚP",
         "question": "Hình ảnh mâm cỗ này mang ý nghĩa gia đình đoàn tụ. Ngoài tên gọi 'Tết Thiếu nhi', Tết Trung thu còn được biết đến với tên gọi nào?",
-        "image": "https://file1.dangcongsan.vn/data/0/images/2021/09/21/haianh/mam-co-trung-thu-3-16321287950941916374945-0-0-721-1153-crop-16321288079021021469033.jpg", # Bạn có thể thay bằng "hinh_5.jpg"
+        "image": "hinh_5.jpg", 
         "options": ["A. Tết Trùng Cửu", "B. Tết Thanh Minh", "C. Tết Đoàn viên", "D. Tết Đoan Ngọ"],
         "answer": "C. Tết Đoàn viên"
     },
@@ -50,7 +50,7 @@ QUESTIONS = [
         "id": 6,
         "word": "MỘT",
         "question": "Đoạn video hoạt hình này kể về truyền thuyết gì? Chú Cuội đã bay lên trời cùng với loài cây nào?",
-        "video": "https://www.youtube.com/watch?v=F55_yK4xJzw", # Bạn có thể thay bằng "video_6.mp4"
+        "video": "video_6.mp4", 
         "options": ["A. Cây khế", "B. Cây đa", "C. Cây tre", "D. Cây bồ đề"],
         "answer": "B. Cây đa"
     },
@@ -65,7 +65,7 @@ QUESTIONS = [
         "id": 8,
         "word": "TRUNG",
         "question": "Xem hình ảnh nhân vật hóa trang này. Nhân vật nữ xinh đẹp, dịu dàng cai quản cung trăng là ai?",
-        "image": "https://nld.mediacdn.vn/291774122806476800/2023/9/28/ngocthanhtam18-16958863674681650392341.jpg", # Bạn có thể thay bằng "hinh_8.jpg"
+        "image": "hinh_8.jpg", 
         "options": ["A. Công chúa Bạch Tuyết", "B. Tiên nữ Giáng Hương", "C. Chị Hằng Nga", "D. Mẫu Thượng Ngàn"],
         "answer": "C. Chị Hằng Nga"
     },
@@ -73,7 +73,7 @@ QUESTIONS = [
         "id": 9,
         "word": "THU",
         "question": "Đoạn video này mô tả hoạt động gì mà trẻ em rất thích thú vào đêm rằm tháng 8?",
-        "video": "https://www.youtube.com/watch?v=O15d9yH2m-Y", # Bạn có thể thay bằng "video_9.mp4"
+        "video": "video_9.mp4", 
         "options": ["A. Hái lộc", "B. Phá cỗ", "C. Du xuân", "D. Rước đèn"],
         "answer": "D. Rước đèn"
     },
@@ -113,20 +113,23 @@ def show_question_modal(idx):
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
     # ---------------- THÊM HÌNH ẢNH / VIDEO VÀO ĐÂY ----------------
-    # Nếu câu hỏi có hình ảnh
+    # Xử lý an toàn: Nếu không tìm thấy file ảnh/video, nó sẽ hiện báo lỗi đỏ chứ không làm hỏng web
     if "image" in q_data and q_data["image"]:
         try:
             st.image(q_data["image"], use_container_width=True)
+        except FileNotFoundError:
+            st.error(f"⚠️ Chưa tìm thấy ảnh: Bạn hãy copy 1 tấm ảnh tên là '{q_data['image']}' bỏ vào cùng thư mục với file code nhé!")
         except Exception as e:
-            st.error(f"⚠️ Lỗi tải hình ảnh: Không tìm thấy file '{q_data['image']}'. Hãy chắc chắn file ảnh nằm cùng thư mục với code.")
+            st.error("⚠️ Lỗi không hiển thị được ảnh.")
         st.markdown("<br>", unsafe_allow_html=True)
         
-    # Nếu câu hỏi có video (Có thể là link Youtube hoặc file .mp4)
     if "video" in q_data and q_data["video"]:
         try:
             st.video(q_data["video"])
+        except FileNotFoundError:
+            st.error(f"⚠️ Chưa tìm thấy video: Bạn hãy copy 1 video tên là '{q_data['video']}' bỏ vào cùng thư mục với file code nhé!")
         except Exception as e:
-            st.error(f"⚠️ Lỗi tải video: Không tìm thấy file '{q_data['video']}'. Hãy chắc chắn file video nằm cùng thư mục với code.")
+            st.error("⚠️ Lỗi không phát được video.")
         st.markdown("<br>", unsafe_allow_html=True)
     # ----------------------------------------------------------
     
@@ -150,128 +153,20 @@ def show_question_modal(idx):
 # --- CSS GIAO DIỆN ĐỎ TRẮNG - LỒNG ĐÈN ---
 st.markdown("""
 <style>
-    /* Nền Đỏ Trắng Lễ Hội */
-    .stApp { 
-        background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); 
-        font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; 
-    }
-    
-    /* Trang trí lồng đèn lấp lánh */
-    .lantern-decor {
-        position: absolute;
-        font-size: 50px;
-        opacity: 0.15;
-        animation: float 4s ease-in-out infinite;
-        z-index: 0;
-    }
-    .l1 { top: 10px; left: 5%; }
-    .l2 { top: 30px; right: 5%; animation-delay: 1s; }
-    .l3 { bottom: 20px; left: 10%; animation-delay: 2s; }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(-5deg); }
-        50% { transform: translateY(-15px) rotate(5deg); }
-    }
-
-    .white-container { 
-        background-color: rgba(255, 255, 255, 0.85); 
-        backdrop-filter: blur(15px); 
-        border-radius: 25px; 
-        padding: 35px; 
-        box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); 
-        border: 3px solid #ffcdd2; 
-        margin-bottom: 25px; 
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .question-text { 
-        font-size: 34px; 
-        color: #b71c1c; 
-        text-align: center; 
-        margin-bottom: 30px; 
-        font-weight: 900; 
-        line-height: 1.5; 
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.1); 
-    }
-    
-    .error-message { 
-        background: linear-gradient(90deg, #ffeb3b, #ffc107); 
-        color: #b71c1c; 
-        padding: 15px; 
-        border-radius: 15px; 
-        text-align: center; 
-        font-size: 24px; 
-        font-weight: 900; 
-        margin-bottom: 25px; 
-        border-left: 8px solid #d32f2f; 
-        box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
-    }
-    
-    /* Ô chữ 11 ô cần thu nhỏ xíu để vừa màn hình */
-    .word-box { 
-        display: flex; justify-content: center; align-items: center; 
-        height: 100px; 
-        background: linear-gradient(145deg, #f44336, #c62828); 
-        color: #fffde7; 
-        border-radius: 15px; 
-        font-size: 32px; 
-        font-weight: 900; 
-        box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.5); 
-        border: 3px solid #ff8a80; 
-        margin: 5px; 
-    }
-    .word-hidden { 
-        background: linear-gradient(145deg, #ffffff, #eeeeee); 
-        color: #bdbdbd; 
-        box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); 
-        border: 3px solid #e0e0e0; 
-        text-shadow: none;
-    }
-    
-    /* Nút bấm (Câu hỏi & Đáp án) Đỏ - Vàng */
-    div.stButton > button { 
-        border-radius: 20px; 
-        font-weight: 900; 
-        height: auto; 
-        min-height: 85px;
-        padding: 10px;
-        border: 3px solid #ef5350; 
-        background: linear-gradient(to bottom, #ffffff, #ffebee); 
-        color: #c62828 !important; 
-        box-shadow: 0 6px 15px rgba(183, 28, 28, 0.15); 
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-        white-space: normal; 
-    }
-    div.stButton > button p {
-        font-size: 28px !important; /* Chữ siêu bự */
-        font-weight: 900 !important; 
-        margin: 0 !important;
-        color: #c62828 !important;
-    }
-    div.stButton > button:hover { 
-        border-color: #b71c1c; 
-        background: linear-gradient(145deg, #e53935, #b71c1c); 
-        box-shadow: 0 10px 25px rgba(183, 28, 28, 0.5); 
-        transform: translateY(-5px); 
-    }
-    div.stButton > button:hover p {
-        color: #ffffff !important; /* Đổi màu chữ thành trắng khi rê chuột */
-    }
-    
-    /* Tiêu đề chính */
-    .main-title { 
-        text-align: center; 
-        font-size: 55px; 
-        font-weight: 900; 
-        margin-bottom: 40px; 
-        text-transform: uppercase; 
-        background: linear-gradient(to right, #b71c1c, #ff9800, #b71c1c); 
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.15); 
-    }
+    .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
+    .lantern-decor { position: absolute; font-size: 50px; opacity: 0.15; animation: float 4s ease-in-out infinite; z-index: 0; }
+    .l1 { top: 10px; left: 5%; } .l2 { top: 30px; right: 5%; animation-delay: 1s; } .l3 { bottom: 20px; left: 10%; animation-delay: 2s; }
+    @keyframes float { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+    .white-container { background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border-radius: 25px; padding: 35px; box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); border: 3px solid #ffcdd2; margin-bottom: 25px; position: relative; overflow: hidden; }
+    .question-text { font-size: 34px; color: #b71c1c; text-align: center; margin-bottom: 30px; font-weight: 900; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
+    .error-message { background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; padding: 15px; border-radius: 15px; text-align: center; font-size: 24px; font-weight: 900; margin-bottom: 25px; border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
+    .word-box { display: flex; justify-content: center; align-items: center; height: 100px; background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; border-radius: 15px; font-size: 32px; font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; margin: 5px; }
+    .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; }
+    div.stButton > button { border-radius: 20px; font-weight: 900; height: auto; min-height: 85px; padding: 10px; border: 3px solid #ef5350; background: linear-gradient(to bottom, #ffffff, #ffebee); color: #c62828 !important; box-shadow: 0 6px 15px rgba(183, 28, 28, 0.15); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); white-space: normal; }
+    div.stButton > button p { font-size: 28px !important; font-weight: 900 !important; margin: 0 !important; color: #c62828 !important; }
+    div.stButton > button:hover { border-color: #b71c1c; background: linear-gradient(145deg, #e53935, #b71c1c); box-shadow: 0 10px 25px rgba(183, 28, 28, 0.5); transform: translateY(-5px); }
+    div.stButton > button:hover p { color: #ffffff !important; }
+    .main-title { text-align: center; font-size: 55px; font-weight: 900; margin-bottom: 40px; text-transform: uppercase; background: linear-gradient(to right, #b71c1c, #ff9800, #b71c1c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 3px 3px 8px rgba(0,0,0,0.15); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -309,7 +204,6 @@ with col_guess:
 @st.dialog("🎉 ĐÊM HỘI TRĂNG RẰM ĐÃ TỎA SÁNG 🎉", width="large")
 def show_victory_modal():
     st.balloons()
-    # Mưa Bánh Trung Thu, Lồng đèn, Thỏ ngọc
     st.markdown("""
     <style>
     @keyframes fall {
