@@ -201,32 +201,69 @@ st.markdown("""
     }
     
     /* --------------------------------------------------- */
-    /* 2. NÚT LỒNG ĐÈN CHỌN CÂU HỎI (Tròn xoe, lấp lánh)  */
+    /* 2. NÚT LỒNG ĐÈN CHỌN CÂU HỎI (Hình lồng đèn siêu Cute) */
     /* --------------------------------------------------- */
     button[data-testid="baseButton-primary"] { 
-        border-radius: 50% !important; /* Tròn hoàn hảo */
-        aspect-ratio: 1 / 1 !important; /* Ép vuông để thành tròn */
-        border: 4px solid #FFD700 !important; /* Viền vàng */
+        position: relative !important;
+        border-radius: 40% !important; /* Bo cong tạo bụng lồng đèn */
+        aspect-ratio: 1 / 1.15 !important; /* Hơi thuôn dài giống lồng đèn giấy */
+        border: 3px solid #FFD700 !important; /* Viền vàng */
         background: radial-gradient(circle at 30% 30%, #ff8a65 0%, #e53935 50%, #b71c1c 100%) !important; 
-        box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.4), inset 0 -15px 15px rgba(0,0,0,0.4) !important;
+        box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.4) !important;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; 
         padding: 0 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
+        margin-top: 15px !important;
+        margin-bottom: 30px !important; /* Chừa chỗ cho tua rua */
+        overflow: visible !important; /* Quan trọng để hiện chóp và tua rua */
     }
+
+    /* VẼ MŨ/CHÓP LỒNG ĐÈN MÀU VÀNG */
+    button[data-testid="baseButton-primary"]::before {
+        content: '' !important;
+        position: absolute !important;
+        top: -10px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 25px !important;
+        height: 10px !important;
+        background: #FFD700 !important;
+        border-radius: 5px 5px 0 0 !important;
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.3) !important;
+    }
+
+    /* VẼ ĐUÔI TUA RUA LỒNG ĐÈN CHẢY XUỐNG DƯỚI */
+    button[data-testid="baseButton-primary"]::after {
+        content: '' !important;
+        position: absolute !important;
+        bottom: -25px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 15px !important;
+        height: 25px !important;
+        background: #d32f2f !important;
+        border-top: 4px solid #FFD700 !important;
+        border-radius: 0 0 3px 3px !important;
+        box-shadow: 0 5px 5px rgba(0,0,0,0.3) !important;
+    }
+
     button[data-testid="baseButton-primary"] p { 
-        font-size: 55px !important; /* Số to khổng lồ */
+        font-size: 50px !important; /* Số khổng lồ ở giữa */
         font-weight: 900 !important; 
         color: #FFFDE7 !important; 
         text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 15px #FFD700 !important; 
         margin: 0 !important;
+        z-index: 5 !important;
     }
+
     button[data-testid="baseButton-primary"]:hover { 
         border-color: #FFFFFF !important; 
-        background: radial-gradient(circle at 30% 30%, #ffab91 0%, #ef5350 50%, #d32f2f 100%) !important; 
         transform: translateY(-8px) scale(1.05) !important; 
+        box-shadow: 0 15px 25px rgba(183, 28, 28, 0.7), inset 0 10px 15px rgba(255,255,255,0.6) !important;
     }
+    
     button[data-testid="baseButton-primary"]:disabled {
         background: radial-gradient(circle at center, #e0e0e0 0%, #9e9e9e 80%) !important;
         border-color: #bdbdbd !important;
