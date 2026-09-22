@@ -8,7 +8,7 @@ QUESTIONS = [
         "id": 1,
         "word": "CHÚC",
         "question": "Hình ảnh dưới đây gợi nhớ đến loại bánh truyền thống nào không thể thiếu của dịp Tết Trung Thu?",
-        "image": "https://images.unsplash.com/photo-1695428612140-5e3650ce892a?q=80&w=800", # Đã thay bằng link ảnh mạng chạy 100%
+        "image": "https://images.unsplash.com/photo-1695428612140-5e3650ce892a?q=80&w=800",
         "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh nướng, bánh dẻo", "D. Bánh gai"],
         "answer": "C. Bánh nướng, bánh dẻo"
     },
@@ -16,7 +16,7 @@ QUESTIONS = [
         "id": 2,
         "word": "CÔ",
         "question": "Lắng nghe giai điệu trong đoạn video sau. Bài hát này gợi nhớ đến nhân vật nào trong sự tích Trung Thu?",
-        "video": "https://youtu.be/5xX5pdNHMJM?si=mZVgZ5CbTz4HBWkm", # Link YouTube bạn yêu cầu
+        "video": "https://youtu.be/5xX5pdNHMJM?si=mZVgZ5CbTz4HBWkm",
         "options": ["A. Hậu Nghệ", "B. Chú Cuội", "C. Thiên Lôi", "D. Ngọc Hoàng"],
         "answer": "B. Chú Cuội"
     },
@@ -24,7 +24,7 @@ QUESTIONS = [
         "id": 3,
         "word": "VÀ",
         "question": "Đây là món đồ chơi rực rỡ làm từ tre và giấy bóng kính đỏ, gắn liền với tuổi thơ đêm rằm. Tên của nó là gì?",
-        "image": "https://images.unsplash.com/photo-1599813295980-60b64d0bb033?q=80&w=800", # Ảnh lồng đèn ông sao
+        "image": "https://images.unsplash.com/photo-1599813295980-60b64d0bb033?q=80&w=800",
         "options": ["A. Tò he", "B. Đèn kéo quân", "C. Mặt nạ giấy bồi", "D. Đèn ông sao"],
         "answer": "D. Đèn ông sao"
     },
@@ -32,7 +32,7 @@ QUESTIONS = [
         "id": 4,
         "word": "CẢ",
         "question": "Con vật thiêng liêng nào thường dẫn đầu đoàn múa rộn ràng trong tiếng trống đêm Trung thu?",
-        "image": "mua_lan.jpg", 
+        "image": "mua_lan.jpg", # File hình ảnh offline (cần có trong máy)
         "options": ["A. Con lân", "B. Con rồng", "C. Con cá chép", "D. Con phượng hoàng"],
         "answer": "A. Con lân"
     },
@@ -87,8 +87,11 @@ QUESTIONS = [
     }
 ]
 
+# Danh sách Icon lồng đèn dễ thương tương ứng 11 câu
+LANTERN_ICONS = ["🐟", "⭐", "🦋", "💖", "🐰", "🐱", "🐯", "🐷", "🐻", "🌸", "🏮"]
+
 if 'revealed_words' not in st.session_state:
-    st.session_state.revealed_words = [False] * 11 # 11 chữ cái
+    st.session_state.revealed_words = [False] * 11
 if 'game_won' not in st.session_state:
     st.session_state.game_won = False
 if 'victory_shown' not in st.session_state:
@@ -104,13 +107,11 @@ def show_question_modal(idx):
     
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # --- CHÈN HÌNH ẢNH HOẶC VIDEO AN TOÀN ---
+    # --- CHÈN HÌNH ẢNH HOẶC VIDEO ---
     if "image" in q_data:
         try:
-            # Cố gắng tải hình ảnh
             st.image(q_data["image"], use_container_width=True)
         except Exception:
-            # Lỗi không có ảnh sẽ hiện bảng báo nhẹ nhàng, không sập web
             st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}'). Lớp mình cứ đọc câu hỏi và trả lời nhé!")
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -118,13 +119,11 @@ def show_question_modal(idx):
         try:
             st.video(q_data["video"])
         except Exception:
-            st.warning("⚠️ Lỗi không phát được video.")
+            st.warning("⚠️ Lỗi không phát được video. Vui lòng kiểm tra lại link hoặc file.")
         st.markdown("<br>", unsafe_allow_html=True)
-    # -----------------------------------------
     
     error_msg_placeholder = st.empty()
     
-    # Nếu đang ở trạng thái sai thì hiện thông báo lỗi
     if st.session_state[status_key] == "wrong":
         error_msg_placeholder.markdown("<div class='error-message'>❌ Sai rồi! Bạn hãy đọc kỹ và chọn lại đáp án nhé.</div>", unsafe_allow_html=True)
             
@@ -135,62 +134,48 @@ def show_question_modal(idx):
                 if option == q_data['answer']:
                     st.session_state[status_key] = "correct"
                     st.session_state.revealed_words[idx] = True
-                    # Trả lời đúng -> Đóng tab và load lại trang chính
                     st.rerun() 
                 else:
                     st.session_state[status_key] = "wrong"
-                    # Trả lời sai -> Cập nhật trực tiếp thông báo lỗi, giữ nguyên tab
                     error_msg_placeholder.markdown("<div class='error-message'>❌ Sai rồi! Bạn hãy đọc kỹ và chọn lại đáp án nhé.</div>", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
-    /* Nền Đỏ - Hồng Trung Thu */
-    .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
+    /* Nền Đỏ - Hồng siêu ngọt ngào */
+    .stApp { background: linear-gradient(135deg, #ffcdd2, #f8bbd0, #ff8a80); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
     
-    /* Trang trí Lồng đèn & Ngôi sao lơ lửng */
-    .lantern-decor { position: absolute; font-size: 50px; opacity: 0.2; animation: float 4s ease-in-out infinite; z-index: 0; }
-    .star-decor { position: absolute; font-size: 30px; opacity: 0.4; animation: twinkle 2s infinite; z-index: 0; }
-    .l1 { top: 10px; left: 5%; } .l2 { top: 30px; right: 5%; animation-delay: 1s; } .l3 { bottom: 20px; left: 10%; animation-delay: 2s; }
-    .s1 { top: 15%; left: 15%; } .s2 { top: 50%; right: 10%; animation-delay: 1s; } .s3 { bottom: 10%; right: 20%; animation-delay: 0.5s; }
-    
-    @keyframes float { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
-    @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 0.8; transform: scale(1.2); } }
-    
-    /* Khung nội dung trắng */
+    /* Khung nội dung */
     .white-container { 
-        background-color: rgba(255, 255, 255, 0.85); 
-        backdrop-filter: blur(15px); 
-        border-radius: 25px; 
+        background-color: rgba(255, 255, 255, 0.9); 
+        backdrop-filter: blur(10px); 
+        border-radius: 30px; 
         padding: 35px; 
-        box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); 
-        border: 3px solid #ffcdd2; 
+        box-shadow: 0 15px 35px rgba(211, 47, 47, 0.2); 
+        border: 4px solid #ff5252; 
         margin-bottom: 25px; 
-        position: relative; 
-        overflow: hidden; 
     }
     
-    /* Chữ câu hỏi siêu to in đậm */
+    /* Chữ câu hỏi KHỔNG LỒ, IN ĐẬM */
     .question-text { 
-        font-size: 38px; color: #b71c1c; text-align: center; 
-        margin-bottom: 30px; font-weight: 900; line-height: 1.5; 
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.1); 
+        font-size: 42px; color: #b71c1c; text-align: center; 
+        margin-bottom: 30px; font-weight: 900; line-height: 1.4; 
     }
     
-    /* Thông báo lỗi đỏ chói */
+    /* Thông báo lỗi đỏ chói, to */
     .error-message { 
-        background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; 
-        padding: 15px; border-radius: 15px; text-align: center; 
-        font-size: 28px; font-weight: 900; margin-bottom: 25px; 
-        border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); 
+        background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #d32f2f; 
+        padding: 20px; border-radius: 20px; text-align: center; 
+        font-size: 32px; font-weight: 900; margin-bottom: 25px; 
+        box-shadow: 0 8px 20px rgba(211, 47, 47, 0.3); 
     }
     
     /* Chữ cái thông điệp lật mở */
     .word-box { 
         display: flex; justify-content: center; align-items: center; 
-        height: 110px; background: linear-gradient(145deg, #f44336, #c62828); 
-        color: #fffde7; border-radius: 15px; font-size: 42px; font-weight: 900; 
+        height: 120px; background: linear-gradient(145deg, #ff5252, #c62828); 
+        color: #fffde7; border-radius: 20px; font-size: 48px; font-weight: 900; 
         box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; margin: 5px; 
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ffd700; margin: 5px; 
     }
     .word-hidden { 
         background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; 
@@ -198,45 +183,43 @@ st.markdown("""
         border: 3px solid #e0e0e0; text-shadow: none; 
     }
     
-    /* BIẾN NÚT BẤM THÀNH HÌNH LỒNG ĐÈN 3D */
+    /* BIẾN NÚT BẤM THÀNH VIÊN KẸO/LỒNG ĐÈN CUTE */
     div.stButton > button { 
-        border-radius: 50% 50% 15% 15% / 40% 40% 20% 20% !important; /* Dáng bầu của lồng đèn */
-        border: 4px solid #FFD700 !important; /* Viền vàng hoàng kim */
-        background: radial-gradient(ellipse at center, #ff5252 0%, #b71c1c 80%) !important; /* Nền đỏ 3D tỏa sáng */
-        box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), 
-                    inset 0 15px 15px rgba(255,255,255,0.4), /* Đỉnh lồng đèn bắt sáng */
-                    inset 0 -15px 15px rgba(0,0,0,0.5) !important; /* Đáy lồng đèn tối lại */
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; 
-        min-height: 110px !important;
+        border-radius: 50px !important; /* Bo tròn hoàn toàn 2 đầu như viên thuốc/lồng đèn tròn */
+        border: 4px solid #FFD700 !important; 
+        background: linear-gradient(180deg, #ff8a80 0%, #d32f2f 100%) !important; 
+        box-shadow: 0 8px 15px rgba(211, 47, 47, 0.4), inset 0 8px 10px rgba(255,255,255,0.3) !important; 
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.5) !important; 
+        min-height: 100px !important;
         height: auto !important;
-        padding: 10px 5px !important;
-        position: relative;
+        padding: 15px 10px !important;
     }
     
-    /* Chữ bên trong lồng đèn: To, in đậm, màu vàng sáng */
-    div.stButton > button p { 
-        font-size: 32px !important; 
+    /* ÉP CHỮ TRONG NÚT BẤM SIÊU TO VÀ IN ĐẬM */
+    div.stButton > button p, div.stButton > button span, div.stButton > button div { 
+        font-size: 36px !important; 
         font-weight: 900 !important; 
         color: #FFFDE7 !important; 
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; 
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6) !important; 
         margin: 0 !important;
-        font-family: 'Georgia', serif !important;
+        white-space: normal !important;
+        line-height: 1.3 !important;
     }
     
-    /* Hiệu ứng khi di chuột vào Lồng đèn (phát sáng rực lên) */
+    /* Hiệu ứng nảy lên khi hover */
     div.stButton > button:hover { 
         border-color: #FFFFFF !important; 
-        background: radial-gradient(ellipse at center, #ff7961 0%, #d32f2f 80%) !important; 
+        background: linear-gradient(180deg, #ff5252 0%, #b71c1c 100%) !important; 
         transform: translateY(-8px) scale(1.05) !important; 
-        box-shadow: 0 15px 30px rgba(183, 28, 28, 0.8), 0 0 20px rgba(255, 215, 0, 0.6), inset 0 15px 15px rgba(255,255,255,0.6), inset 0 -15px 15px rgba(0,0,0,0.5) !important;
+        box-shadow: 0 15px 25px rgba(211, 47, 47, 0.6), inset 0 8px 10px rgba(255,255,255,0.5) !important;
     }
     
-    /* Lồng đèn bị tắt (Đã mở) */
+    /* Trạng thái nút đã tắt (câu đã mở) */
     div.stButton > button:disabled {
-        background: radial-gradient(ellipse at center, #e0e0e0 0%, #9e9e9e 80%) !important;
+        background: linear-gradient(180deg, #e0e0e0 0%, #9e9e9e 100%) !important;
         border-color: #bdbdbd !important;
         transform: none !important;
-        box-shadow: inset 0 10px 10px rgba(255,255,255,0.3), inset 0 -10px 10px rgba(0,0,0,0.3) !important;
+        box-shadow: inset 0 5px 10px rgba(255,255,255,0.5) !important;
     }
     div.stButton > button:disabled p {
         color: #ffffff !important;
@@ -245,17 +228,16 @@ st.markdown("""
     
     /* Tiêu đề chính */
     .main-title { 
-        text-align: center; font-size: 55px; font-weight: 900; margin-bottom: 40px; 
-        text-transform: uppercase; background: linear-gradient(to right, #b71c1c, #ff9800, #b71c1c); 
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.15); 
+        text-align: center; font-size: 60px; font-weight: 900; margin-bottom: 30px; 
+        text-transform: uppercase; color: #b71c1c;
+        text-shadow: 3px 3px 0px #FFD700, 5px 5px 10px rgba(0,0,0,0.2); 
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
+st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(11) # 11 cột cho 11 chữ
 for i, col in enumerate(cols):
     with col:
@@ -265,13 +247,13 @@ for i, col in enumerate(cols):
             st.markdown(f'<div class="word-box word-hidden">?</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown("<div style='font-size: 36px; font-weight: 900; color: #b71c1c; margin-bottom: 20px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
+st.markdown("<div style='font-size: 38px; font-weight: 900; color: #b71c1c; margin-bottom: 20px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
 
-btn_cols = st.columns(11) # 11 cột cho 11 nút lồng đèn
+btn_cols = st.columns(11)
 for i, b_col in enumerate(btn_cols):
     with b_col:
-        # Xóa icon 🏮 đi vì bản thân cái nút bây giờ đã là cái lồng đèn rồi!
-        btn_label = f"CÂU {i+1}" if not st.session_state.revealed_words[i] else "✅"
+        # Nhét icon dễ thương và số vào nút (không còn chữ "Câu")
+        btn_label = f"{LANTERN_ICONS[i]} {i+1}" if not st.session_state.revealed_words[i] else "✅"
         if st.button(btn_label, key=f"btn_{i}", disabled=st.session_state.revealed_words[i]):
             show_question_modal(i)
 
@@ -279,7 +261,7 @@ st.markdown("<br><br>", unsafe_allow_html=True)
 col_empty1, col_guess, col_empty2 = st.columns([1, 2, 1])
 with col_guess:
     st.markdown("<div style='text-align: center; font-size: 32px; font-weight: 900; color: #b71c1c; margin-bottom: 15px;'>💡 Lớp mình đã tìm ra thông điệp chưa?</div>", unsafe_allow_html=True)
-    if st.button("🌟 LẬT MỞ TOÀN BỘ THÔNG ĐIỆP NGAY 🌟", key="btn_reveal_all", use_container_width=True):
+    if st.button("🌟 LẬT MỞ TOÀN BỘ THÔNG ĐIỆP 🌟", key="btn_reveal_all", use_container_width=True):
         st.session_state.revealed_words = [True] * 11
         st.session_state.victory_shown = False 
         st.rerun()
@@ -287,17 +269,16 @@ with col_guess:
 @st.dialog("🎉 ĐÊM HỘI TRĂNG RẰM ĐÃ TỎA SÁNG 🎉", width="large")
 def show_victory_modal():
     st.balloons()
-    # Hiệu ứng rơi bánh trung thu, thỏ ngọc, lồng đèn
     st.markdown("""
     <style>
     @keyframes fall {
-        0% { transform: translateY(-10vh) rotate(0deg); opacity: 1;}
-        100% { transform: translateY(100vh) rotate(360deg); opacity: 0;}
+        0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 1;}
+        100% { transform: translateY(100vh) rotate(360deg) scale(1.5); opacity: 0;}
     }
-    .flower { position: fixed; font-size: 40px; z-index: 9999; top: -10vh; animation: fall linear forwards; }
+    .flower { position: fixed; font-size: 50px; z-index: 9999; top: -10vh; animation: fall linear forwards; }
     </style>
     <script>
-    const flowers = ['🏮', '🌕', '⭐', '✨', '🥮', '🐇']; 
+    const flowers = ['🏮', '🌕', '⭐', '✨', '🥮', '🐇', '💖']; 
     for(let i=0; i<70; i++) {
         let f = document.createElement('div');
         f.className = 'flower';
@@ -315,7 +296,7 @@ def show_victory_modal():
         <h1 style='color: #d32f2f; font-size: 55px; font-weight: 900; margin-bottom: 10px; line-height: 1.4; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);'>
             CHÚC CÔ VÀ CẢ LỚP<br>MỘT NGÀY TRUNG THU TỐT LÀNH
         </h1>
-        <p style='color: #ff9800; font-size: 40px; font-weight: 900; margin-top: 25px; text-shadow: 0 0 15px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 193, 7, 0.6);'>
+        <p style='color: #ff9800; font-size: 45px; font-weight: 900; margin-top: 25px; text-shadow: 0 0 15px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 193, 7, 0.6);'>
             luôn hạnh phúc và ngập tràn niềm vui 🏮🌕
         </p>
     </div>
