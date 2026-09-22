@@ -128,23 +128,13 @@ def show_question_modal(idx):
             
     # PHÂN BIỆT 2 DẠNG CÂU HỎI
     if q_data.get("type") == "reveal":
-        # Dạng Câu hỏi Mở
-        if st.session_state[status_key] == "playing":
-            if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_{idx}", use_container_width=True, type="secondary"):
-                st.session_state[status_key] = "revealed"
-                st.rerun()
-        elif st.session_state[status_key] == "revealed":
-            st.markdown(f"""
-                <div style='text-align:center; padding:20px; background-color:#E8F5E9; border:4px dashed #4CAF50; border-radius:15px; margin-bottom:20px;'>
-                    <h2 style='color:#2E7D32; font-size:45px; font-weight:900; margin:0;'>🎉 {q_data['answer']}</h2>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("✅ CHÍNH XÁC! LẬT CHỮ NGAY", key=f"btn_correct_{idx}", use_container_width=True, type="secondary"):
-                st.session_state.revealed_words[idx] = True
-                st.rerun()
+        # Dạng Câu hỏi Mở: Bấm 1 phát đóng cửa sổ và lật chữ ở ngoài ngay lập tức
+        if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_{idx}", use_container_width=True, type="secondary"):
+            st.session_state.revealed_words[idx] = True
+            st.rerun()
                 
     else:
-        # Dạng Trắc nghiệm A B C D
+        # Dạng Trắc nghiệm A B C D (Giữ nguyên: Sai báo đỏ, Đúng lật chữ luôn)
         ans_cols = st.columns(2)
         for i, option in enumerate(q_data['options']):
             with ans_cols[i % 2]:
