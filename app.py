@@ -8,7 +8,7 @@ QUESTIONS = [
         "id": 1,
         "word": "CHÚC",
         "question": "Hình ảnh dưới đây gợi nhớ đến loại bánh truyền thống nào không thể thiếu của dịp Tết Trung Thu?",
-        "image": "https://images.unsplash.com/photo-1601002241512-466e3b2b910e?w=800", # Ảnh Bánh Trung Thu
+        "image": "https://images.unsplash.com/photo-1601002241512-466e3b2b910e?q=80&w=800", # Ảnh Bánh Trung Thu siêu đẹp
         "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh nướng, bánh dẻo", "D. Bánh gai"],
         "answer": "C. Bánh nướng, bánh dẻo"
     },
@@ -16,7 +16,7 @@ QUESTIONS = [
         "id": 2,
         "word": "CÔ",
         "question": "Lắng nghe giai điệu trong đoạn video sau. Bài hát này gợi nhớ đến nhân vật nào trong sự tích Trung Thu?",
-        "video": "https://www.youtube.com/watch?v=5xX5pdNHMJM", # Video Chú Cuội
+        "video": "https://youtu.be/5xX5pdNHMJM?si=mZVgZ5CbTz4HBWkm", # Video Sự tích Chú Cuội
         "options": ["A. Hậu Nghệ", "B. Chú Cuội", "C. Thiên Lôi", "D. Ngọc Hoàng"],
         "answer": "B. Chú Cuội"
     },
@@ -24,7 +24,7 @@ QUESTIONS = [
         "id": 3,
         "word": "VÀ",
         "question": "Đây là món đồ chơi rực rỡ làm từ tre và giấy bóng kính đỏ, gắn liền với tuổi thơ đêm rằm. Tên của nó là gì?",
-        "image": "https://images.unsplash.com/photo-1599813295980-60b64d0bb033?w=800", # Ảnh Lồng Đèn
+        "image": "https://images.unsplash.com/photo-1599813295980-60b64d0bb033?q=80&w=800", # Ảnh Lồng Đèn đỏ rực rỡ
         "options": ["A. Tò he", "B. Đèn kéo quân", "C. Mặt nạ giấy bồi", "D. Đèn ông sao"],
         "answer": "D. Đèn ông sao"
     },
@@ -32,7 +32,7 @@ QUESTIONS = [
         "id": 4,
         "word": "CẢ",
         "question": "Con vật thiêng liêng nào thường dẫn đầu đoàn múa rộn ràng trong tiếng trống đêm Trung thu?",
-        "image": "https://images.unsplash.com/photo-1582236906236-8a9d06283db8?w=800", # Ảnh Múa Lân
+        "image": "https://images.unsplash.com/photo-1582236906236-8a9d06283db8?q=80&w=800", # Ảnh Múa Lân rực rỡ
         "options": ["A. Con lân", "B. Con rồng", "C. Con cá chép", "D. Con phượng hoàng"],
         "answer": "A. Con lân"
     },
@@ -87,6 +87,7 @@ QUESTIONS = [
     }
 ]
 
+# Danh sách Icon thú cưng và biểu tượng lấp lánh cho lồng đèn
 LANTERN_ICONS = ["🐟", "⭐", "🦋", "💖", "🐰", "🐱", "🐯", "🐷", "🐻", "🌸", "🏮"]
 
 if 'revealed_words' not in st.session_state:
@@ -106,20 +107,20 @@ def show_question_modal(idx):
     
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # Render Hình Ảnh và Video với tỷ lệ đẹp mắt
+    # Render Hình Ảnh và Video an toàn
     if "image" in q_data:
         try:
             st.image(q_data["image"], use_container_width=True)
-            st.markdown("<br>", unsafe_allow_html=True)
         except Exception:
             st.warning("⚠️ Đang tải ảnh, lớp mình cứ đọc câu hỏi và trả lời nhé!")
+        st.markdown("<br>", unsafe_allow_html=True)
             
     if "video" in q_data:
         try:
             st.video(q_data["video"])
-            st.markdown("<br>", unsafe_allow_html=True)
         except Exception:
-            st.warning("⚠️ Không tải được video, lớp mình cứ đọc câu hỏi và trả lời nhé!")
+            st.warning("⚠️ Lỗi không tải được video.")
+        st.markdown("<br>", unsafe_allow_html=True)
     
     error_msg_placeholder = st.empty()
     
@@ -140,20 +141,39 @@ def show_question_modal(idx):
 
 st.markdown("""
 <style>
+    /* Nền Đỏ - Hồng Trung Thu */
     .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
     
+    /* Trang trí Lồng đèn & Ngôi sao lơ lửng */
+    .lantern-decor { position: absolute; font-size: 50px; opacity: 0.2; animation: float 4s ease-in-out infinite; z-index: 0; }
+    .star-decor { position: absolute; font-size: 30px; opacity: 0.4; animation: twinkle 2s infinite; z-index: 0; }
+    .l1 { top: 10px; left: 5%; } .l2 { top: 30px; right: 5%; animation-delay: 1s; } .l3 { bottom: 20px; left: 10%; animation-delay: 2s; }
+    .s1 { top: 15%; left: 15%; } .s2 { top: 50%; right: 10%; animation-delay: 1s; } .s3 { bottom: 10%; right: 20%; animation-delay: 0.5s; }
+    
+    @keyframes float { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+    @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 0.8; transform: scale(1.2); } }
+    
+    /* Khung nội dung trắng */
     .white-container { 
-        background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); 
-        border-radius: 25px; padding: 35px; box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); 
-        border: 3px solid #ffcdd2; margin-bottom: 25px; 
+        background-color: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(15px); 
+        border-radius: 25px; 
+        padding: 35px; 
+        box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); 
+        border: 3px solid #ffcdd2; 
+        margin-bottom: 25px; 
+        position: relative; 
+        overflow: hidden; 
     }
     
+    /* Chữ câu hỏi siêu to in đậm */
     .question-text { 
         font-size: 38px; color: #b71c1c; text-align: center; 
         margin-bottom: 30px; font-weight: 900; line-height: 1.5; 
         text-shadow: 1px 1px 3px rgba(0,0,0,0.1); 
     }
     
+    /* Thông báo lỗi đỏ chói */
     .error-message { 
         background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; 
         padding: 15px; border-radius: 15px; text-align: center; 
@@ -161,7 +181,7 @@ st.markdown("""
         border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); 
     }
     
-    /* Ô chứa chữ cái bí mật */
+    /* Chữ cái thông điệp lật mở */
     .word-box { 
         display: flex; justify-content: center; align-items: center; 
         height: 110px; background: linear-gradient(145deg, #f44336, #c62828); 
@@ -205,31 +225,43 @@ st.markdown("""
 
     /* Định hình nút bấm thành chiếc Lồng đèn bầu bĩnh */
     div.stButton > button { 
-        border-radius: 40px !important; 
+        border-radius: 50% 50% 15% 15% / 40% 40% 20% 20% !important; /* Dáng bầu của lồng đèn */
         border: 4px solid #FFD700 !important; 
-        background: radial-gradient(circle at 50% 30%, #ff8a80, #d32f2f) !important;
+        background: radial-gradient(ellipse at center, #ff8a80 0%, #d32f2f 80%) !important;
         animation: lanternGlow 1.5s infinite alternate !important; 
         position: relative;
         z-index: 2;
         min-height: 100px !important;
         height: auto !important;
-        padding: 10px 5px !important;
+        padding: 5px 2px !important; /* Cắt giảm đệm 2 bên để chữ không bị chèn */
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    
+    /* FIX LỖI BỊ CẮT CHỮ (DẤU ...): Ép không được ngắt dòng và vô hiệu hóa clip text */
+    div.stButton > button * { 
+        white-space: nowrap !important; 
+        overflow: visible !important; 
+        text-overflow: clip !important; 
     }
     
     /* Chữ và con vật (🐰 1) hòa làm 1 khối to, rõ ràng */
-    div.stButton > button p, div.stButton > button span { 
-        font-size: 34px !important; 
+    div.stButton > button p, div.stButton > button span, div.stButton > button div { 
+        font-size: 26px !important; /* Chỉnh nhỏ lại một xíu để hiện đủ cả con vật + số */
         font-weight: 900 !important; 
         color: #FFFDE7 !important; 
         text-shadow: 2px 2px 6px rgba(0,0,0,0.8), 0 0 12px #FFD700 !important; 
         margin: 0 !important;
         font-family: 'Segoe UI', sans-serif !important;
+        letter-spacing: -1px !important; /* Ép chữ sát lại nhau một chút */
     }
     
     /* Khi rê chuột vào lồng đèn */
     div.stButton > button:hover { 
         border-color: #FFFFFF !important; 
-        background: radial-gradient(circle at 50% 30%, #ff5252, #b71c1c) !important; 
+        background: radial-gradient(ellipse at center, #ff5252 0%, #b71c1c 80%) !important; 
         transform: translateY(-5px) scale(1.05) !important; 
     }
     
@@ -246,6 +278,13 @@ st.markdown("""
         border-radius: 20px !important; /* Hình viên thuốc */
         background: linear-gradient(135deg, #ffb74d 0%, #f57c00 100%) !important; /* Màu kẹo cam pastel */
         box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3) !important;
+        padding: 15px !important;
+    }
+    /* Mở lại size lớn và cho phép xuống dòng cho đáp án A, B, C, D */
+    div[role="dialog"] div.stButton > button * {
+        white-space: normal !important; 
+        font-size: 30px !important;
+        letter-spacing: 0 !important;
     }
     div[role="dialog"] div.stButton > button:hover {
         transform: translateY(-4px) !important;
@@ -260,7 +299,7 @@ st.markdown("""
         transform: none !important;
         box-shadow: inset 0 10px 10px rgba(255,255,255,0.3) !important;
     }
-    div.stButton > button:disabled p { color: #ffffff !important; text-shadow: none !important; }
+    div.stButton > button:disabled * { color: #ffffff !important; text-shadow: none !important; }
     
     /* Tiêu đề chính */
     .main-title { 
@@ -274,7 +313,7 @@ st.markdown("""
 
 st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="white-container">', unsafe_allow_html=True)
+st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
 cols = st.columns(11)
 for i, col in enumerate(cols):
     with col:
