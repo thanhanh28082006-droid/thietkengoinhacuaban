@@ -8,7 +8,7 @@ QUESTIONS = [
         "id": 1,
         "word": "CHÚC",
         "question": "Hình ảnh dưới đây gợi nhớ đến loại bánh truyền thống nào không thể thiếu của dịp Tết Trung Thu?",
-        "image": "images.jpg", # Tên file ảnh bánh trung thu của bạn
+        "image": "https://images.unsplash.com/photo-1695428612140-5e3650ce892a?q=80&w=800", # Đã thay bằng link ảnh mạng chạy 100%
         "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh nướng, bánh dẻo", "D. Bánh gai"],
         "answer": "C. Bánh nướng, bánh dẻo"
     },
@@ -16,7 +16,7 @@ QUESTIONS = [
         "id": 2,
         "word": "CÔ",
         "question": "Lắng nghe giai điệu trong đoạn video sau. Bài hát này gợi nhớ đến nhân vật nào trong sự tích Trung Thu?",
-        "video": "https://youtu.be/5xX5pdNHMJM?si=mZVgZ5CbTz4HBWkm", # Link YouTube
+        "video": "https://youtu.be/5xX5pdNHMJM?si=mZVgZ5CbTz4HBWkm", # Link YouTube bạn yêu cầu
         "options": ["A. Hậu Nghệ", "B. Chú Cuội", "C. Thiên Lôi", "D. Ngọc Hoàng"],
         "answer": "B. Chú Cuội"
     },
@@ -24,7 +24,7 @@ QUESTIONS = [
         "id": 3,
         "word": "VÀ",
         "question": "Đây là món đồ chơi rực rỡ làm từ tre và giấy bóng kính đỏ, gắn liền với tuổi thơ đêm rằm. Tên của nó là gì?",
-        "image": "den_ong_sao.jpg", # Giả sử bạn có file này, nếu không có code sẽ tự báo thiếu rất êm
+        "image": "https://images.unsplash.com/photo-1599813295980-60b64d0bb033?q=80&w=800", # Ảnh lồng đèn ông sao
         "options": ["A. Tò he", "B. Đèn kéo quân", "C. Mặt nạ giấy bồi", "D. Đèn ông sao"],
         "answer": "D. Đèn ông sao"
     },
@@ -198,40 +198,45 @@ st.markdown("""
         border: 3px solid #e0e0e0; text-shadow: none; 
     }
     
-    /* STYLE NÚT BẤM HÓA THÀNH LỒNG ĐÈN CHUẨN TRUNG THU */
+    /* BIẾN NÚT BẤM THÀNH HÌNH LỒNG ĐÈN 3D */
     div.stButton > button { 
-        border-radius: 30px 30px 15px 15px !important; /* Dáng bầu của lồng đèn */
+        border-radius: 50% 50% 15% 15% / 40% 40% 20% 20% !important; /* Dáng bầu của lồng đèn */
         border: 4px solid #FFD700 !important; /* Viền vàng hoàng kim */
-        background: linear-gradient(180deg, #ff5252, #c62828) !important; /* Nền đỏ lồng đèn */
-        box-shadow: 0 8px 15px rgba(183, 28, 28, 0.4), inset 0 5px 15px rgba(255,255,255,0.3) !important; 
+        background: radial-gradient(ellipse at center, #ff5252 0%, #b71c1c 80%) !important; /* Nền đỏ 3D tỏa sáng */
+        box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), 
+                    inset 0 15px 15px rgba(255,255,255,0.4), /* Đỉnh lồng đèn bắt sáng */
+                    inset 0 -15px 15px rgba(0,0,0,0.5) !important; /* Đáy lồng đèn tối lại */
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; 
-        min-height: 90px !important;
+        min-height: 110px !important;
         height: auto !important;
-        padding: 15px 5px !important;
+        padding: 10px 5px !important;
+        position: relative;
     }
     
-    /* ÉP CHỮ TRONG NÚT SIÊU TO, IN ĐẬM VÀ CÓ MÀU VÀNG */
+    /* Chữ bên trong lồng đèn: To, in đậm, màu vàng sáng */
     div.stButton > button p { 
-        font-size: 28px !important; 
+        font-size: 32px !important; 
         font-weight: 900 !important; 
-        color: #FFFDE7 !important; /* Chữ vàng sáng */
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important; 
+        color: #FFFDE7 !important; 
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; 
         margin: 0 !important;
+        font-family: 'Georgia', serif !important;
     }
     
+    /* Hiệu ứng khi di chuột vào Lồng đèn (phát sáng rực lên) */
     div.stButton > button:hover { 
         border-color: #FFFFFF !important; 
-        background: linear-gradient(180deg, #ff8a80, #d32f2f) !important; 
-        transform: translateY(-5px) !important; 
-        box-shadow: 0 15px 25px rgba(183, 28, 28, 0.6), inset 0 5px 15px rgba(255,255,255,0.5) !important;
+        background: radial-gradient(ellipse at center, #ff7961 0%, #d32f2f 80%) !important; 
+        transform: translateY(-8px) scale(1.05) !important; 
+        box-shadow: 0 15px 30px rgba(183, 28, 28, 0.8), 0 0 20px rgba(255, 215, 0, 0.6), inset 0 15px 15px rgba(255,255,255,0.6), inset 0 -15px 15px rgba(0,0,0,0.5) !important;
     }
     
-    /* Nút đã bị vô hiệu hóa (Đã mở) */
+    /* Lồng đèn bị tắt (Đã mở) */
     div.stButton > button:disabled {
-        background: linear-gradient(180deg, #e0e0e0, #9e9e9e) !important;
+        background: radial-gradient(ellipse at center, #e0e0e0 0%, #9e9e9e 80%) !important;
         border-color: #bdbdbd !important;
         transform: none !important;
-        box-shadow: none !important;
+        box-shadow: inset 0 10px 10px rgba(255,255,255,0.3), inset 0 -10px 10px rgba(0,0,0,0.3) !important;
     }
     div.stButton > button:disabled p {
         color: #ffffff !important;
@@ -262,11 +267,11 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<div style='font-size: 36px; font-weight: 900; color: #b71c1c; margin-bottom: 20px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
 
-btn_cols = st.columns(11) # 11 nút bấm
+btn_cols = st.columns(11) # 11 cột cho 11 nút lồng đèn
 for i, b_col in enumerate(btn_cols):
     with b_col:
-        # Nhét icon lồng đèn vào chữ của nút
-        btn_label = f"🏮 CÂU {i+1}" if not st.session_state.revealed_words[i] else "✅ ĐÃ MỞ"
+        # Xóa icon 🏮 đi vì bản thân cái nút bây giờ đã là cái lồng đèn rồi!
+        btn_label = f"CÂU {i+1}" if not st.session_state.revealed_words[i] else "✅"
         if st.button(btn_label, key=f"btn_{i}", disabled=st.session_state.revealed_words[i]):
             show_question_modal(i)
 
