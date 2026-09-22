@@ -175,10 +175,37 @@ st.markdown("""
         background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; border: 3px solid #e0e0e0; 
     }
     
-    /* GIAO DIỆN LỒNG ĐÈN TRÒN DỄ THƯƠNG (CHỈ CÓ SỐ) */
-    div.stButton > button { 
-        border-radius: 50% !important; /* Biến thành hình tròn hoàn hảo */
-        aspect-ratio: 1 / 1 !important; /* Ép tỷ lệ 1:1 */
+    /* --------------------------------------------------- */
+    /* 1. NÚT ĐÁP ÁN (Hình chữ nhật bo góc, bình thường)  */
+    /* --------------------------------------------------- */
+    button[data-testid="baseButton-secondary"] { 
+        border-radius: 20px !important; 
+        border: 3px solid #ffcdd2 !important; 
+        background: linear-gradient(to bottom, #ffffff, #ffebee) !important; 
+        box-shadow: 0 6px 15px rgba(211, 47, 47, 0.15) !important;
+        min-height: 80px !important;
+        padding: 10px 20px !important;
+        transition: all 0.3s ease !important;
+    }
+    button[data-testid="baseButton-secondary"] p { 
+        font-size: 28px !important; 
+        font-weight: 800 !important; 
+        color: #b71c1c !important; 
+        text-shadow: none !important;
+        white-space: break-spaces !important;
+    }
+    button[data-testid="baseButton-secondary"]:hover { 
+        border-color: #ef5350 !important; 
+        background: #ffebee !important; 
+        transform: translateY(-3px) !important; 
+    }
+    
+    /* --------------------------------------------------- */
+    /* 2. NÚT LỒNG ĐÈN CHỌN CÂU HỎI (Tròn xoe, lấp lánh)  */
+    /* --------------------------------------------------- */
+    button[data-testid="baseButton-primary"] { 
+        border-radius: 50% !important; /* Tròn hoàn hảo */
+        aspect-ratio: 1 / 1 !important; /* Ép vuông để thành tròn */
         border: 4px solid #FFD700 !important; /* Viền vàng */
         background: radial-gradient(circle at 30% 30%, #ff8a65 0%, #e53935 50%, #b71c1c 100%) !important; 
         box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.4), inset 0 -15px 15px rgba(0,0,0,0.4) !important;
@@ -188,26 +215,23 @@ st.markdown("""
         align-items: center !important;
         justify-content: center !important;
     }
-    
-    /* Chữ (số) bên trong lồng đèn */
-    div.stButton > button p { 
+    button[data-testid="baseButton-primary"] p { 
         font-size: 55px !important; /* Số to khổng lồ */
         font-weight: 900 !important; 
         color: #FFFDE7 !important; 
         text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 15px #FFD700 !important; 
         margin: 0 !important;
     }
-    
-    div.stButton > button:hover { 
+    button[data-testid="baseButton-primary"]:hover { 
         border-color: #FFFFFF !important; 
         background: radial-gradient(circle at 30% 30%, #ffab91 0%, #ef5350 50%, #d32f2f 100%) !important; 
         transform: translateY(-8px) scale(1.05) !important; 
     }
-    
-    div.stButton > button:disabled {
+    button[data-testid="baseButton-primary"]:disabled {
         background: radial-gradient(circle at center, #e0e0e0 0%, #9e9e9e 80%) !important;
         border-color: #bdbdbd !important;
         transform: none !important;
+        box-shadow: none !important;
     }
     
     /* Tiêu đề chính */
@@ -238,7 +262,8 @@ for i, b_col in enumerate(btn_cols):
     with b_col:
         # CHỈ HIỂN THỊ SỐ 1, 2, 3...
         btn_label = f"{i+1}" if not st.session_state.revealed_words[i] else "✅"
-        if st.button(btn_label, key=f"btn_{i}", disabled=st.session_state.revealed_words[i]):
+        # Thêm type="primary" ĐỂ ÉP NÓ BIẾN THÀNH LỒNG ĐÈN TRÒN! Các nút còn lại sẽ tự động là hình chữ nhật.
+        if st.button(btn_label, key=f"btn_{i}", disabled=st.session_state.revealed_words[i], type="primary"):
             show_question_modal(i)
 
 st.markdown("<br><br>", unsafe_allow_html=True)
