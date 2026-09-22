@@ -53,7 +53,7 @@ QUESTIONS = [
         "word": "NGÀY",
         "type": "reveal",
         "question": "7. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "image_cb2abb.png", # Hình Mâm cỗ thưởng Nguyệt
+        "image": "Screenshot 2026-09-22 233552.jpg", # Hình Mâm cỗ thưởng Nguyệt MỚI
         "answer": "Mâm cỗ thưởng Nguyệt"
     },
     {
@@ -61,7 +61,7 @@ QUESTIONS = [
         "word": "TRUNG",
         "type": "reveal",
         "question": "8. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "image_cb2a7a.png", # Hình Cây đa
+        "image": "Screenshot 2026-09-22 233610.png", # Hình Cây đa MỚI
         "answer": "Cây đa"
     },
     {
@@ -104,6 +104,11 @@ def show_question_modal(idx):
     status_key = f"q_status_{idx}"
     if status_key not in st.session_state:
         st.session_state[status_key] = "playing"
+        
+    # Key để theo dõi việc hiển thị đáp án cho câu hỏi mở
+    show_answer_key = f"show_answer_{idx}"
+    if show_answer_key not in st.session_state:
+        st.session_state[show_answer_key] = False
     
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
@@ -128,10 +133,17 @@ def show_question_modal(idx):
             
     # PHÂN BIỆT 2 DẠNG CÂU HỎI
     if q_data.get("type") == "reveal":
-        # Dạng Câu hỏi Mở: Bấm 1 phát đóng cửa sổ và lật chữ ở ngoài ngay lập tức
-        if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_{idx}", use_container_width=True, type="secondary"):
-            st.session_state.revealed_words[idx] = True
-            st.rerun()
+        # Dạng Câu hỏi Mở: Hiển thị đáp án trước khi đóng
+        if not st.session_state[show_answer_key]:
+            if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
+                st.session_state[show_answer_key] = True
+                st.rerun()
+        else:
+            # Khi đã bấm mở, hiển thị đáp án và nút lật chữ (để đóng modal)
+            st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
+            if st.button("✅ CHÍNH XÁC! LẬT CHỮ NGAY", key=f"btn_reveal_final_{idx}", use_container_width=True, type="primary"):
+                st.session_state.revealed_words[idx] = True
+                st.rerun()
                 
     else:
         # Dạng Trắc nghiệm A B C D (Giữ nguyên: Sai báo đỏ, Đúng lật chữ luôn)
