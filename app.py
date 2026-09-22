@@ -1,411 +1,329 @@
 import streamlit as st
-import random
+import time
 
-# --- 1. CẤU HÌNH GIAO DIỆN (XANH TRẮNG NƯỚC BIỂN NHẠT - CHỮ TO, IN ĐẬM) ---
-st.set_page_config(page_title="Design Your House", layout="wide", initial_sidebar_state="collapsed")
+# --- CẤU HÌNH TRANG ---
+st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
 
-st.markdown("""
-    <style>
-    /* Nền Gradient Xanh Trắng Nước Biển Nhạt (Light Ocean Blue) */
-    .stApp {
-        background: linear-gradient(135deg, #F4FDFF 0%, #E0F7FA 45%, #81D4FA 100%);
-    }
-    
-    /* TOÀN BỘ CHỮ ÉP IN ĐẬM VÀ ĐỔI MÀU XANH ĐEN */
-    h1, h2, h3, h4, h5, h6, p, span, div, label, li, a {
-        color: #0F172A !important;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
-        font-weight: 800 !important;
-    }
-    
-    /* TĂNG KÍCH THƯỚC CHỮ TỔNG THỂ */
-    h2 { font-size: 36px !important; font-weight: 900 !important; color: #0284C7 !important; }
-    h3 { font-size: 28px !important; font-weight: 900 !important; color: #0369A1 !important; }
-    h4 { font-size: 24px !important; font-weight: 900 !important; }
-    
-    /* TÙY CHỈNH KHUNG CHỨA BẢNG ĐIỀU KHIỂN (Trong suốt mờ) */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background: rgba(255, 255, 255, 0.75) !important;
-        backdrop-filter: blur(10px);
-        border: 2px solid #38BDF8 !important;
-        border-radius: 20px !important;
-        box-shadow: 0 5px 15px rgba(2, 132, 199, 0.1) !important;
-        padding: 15px;
-    }
-
-    /* TAB CỬA SỔ KHỔNG LỒ (MODAL CHỌN VẬT LIỆU) */
-    .huge-modal {
-        background: rgba(255, 255, 255, 0.98);
-        border-radius: 24px;
-        padding: 40px 50px;
-        box-shadow: 0 10px 40px rgba(2, 132, 199, 0.25);
-        border: 3px solid #0EA5E9;
-        animation: slideUp 0.3s ease-out;
-        text-align: center;
-        margin: 0 auto;
-        max-width: 1000px;
-    }
-    
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Nút bấm (Buttons) Xanh Dương Biển - PHÓNG TO */
-    .stButton>button {
-        background: linear-gradient(90deg, #0284C7 0%, #0EA5E9 100%);
-        color: #FFFFFF !important;
-        border-radius: 15px;
-        font-weight: 900 !important;
-        font-size: 22px !important; /* Tăng size chữ nút */
-        padding: 20px 15px !important; 
-        border: none;
-        transition: all 0.3s;
-        width: 100%;
-        text-transform: uppercase;
-        box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
-        margin-top: 10px;
-        white-space: normal !important; 
-        word-wrap: break-word;
-        height: auto !important;
-        min-height: 100px; /* Tăng chiều cao nút */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .stButton>button:hover {
-        background: linear-gradient(90deg, #0369A1 0%, #0284C7 100%);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
-    }
-    
-    button[disabled] {
-        background: rgba(15, 23, 42, 0.05) !important;
-        color: rgba(15, 23, 42, 0.4) !important;
-        box-shadow: none !important;
-        border: 2px dashed rgba(15, 23, 42, 0.2) !important;
-        transform: none !important;
-    }
-    
-    /* CSS Chữ của các đáp án Radio - TĂNG SIZE */
-    .stRadio p {
-        font-size: 24px !important; 
-        font-weight: 900 !important;
-        color: #0F172A !important;
-        padding-left: 10px;
-        margin-bottom: 12px;
-        line-height: 1.5;
-    }
-    
-    /* Ô quy trình đang xếp - TĂNG KÍCH THƯỚC */
-    .selected-step-box {
-        background: #F0F9FF;
-        border: 3px solid #38BDF8;
-        border-radius: 12px;
-        padding: 10px 15px;
-        text-align: center;
-        font-weight: 900 !important;
-        color: #0369A1 !important;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
-        height: 100px; /* Ô to hơn */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px; /* Chữ to hơn */
-    }
-
-    /* Danh sách vật liệu hoàn hảo 80/80 */
-    .perfect-material-box {
-        background: #ECFDF5;
-        border: 2px solid #10B981;
-        border-radius: 12px;
-        padding: 20px 25px;
-        margin-bottom: 15px;
-        font-size: 22px; 
-        font-weight: 900 !important;
-        color: #047857 !important;
-        display: flex;
-        align-items: center;
-        text-align: left;
-        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
-    }
-    .perfect-material-box span {
-        color: #047857 !important;
-        font-weight: 900 !important;
-        font-size: 20px !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# --- 2. DỮ LIỆU TRÒ CHƠI ---
-game_data = [
+# --- DỮ LIỆU 11 CÂU HỎI TRUNG THU ---
+QUESTIONS = [
     {
-        "title": "🏗️ LÀM MÓNG",
-        "desc": "Nền tảng vững chắc quyết định tuổi thọ của cả công trình.",
-        "options": [
-            {"text": "🪙 Hợp kim nhôm nguyên khối (Solid aluminum)", "correct": False, "error": "- Móng Nhôm: Chịu nén kém, oxy hóa ngầm làm sập nhà."},
-            {"text": "🧱 Bê tông cốt thép chuẩn (Reinforced concrete)", "correct": True, "error": ""},
-            {"text": "🪨 Bê tông đúc chuẩn (Standard cast concrete)", "correct": False, "error": "- Móng Bê tông đúc: Thiếu lõi thép sẽ rất giòn, không chịu được lực uốn, gây gãy nứt móng."}
-        ]
+        "id": 1,
+        "word": "CHÚC",
+        "question": "Bánh trung thu truyền thống có hai loại phổ biến nhất là bánh nướng và bánh gì?",
+        "options": ["A. Bánh in", "B. Bánh phu thê", "C. Bánh dẻo", "D. Bánh gai"],
+        "answer": "C. Bánh dẻo"
     },
     {
-        "title": "⛓️ ĐỔ KHUNG CỘT",
-        "desc": "Hệ xương sống chống chịu mọi bão tố và tải trọng.",
-        "options": [
-            {"text": "🔲 Sắt non dập hộp (Soft iron box)", "correct": False, "error": "- Cột Sắt non: Chịu tải kém, móp méo và gãy gập ngay khi gánh sức nặng tầng trên."},
-            {"text": "〰️ Thép trơn siêu dẻo (Flexible smooth steel)", "correct": False, "error": "- Cột Thép dẻo: Không bám dính bê tông, rung lắc là gãy."},
-            {"text": "📌 Thép vằn cường độ cao (High-strength steel)", "correct": True, "error": ""}
-        ]
+        "id": 2,
+        "word": "CÔ",
+        "question": "Theo sự tích dân gian Việt Nam, ai là người phải ngồi dưới gốc cây đa trên cung trăng?",
+        "options": ["A. Hậu Nghệ", "B. Chú Cuội", "C. Thiên Lôi", "D. Ngọc Hoàng"],
+        "answer": "B. Chú Cuội"
     },
     {
-        "title": "🧱 XÂY TƯỜNG",
-        "desc": "Lớp áo bảo vệ không gian sống khỏi thời tiết.",
-        "options": [
-            {"text": "🧱 Gạch đất nung / Gạch AAC (Fired brick / AAC)", "correct": True, "error": ""},
-            {"text": "🌑 Gạch xỉ than tái chế (Recycled cinder block)", "correct": False, "error": "- Tường Xỉ than: Hút nước như bọt biển, ngập ngụa khi mưa."},
-            {"text": "🧱 Gạch block xi măng tự trộn (Hand-mixed cement block)", "correct": False, "error": "- Tường Xi măng tự trộn: Trộn thủ công sai tỷ lệ khiến gạch bở rạc, ngấm nước và nứt toác sau 1 mùa mưa."}
-        ]
+        "id": 3,
+        "word": "VÀ",
+        "question": "Món đồ chơi rực rỡ làm từ tre và giấy bóng kính đỏ, gắn liền với tuổi thơ đêm rằm là gì?",
+        "options": ["A. Tò he", "B. Đèn kéo quân", "C. Mặt nạ giấy bồi", "D. Đèn ông sao"],
+        "answer": "D. Đèn ông sao"
     },
     {
-        "title": "🏠 LÀM MÁI",
-        "desc": "Lá chắn che chở tổ ấm khỏi nắng mưa.",
-        "options": [
-            {"text": "🛸 Mái nhôm đúc nguyên tấm (Cast aluminum roof)", "correct": False, "error": "- Mái Nhôm: Hấp thụ nhiệt siêu tốc, áp mái nóng như lò bát quái."},
-            {"text": "🎨 Ngói xi măng ép màu (Color pressed cement)", "correct": False, "error": "- Ngói ép: Phơi nắng 1 năm là nứt rạn, dột tong tỏng."},
-            {"text": "🏠 Bê tông & Ngói tráng men (Concrete & glazed tiles)", "correct": True, "error": ""}
-        ]
+        "id": 4,
+        "word": "CẢ",
+        "question": "Con vật thiêng liêng nào thường dẫn đầu đoàn múa rộn ràng trong tiếng trống đêm Trung thu?",
+        "options": ["A. Con lân", "B. Con rồng", "C. Con cá chép", "D. Con phượng hoàng"],
+        "answer": "A. Con lân"
     },
     {
-        "title": "⚡ ĐIỆN NƯỚC ÂM",
-        "desc": "Mạch máu ngầm cung cấp tiện nghi cho ngôi nhà.",
-        "options": [
-            {"text": "🚿 Ống nước Inox mạ bạc (Silver-plated Inox pipe)", "correct": False, "error": "- Ống Inox ngầm: Trở thành bẫy giật điện chết người nếu rò điện."},
-            {"text": "⚡ Dây đồng & Ống nhựa PPR (Copper wire & PPR pipe)", "correct": True, "error": ""},
-            {"text": "🔌 Dây điện lõi nhôm (Aluminum core wire)", "correct": False, "error": "- Dây Nhôm: Sinh nhiệt cao, chập cháy ngầm trong tường."}
-        ]
+        "id": 5,
+        "word": "LỚP",
+        "question": "Ngoài tên gọi 'Tết Thiếu nhi', Tết Trung thu còn được biết đến với tên gọi vô cùng ý nghĩa nào?",
+        "options": ["A. Tết Trùng Cửu", "B. Tết Thanh Minh", "C. Tết Đoàn viên", "D. Tết Đoan Ngọ"],
+        "answer": "C. Tết Đoàn viên"
     },
     {
-        "title": "⏳ TRÁT TƯỜNG",
-        "desc": "Làm phẳng và chuẩn bị bề mặt cho bước trang trí.",
-        "options": [
-            {"text": "🧪 Keo Epoxy pha bột đá (Epoxy with stone powder)", "correct": False, "error": "- Trát Epoxy: Tường không thở được, mồ hôi ướt nhẹp khi nồm."},
-            {"text": "💨 Xi măng nguyên chất (Pure cement without sand)", "correct": False, "error": "- Xi măng nguyên chất: Co ngót cực mạnh, nứt toác chân chim."},
-            {"text": "⏳ Vữa xi măng trộn cát mịn (Cement & fine sand)", "correct": True, "error": ""}
-        ]
+        "id": 6,
+        "word": "MỘT",
+        "question": "Truyền thuyết dân gian kể rằng, chú Cuội đã bay lên trời cùng với loài cây nào?",
+        "options": ["A. Cây khế", "B. Cây đa", "C. Cây tre", "D. Cây bồ đề"],
+        "answer": "B. Cây đa"
     },
     {
-        "title": "🎨 LÁT GẠCH & SƠN",
-        "desc": "Khoác lên ngôi nhà vẻ đẹp thẩm mỹ lộng lẫy.",
-        "options": [
-            {"text": "🛡️ Keo dán gạch & Sơn chống thấm (Tile adhesive & paint)", "correct": True, "error": ""},
-            {"text": "💧 Nước xi măng lỏng (Liquid cement slurry)", "correct": False, "error": "- Lát nước xi măng: Gạch phồng rộp, nổ vỡ lụp bụp."},
-            {"text": "🛢️ Sơn dầu bóng công nghiệp (Industrial oil paint)", "correct": False, "error": "- Sơn dầu: Bong tróc, lột ra từng mảng như da rắn."}
-        ]
+        "id": 7,
+        "word": "NGÀY",
+        "question": "Tết Trung thu hằng năm được tổ chức vào ngày nào theo lịch Âm?",
+        "options": ["A. Rằm tháng 7", "B. Rằm tháng 8", "C. Rằm tháng Giêng", "D. Mùng 1 tháng 8"],
+        "answer": "B. Rằm tháng 8"
     },
     {
-        "title": "🛋️ NỘI THẤT",
-        "desc": "Hoàn thiện không gian sống tiện nghi, sang trọng.",
-        "options": [
-            {"text": "✈️ Bồn cầu đúc Nhôm hàng không (Aluminum toilet)", "correct": False, "error": "- Bồn cầu Nhôm: Kỵ hóa chất, xịt tẩy bồn cầu là sùi bọt trắng."},
-            {"text": "🍴 Tủ bếp bọc Bạc nguyên miếng (Solid silver cabinets)", "correct": False, "error": "- Tủ bếp Bạc: Phản ứng muối mắm, xỉn đen thui cực kỳ bẩn."},
-            {"text": "🛋️ Gỗ MDF chống ẩm & Sứ Nano (MDF & Nano porcelain)", "correct": True, "error": ""}
-        ]
+        "id": 8,
+        "word": "TRUNG",
+        "question": "Nhân vật nữ xinh đẹp, dịu dàng cai quản cung trăng cùng Thỏ Ngọc là ai?",
+        "options": ["A. Công chúa Bạch Tuyết", "B. Tiên nữ Giáng Hương", "C. Chị Hằng Nga", "D. Mẫu Thượng Ngàn"],
+        "answer": "C. Chị Hằng Nga"
+    },
+    {
+        "id": 9,
+        "word": "THU",
+        "question": "Hoạt động trẻ em quây quần bên mâm quả, bánh kẹo và cùng nhau ăn uống đêm rằm gọi là gì?",
+        "options": ["A. Hái lộc", "B. Phá cỗ", "C. Du xuân", "D. Lì xì"],
+        "answer": "B. Phá cỗ"
+    },
+    {
+        "id": 10,
+        "word": "TỐT",
+        "question": "Điệu múa Lân - Sư - Rồng trong đêm rằm tháng Tám mang ý nghĩa cầu mong điều gì?",
+        "options": ["A. Mưa thuận gió hòa", "B. May mắn và thịnh vượng", "C. Trúng mùa vụ", "D. Xua đuổi thú dữ"],
+        "answer": "B. May mắn và thịnh vượng"
+    },
+    {
+        "id": 11,
+        "word": "LÀNH",
+        "question": "Trong mâm cỗ Trung thu, người ta thường dùng những múi của loại quả nào để xếp thành hình chú chó lấp lánh?",
+        "options": ["A. Quả bưởi", "B. Quả dưa hấu", "C. Quả hồng", "D. Quả lựu"],
+        "answer": "A. Quả bưởi"
     }
 ]
 
-CORRECT_SEQUENCE = [step["title"] for step in game_data]
+# --- KHỞI TẠO SESSION STATE ---
+if 'revealed_words' not in st.session_state:
+    st.session_state.revealed_words = [False] * 11 # 11 chữ cái
+if 'game_won' not in st.session_state:
+    st.session_state.game_won = False
+if 'victory_shown' not in st.session_state:
+    st.session_state.victory_shown = False
 
-# --- 3. QUẢN LÝ TRẠNG THÁI ---
-if 'phase' not in st.session_state:
-    st.session_state.phase = 1 
-if 'user_sequence' not in st.session_state:
-    st.session_state.user_sequence = []
-
-# Logic xóa cache
-if 'shuffled_processes' not in st.session_state or set(st.session_state.shuffled_processes) != set(CORRECT_SEQUENCE):
-    temp = CORRECT_SEQUENCE.copy()
-    random.shuffle(temp)
-    st.session_state.shuffled_processes = temp
-    st.session_state.user_sequence = [] 
-    st.session_state.completed_materials = []
-    st.session_state.score = 0
-    st.session_state.issues = []
-    st.session_state.active_material_step = None
-
-# =========================================================================
-# KỊCH BẢN MỞ TAB KHỔNG LỒ CHỌN VẬT LIỆU (CHIẾM TOÀN MÀN HÌNH)
-# =========================================================================
-if st.session_state.active_material_step is not None:
-    idx = st.session_state.active_material_step
-    current_data = game_data[idx]
-    current_opts = current_data["options"] 
+# --- HÀM XỬ LÝ CỬA SỔ POP-UP ---
+@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
+def show_question_modal(idx):
+    q_data = QUESTIONS[idx]
     
-    st.markdown("<div class='huge-modal'>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='font-size: 42px;'>LỰA CHỌN VẬT LIỆU<br><span style='color: #0284C7 !important;'>{current_data['title']}</span></h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='font-size: 24px; color: #475569 !important; margin-bottom: 20px;'>💡 {current_data['desc']}</h3>", unsafe_allow_html=True)
-    st.write("---")
+    status_key = f"q_status_{idx}"
+    if status_key not in st.session_state:
+        st.session_state[status_key] = "playing"
     
-    st.markdown("<h2 style='font-size: 32px; margin-bottom: 20px;'>👉 VẬT LIỆU NÀO ĐẠT TIÊU CHUẨN KỸ THUẬT? 🧐</h2>", unsafe_allow_html=True)
+    st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    option_texts = [opt["text"] for opt in current_opts]
-    choice = st.radio("Chọn vật liệu", option_texts, index=None, label_visibility="collapsed")
+    error_msg_placeholder = st.empty()
     
-    st.write("")
-    st.write("")
-    col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
-    with col_btn2:
-        if st.button("✅ XÁC NHẬN VẬT LIỆU ✅"):
-            if choice:
-                selected_opt = next(item for item in current_opts if item["text"] == choice)
-                if selected_opt["correct"]:
-                    st.session_state.score += 10
-                else:
-                    st.session_state.issues.append(selected_opt["error"])
-                
-                st.session_state.completed_materials.append(idx)
-                st.session_state.active_material_step = None
-                
-                if len(st.session_state.completed_materials) == 8:
-                    st.session_state.phase = 3
-                st.rerun()
-            else:
-                st.error("⚠️ VUI LÒNG CHỌN 1 LOẠI VẬT LIỆU!")
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =========================================================================
-# GIAO DIỆN CHÍNH
-# =========================================================================
-else:
-    st.markdown("<div style='text-align: center; margin-bottom: 30px;'>", unsafe_allow_html=True)
-    try:
-        st.image("image_04e8c0.png", use_container_width=True)
-    except:
-        st.markdown("<h1 style='font-size: 55px; font-weight: 900; color: #0369A1 !important;'>🏡 DESIGN YOUR HOUSE 🏡</h1>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([3, 7], gap="large")
-    
-    with col1:
-        with st.container(border=True):
-            st.markdown("<h3 style='text-align: center;'>🌟 Mẫu Nhà Hiện Đại 🌟</h3>", unsafe_allow_html=True)
-            st.image("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.image("https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", use_container_width=True)
-
-    with col2:
-        # -----------------------------------------------------
-        # PHASE 1: SẮP XẾP QUY TRÌNH
-        # -----------------------------------------------------
-        if st.session_state.phase == 1:
-            with st.container(border=True):
-                st.markdown("<h2>📌 BƯỚC 1: SẮP XẾP QUY TRÌNH</h2>", unsafe_allow_html=True)
-                st.markdown("<p style='font-size: 20px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm chọn các khối bên dưới để ghép vào bảng thi công theo trình tự chuẩn!</p>", unsafe_allow_html=True)
-                
-                st.markdown("<h4 style='margin-top: 15px;'>📋 BẢNG THỨ TỰ CỦA BẠN:</h4>", unsafe_allow_html=True)
-                if not st.session_state.user_sequence:
-                    st.info("Bảng đang trống. Hãy chọn các quy trình bên dưới...")
-                else:
-                    chosen_cols = st.columns(4)
-                    for i, p in enumerate(st.session_state.user_sequence):
-                        with chosen_cols[i % 4]:
-                            st.markdown(f"<div class='selected-step-box'><b>#{i+1}</b><br>{p}</div>", unsafe_allow_html=True)
-                        
-                if len(st.session_state.user_sequence) == 8:
-                    st.markdown("---")
-                    correct_count = sum(1 for i in range(8) if st.session_state.user_sequence[i] == CORRECT_SEQUENCE[i])
-                    
-                    if correct_count == 8:
-                        st.success("✅ CHUẨN XÁC 8/8 QUY TRÌNH! Bạn đã thiết lập xong tiến độ chuẩn.")
-                        if st.button("🚀 CHUYỂN SANG KHO CHỌN VẬT LIỆU 🚀"):
-                            st.session_state.phase = 2
-                            st.rerun()
-                    else:
-                        st.error(f"❌ Bạn đã xếp đúng {correct_count}/8 quy trình. Thứ tự chưa chính xác, công trình sẽ gặp lỗi!")
-                        if st.button("🔄 XÓA & SẮP XẾP LẠI 🔄"):
-                            st.session_state.user_sequence = []
-                            st.rerun()
-                else:
-                    st.markdown("---")
-                    st.markdown("<h4>🗂️ CÁC KHỐI QUY TRÌNH (Bấm để ghép):</h4>", unsafe_allow_html=True)
-                    remaining = [p for p in st.session_state.shuffled_processes if p not in st.session_state.user_sequence]
-                    
-                    grid_cols = st.columns(4) 
-                    for i, proc in enumerate(remaining):
-                        with grid_cols[i % 4]:
-                            if st.button(proc, key=f"btn_p1_{proc}"):
-                                st.session_state.user_sequence.append(proc)
-                                st.rerun()
-                                
-                    st.write("")
-                    st.markdown("---")
-                    # ĐẶT 2 NÚT DƯỚI CÙNG LÀ XÓA VÀ BỎ QUA QUA BƯỚC 2
-                    col_clear, col_skip = st.columns(2)
-                    with col_clear:
-                        if len(st.session_state.user_sequence) > 0:
-                            if st.button("⏪ XÓA LÀM LẠI TỪ ĐẦU ⏪"):
-                                st.session_state.user_sequence = []
-                                st.rerun()
-                    with col_skip:
-                        if st.button("⏭️ QUA BƯỚC 2"):
-                            st.session_state.user_sequence = CORRECT_SEQUENCE.copy()
-                            st.session_state.phase = 2
-                            st.rerun()
+    if st.session_state[status_key] == "wrong":
+        error_msg_placeholder.markdown("<div class='error-message'>❌ Sai rồi! Bạn hãy đọc kỹ và chọn lại đáp án nhé.</div>", unsafe_allow_html=True)
             
-        # -----------------------------------------------------
-        # PHASE 2: BẢNG CHỌN VẬT LIỆU
-        # -----------------------------------------------------
-        elif st.session_state.phase == 2:
-            with st.container(border=True):
-                st.markdown("<h2>🛒 BƯỚC 2: QUẢN LÝ VẬT TƯ</h2>", unsafe_allow_html=True)
-                st.markdown("<p style='font-size: 20px; color: #0F172A !important;'>✨ Hướng dẫn: Bấm vào các hạng mục bên dưới để phê duyệt vật liệu xây dựng!</p>", unsafe_allow_html=True)
-                st.write("")
-                
-                btn_cols = st.columns(4) 
-                for i, step_data in enumerate(game_data):
-                    with btn_cols[i % 4]:
-                        if i in st.session_state.completed_materials:
-                            st.button(f"✅ ĐÃ DUYỆT:\n{step_data['title']}", key=f"btn_p2_{i}", disabled=True)
-                        else:
-                            if st.button(f"⚙️ XỬ LÝ:\n{step_data['title']}", key=f"btn_p2_{i}"):
-                                st.session_state.active_material_step = i
-                                st.rerun()
-
-        # -----------------------------------------------------
-        # PHASE 3: KẾT QUẢ NGHIỆM THU
-        # -----------------------------------------------------
-        elif st.session_state.phase == 3:
-            with st.container(border=True):
-                st.markdown("<h2>🎯 HỒ SƠ NGHIỆM THU CÔNG TRÌNH 🏆</h2>", unsafe_allow_html=True)
-                st.markdown(f"<h3>ĐIỂM AN TOÀN KỸ THUẬT: <br><span style='color: #0284C7 !important; font-size: 60px;'>{st.session_state.score} / 80 ĐIỂM</span></h3>", unsafe_allow_html=True)
-                
-                if st.session_state.score == 80:
-                    st.success("✅ ĐẠT CHUẨN QUỐC TẾ! CÔNG TRÌNH HOÀN HẢO TUYỆT ĐỐI! 🎉")
-                    st.balloons()
-                    
-                    st.markdown("---")
-                    st.markdown("<h3 style='text-align: center; margin-bottom: 20px; color: #10B981 !important;'>🏆 BẢNG VẬT LIỆU CHUẨN ĐÃ SỬ DỤNG 🏆</h3>", unsafe_allow_html=True)
-                    
-                    for item in game_data:
-                        correct_material = next(opt["text"] for opt in item["options"] if opt["correct"])
-                        st.markdown(f"""
-                        <div class='perfect-material-box'>
-                            <span style='width: 35%; font-size: 20px;'>{item['title']}</span> 
-                            <span style='width: 65%; border-left: 3px solid rgba(4,120,87,0.3); padding-left: 15px; font-size: 20px;'>{correct_material}</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                elif st.session_state.score >= 50:
-                    st.warning("⚠️ ĐẠT YÊU CẦU CƠ BẢN. Kiến trúc bề ngoài ổn nhưng tồn tại rủi ro rình rập!")
+    ans_cols = st.columns(2)
+    for i, option in enumerate(q_data['options']):
+        with ans_cols[i % 2]:
+            if st.button(option, key=f"opt_{idx}_{i}", use_container_width=True):
+                if option == q_data['answer']:
+                    st.session_state[status_key] = "correct"
+                    st.session_state.revealed_words[idx] = True
+                    st.rerun() 
                 else:
-                    st.error("🚨 KHÔNG ĐẠT! Vi phạm nghiêm trọng tiêu chuẩn kỹ thuật xây dựng!")
-                
-                if st.session_state.issues:
-                    st.markdown("<h4 style='margin-top: 20px;'>🛠️ BÁO CÁO SỰ CỐ VẬT LIỆU:</h4>", unsafe_allow_html=True)
-                    for issue in st.session_state.issues:
-                        st.markdown(f"<p style='padding-left: 15px; border-left: 4px solid #EF4444; font-size: 18px; font-weight: bold;'>{issue}</p>", unsafe_allow_html=True)
+                    st.session_state[status_key] = "wrong"
+                    error_msg_placeholder.markdown("<div class='error-message'>❌ Sai rồi! Bạn hãy đọc kỹ và chọn lại đáp án nhé.</div>", unsafe_allow_html=True)
 
-                st.write("")
-                if st.button("🔄 BẮT ĐẦU DỰ ÁN MỚI 🔄"):
-                    st.session_state.clear()
-                    st.rerun()
+# --- CSS GIAO DIỆN ĐỎ TRẮNG - LỒNG ĐÈN ---
+st.markdown("""
+<style>
+    /* Nền Đỏ Trắng Lễ Hội */
+    .stApp { 
+        background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); 
+        font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; 
+    }
+    
+    /* Trang trí lồng đèn lấp lánh */
+    .lantern-decor {
+        position: absolute;
+        font-size: 50px;
+        opacity: 0.15;
+        animation: float 4s ease-in-out infinite;
+        z-index: 0;
+    }
+    .l1 { top: 10px; left: 5%; }
+    .l2 { top: 30px; right: 5%; animation-delay: 1s; }
+    .l3 { bottom: 20px; left: 10%; animation-delay: 2s; }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .white-container { 
+        background-color: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(15px); 
+        border-radius: 25px; 
+        padding: 35px; 
+        box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); 
+        border: 3px solid #ffcdd2; 
+        margin-bottom: 25px; 
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .question-text { 
+        font-size: 34px; 
+        color: #b71c1c; 
+        text-align: center; 
+        margin-bottom: 30px; 
+        font-weight: 900; 
+        line-height: 1.5; 
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.1); 
+    }
+    
+    .error-message { 
+        background: linear-gradient(90deg, #ffeb3b, #ffc107); 
+        color: #b71c1c; 
+        padding: 15px; 
+        border-radius: 15px; 
+        text-align: center; 
+        font-size: 24px; 
+        font-weight: 900; 
+        margin-bottom: 25px; 
+        border-left: 8px solid #d32f2f; 
+        box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+    }
+    
+    /* Ô chữ 11 ô cần thu nhỏ xíu để vừa màn hình */
+    .word-box { 
+        display: flex; justify-content: center; align-items: center; 
+        height: 100px; 
+        background: linear-gradient(145deg, #f44336, #c62828); 
+        color: #fffde7; 
+        border-radius: 15px; 
+        font-size: 32px; 
+        font-weight: 900; 
+        box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.5); 
+        border: 3px solid #ff8a80; 
+        margin: 5px; 
+    }
+    .word-hidden { 
+        background: linear-gradient(145deg, #ffffff, #eeeeee); 
+        color: #bdbdbd; 
+        box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); 
+        border: 3px solid #e0e0e0; 
+        text-shadow: none;
+    }
+    
+    /* Nút bấm (Câu hỏi & Đáp án) Đỏ - Vàng */
+    div.stButton > button { 
+        border-radius: 20px; 
+        font-weight: 900; 
+        height: auto; 
+        min-height: 85px;
+        padding: 10px;
+        border: 3px solid #ef5350; 
+        background: linear-gradient(to bottom, #ffffff, #ffebee); 
+        color: #c62828 !important; 
+        box-shadow: 0 6px 15px rgba(183, 28, 28, 0.15); 
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+        white-space: normal; 
+    }
+    div.stButton > button p {
+        font-size: 28px !important; /* Chữ siêu bự */
+        font-weight: 900 !important; 
+        margin: 0 !important;
+        color: #c62828 !important;
+    }
+    div.stButton > button:hover { 
+        border-color: #b71c1c; 
+        background: linear-gradient(145deg, #e53935, #b71c1c); 
+        box-shadow: 0 10px 25px rgba(183, 28, 28, 0.5); 
+        transform: translateY(-5px); 
+    }
+    div.stButton > button:hover p {
+        color: #ffffff !important; /* Đổi màu chữ thành trắng khi rê chuột */
+    }
+    
+    /* Tiêu đề chính */
+    .main-title { 
+        text-align: center; 
+        font-size: 55px; 
+        font-weight: 900; 
+        margin-bottom: 40px; 
+        text-transform: uppercase; 
+        background: linear-gradient(to right, #b71c1c, #ff9800, #b71c1c); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.15); 
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --- GIAO DIỆN CHÍNH ---
+st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">⭐</div><div class="lantern-decor l3">🌕</div>', unsafe_allow_html=True)
+cols = st.columns(11) # 11 cột cho 11 chữ
+for i, col in enumerate(cols):
+    with col:
+        if st.session_state.revealed_words[i]:
+            st.markdown(f'<div class="word-box">{QUESTIONS[i]["word"]}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="word-box word-hidden">?</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown("<div style='font-size: 32px; font-weight: 900; color: #b71c1c; margin-bottom: 20px; text-align: center;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ:</div>", unsafe_allow_html=True)
+btn_cols = st.columns(11) # 11 nút bấm
+for i, b_col in enumerate(btn_cols):
+    with b_col:
+        btn_label = f"Câu {i+1}" if not st.session_state.revealed_words[i] else "✅"
+        if st.button(btn_label, key=f"btn_{i}", disabled=st.session_state.revealed_words[i]):
+            show_question_modal(i)
+
+st.markdown("<br><br>", unsafe_allow_html=True)
+col_empty1, col_guess, col_empty2 = st.columns([1, 2, 1])
+with col_guess:
+    st.markdown("<div style='text-align: center; font-size: 28px; font-weight: 900; color: #b71c1c; margin-bottom: 15px;'>💡 Lớp mình đã tìm ra thông điệp chưa?</div>", unsafe_allow_html=True)
+    if st.button("🌟 LẬT MỞ TOÀN BỘ THÔNG ĐIỆP NGAY 🌟", key="btn_reveal_all", use_container_width=True):
+        st.session_state.revealed_words = [True] * 11
+        st.session_state.victory_shown = False 
+        st.rerun()
+
+# --- POPUP CHIẾN THẮNG ---
+@st.dialog("🎉 ĐÊM HỘI TRĂNG RẰM ĐÃ TỎA SÁNG 🎉", width="large")
+def show_victory_modal():
+    st.balloons()
+    # Mưa Bánh Trung Thu, Lồng đèn, Thỏ ngọc
+    st.markdown("""
+    <style>
+    @keyframes fall {
+        0% { transform: translateY(-10vh) rotate(0deg); opacity: 1;}
+        100% { transform: translateY(100vh) rotate(360deg); opacity: 0;}
+    }
+    .flower { position: fixed; font-size: 35px; z-index: 9999; top: -10vh; animation: fall linear forwards; }
+    </style>
+    <script>
+    const flowers = ['🏮', '🌕', '⭐', '✨', '🥮', '🐇']; 
+    for(let i=0; i<70; i++) {
+        let f = document.createElement('div');
+        f.className = 'flower';
+        f.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+        f.style.left = Math.random() * 100 + 'vw';
+        f.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        f.style.animationDelay = Math.random() * 2 + 's';
+        window.parent.document.body.appendChild(f);
+    }
+    </script>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style='text-align: center; padding: 20px 10px;'>
+        <h1 style='color: #d32f2f; font-size: 50px; font-weight: 900; margin-bottom: 10px; line-height: 1.4; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);'>
+            CHÚC CÔ VÀ CẢ LỚP<br>MỘT NGÀY TRUNG THU TỐT LÀNH
+        </h1>
+        <p style='color: #ff9800; font-size: 38px; font-weight: 900; margin-top: 25px; text-shadow: 0 0 15px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 193, 7, 0.6);'>
+            luôn hạnh phúc và ngập tràn niềm vui 🏮🌕
+        </p>
+    </div>
+    <br>
+    """, unsafe_allow_html=True)
+    
+    if st.button("🌟 Tuyệt vời!", use_container_width=True):
+        st.session_state.victory_shown = True
+        st.rerun()
+
+if all(st.session_state.revealed_words):
+    if not st.session_state.victory_shown:
+        show_victory_modal() 
+    else:
+        st.success("🎉 XUẤT SẮC! CẢ LỚP ĐÃ GIẢI MÃ THÀNH CÔNG THÔNG ĐIỆP TRUNG THU!")
