@@ -134,16 +134,22 @@ def show_question_modal(idx):
     # PHÂN BIỆT 2 DẠNG CÂU HỎI
     if q_data.get("type") == "reveal":
         # Dạng Câu hỏi Mở: Hiển thị đáp án và lật chữ cùng lúc
+        
+        # Dùng st.empty() để có thể làm biến mất nút "MỞ ĐÁP ÁN" ngay lập tức sau khi bấm
+        reveal_placeholder = st.empty()
+        
         if not st.session_state[show_answer_key]:
-            if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
+            if reveal_placeholder.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
                 st.session_state[show_answer_key] = True
-                st.session_state.revealed_words[idx] = True # THÊM MỚI: Lật ô chữ ở màn hình chính cùng lúc
-                st.rerun()
-        else:
+                st.session_state.revealed_words[idx] = True # Lật ô chữ ở màn hình chính cùng lúc
+                reveal_placeholder.empty() # Ẩn nút bấm để nhường chỗ cho ô đáp án
+                # ĐÃ BỎ LỆNH st.rerun() Ở ĐÂY ĐỂ POPUP KHÔNG BỊ TỰ ĐÓNG
+                
+        if st.session_state[show_answer_key]:
             # Khi đã bấm mở, hiển thị đáp án. Cửa sổ giữ nguyên cho đến khi bạn bấm Đóng.
             st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
             if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="primary"):
-                st.rerun() # Bấm đóng sẽ tắt popup, để lộ ô chữ đã lật
+                st.rerun() # Bấm đóng sẽ tắt popup, quay lại xem ô chữ đã lật
                 
     else:
         # Dạng Trắc nghiệm A B C D (Giữ nguyên: Sai báo đỏ, Đúng lật chữ luôn)
