@@ -53,7 +53,7 @@ QUESTIONS = [
         "word": "NGÀY",
         "type": "reveal",
         "question": "7. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh1.jpg", 
+        "image": "anh7.png", 
         "answer": "Mâm cỗ thưởng Nguyệt"
     },
     {
@@ -61,7 +61,7 @@ QUESTIONS = [
         "word": "TRUNG",
         "type": "reveal",
         "question": "8. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh2.jpg", 
+        "image": "anh8.png", 
         "answer": "Cây đa"
     },
     {
