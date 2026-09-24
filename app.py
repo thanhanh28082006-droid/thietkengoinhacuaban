@@ -3,17 +3,18 @@ import time
 
 st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
 
+# THÔNG ĐIỆP 10 CHỮ: TRĂNG SÁNG NHẤT KHI LÒNG NGƯỜI LUÔN HƯỚNG VỀ NHAU
 QUESTIONS = [
     {
         "id": 1,
-        "word": "CHÚC",
+        "word": "TRĂNG",
         "type": "reveal", 
         "question": "1. Tết Trung thu là Tết đoàn viên, ai ai cũng muốn về nhà. Vậy cái gì trong đêm Trung thu càng đi xa thì lại càng gần, mà càng đứng yên thì lại càng xa?",
         "answer": "Mặt Trăng"
     },
     {
         "id": 2,
-        "word": "CÔ",
+        "word": "SÁNG",
         "type": "choice", 
         "question": "2. Ba linh vật trong các điệu múa đêm hội trăng rằm là gì?",
         "options": ["A. Lân – Sư tử – Rồng", "B. Lân – Phượng hoàng – Rồng", "C. Lân – Rồng – Phụng", "D. Lân – Rồng – Rắn"],
@@ -21,14 +22,14 @@ QUESTIONS = [
     },
     {
         "id": 3,
-        "word": "VÀ",
+        "word": "NHẤT",
         "type": "reveal",
         "question": "3. Mỗi năm mỗi độ thu về, Bắc Nam xuôi ngược, chợ quê thị thành. Từng đoàn người ngựa diễu hành, Rước vui trẩy hội lượn quanh ngọn đèn. Là đèn gì?",
         "answer": "Đèn kéo quân"
     },
     {
         "id": 4,
-        "word": "CẢ",
+        "word": "KHI",
         "type": "choice",
         "question": "4. Trong truyện cổ tích, chú Cuội vì lý do gì mà phải trốn lên mặt trăng?",
         "options": ["A. Trốn nợ", "B. Mê chị Hằng nên theo chị", "C. Níu giữ cây Đa có phép cải tử hoàn sinh", "D. Bị Ngọc Hoàng bắt đi"],
@@ -36,62 +37,57 @@ QUESTIONS = [
     },
     {
         "id": 5,
-        "word": "LỚP",
+        "word": "LÒNG",
         "type": "reveal",
         "question": "5. Khi bị kéo lên Cung Trăng, Chú Cuội mang theo vật gì?",
         "answer": "Cây rìu"
     },
     {
         "id": 6,
-        "word": "MỘT",
+        "word": "NGƯỜI",
         "type": "reveal",
         "question": "6. Mặt thì đỏ choét, bụng thì to<br>Đi cùng chú lân, gõ cộc cạch<br>Quạt mo phe phẩy, miệng cười toe<br>Lũ trẻ đuổi theo, reo hò thích chí?<br>(Là ai?)",
         "answer": "Ông Địa"
     },
     {
         "id": 7,
-        "word": "NGÀY",
+        "word": "LUÔN",
         "type": "reveal",
         "question": "7. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh7.png", 
+        "image": "anh7.png", # Đã khớp với file trên GitHub của bạn
         "answer": "Mâm cỗ thưởng Nguyệt"
     },
     {
         "id": 8,
-        "word": "TRUNG",
+        "word": "HƯỚNG",
         "type": "reveal",
         "question": "8. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh8.png", 
+        "image": "anh8.png", # Đã khớp với file trên GitHub của bạn
         "answer": "Cây đa"
     },
     {
         "id": 9,
-        "word": "THU",
+        "word": "VỀ",
         "type": "choice",
-        "question": "9. (Câu hỏi chờ thêm nội dung) Bánh nào đặc trưng nhất dịp Trung Thu?",
-        "options": ["A. Bánh chưng", "B. Bánh nướng, bánh dẻo", "C. Bánh trôi", "D. Bánh tét"],
-        "answer": "B. Bánh nướng, bánh dẻo"
+        "question": "9. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
+        "audio": "buontrang.mp3", # Đã ghép file âm thanh
+        "options": ["A. Buồn Trăng", "B. Thằng Cuội", "C. Chiếc đèn ông sao", "D. Rước đèn tháng tám"],
+        "answer": "A. Buồn Trăng"
     },
     {
         "id": 10,
-        "word": "TỐT",
+        "word": "NHAU",
         "type": "choice",
-        "question": "10. (Câu hỏi chờ thêm nội dung) Đêm Trung Thu là ngày rằm tháng mấy?",
-        "options": ["A. Tháng 7", "B. Tháng 8", "C. Tháng 9", "D. Tháng 10"],
-        "answer": "B. Tháng 8"
-    },
-    {
-        "id": 11,
-        "word": "LÀNH",
-        "type": "choice",
-        "question": "11. (Câu hỏi chờ thêm nội dung) Ai là người cai quản cung trăng?",
-        "options": ["A. Công chúa", "B. Tiên nữ", "C. Chị Hằng Nga", "D. Bà Tiên"],
-        "answer": "C. Chị Hằng Nga"
+        "question": "10. Lắng nghe giai điệu rộn ràng sau đây. Nhạc phẩm này gắn liền với đêm hội nào?",
+        "audio": "hoitrangram.mp3", # Đã ghép file âm thanh
+        "options": ["A. Lễ Giáng Sinh", "B. Hội Trăng Rằm", "C. Tết Nguyên Đán", "D. Tết Đoan Ngọ"],
+        "answer": "B. Hội Trăng Rằm"
     }
 ]
 
+# Đổi thành 10 chữ cái tương ứng với 10 câu
 if 'revealed_words' not in st.session_state:
-    st.session_state.revealed_words = [False] * 11
+    st.session_state.revealed_words = [False] * 10
 if 'game_won' not in st.session_state:
     st.session_state.game_won = False
 if 'victory_shown' not in st.session_state:
@@ -112,19 +108,28 @@ def show_question_modal(idx):
     
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # Chèn ảnh và video an toàn
+    # Xử lý Hình ảnh
     if "image" in q_data:
         try:
             st.image(q_data["image"], use_container_width=True)
         except Exception:
-            st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}'). Hãy đảm bảo ảnh nằm cùng thư mục với code!")
+            st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}').")
         st.markdown("<br>", unsafe_allow_html=True)
         
+    # Xử lý Video
     if "video" in q_data:
         try:
             st.video(q_data["video"])
         except Exception:
             st.warning("⚠️ Lỗi không phát được video.")
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+    # Xử lý Âm thanh (Audio mp3)
+    if "audio" in q_data:
+        try:
+            st.audio(q_data["audio"])
+        except Exception:
+            st.warning(f"⚠️ Khung nhạc trống (Chưa tìm thấy file: '{q_data['audio']}').")
         st.markdown("<br>", unsafe_allow_html=True)
     
     error_msg_placeholder = st.empty()
@@ -134,22 +139,16 @@ def show_question_modal(idx):
     # PHÂN BIỆT 2 DẠNG CÂU HỎI
     if q_data.get("type") == "reveal":
         # Dạng Câu hỏi Mở: Hiển thị đáp án và lật chữ cùng lúc
-        
-        # Dùng st.empty() để có thể làm biến mất nút "MỞ ĐÁP ÁN" ngay lập tức sau khi bấm
-        reveal_placeholder = st.empty()
-        
         if not st.session_state[show_answer_key]:
-            if reveal_placeholder.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
+            if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
                 st.session_state[show_answer_key] = True
                 st.session_state.revealed_words[idx] = True # Lật ô chữ ở màn hình chính cùng lúc
-                reveal_placeholder.empty() # Ẩn nút bấm để nhường chỗ cho ô đáp án
-                # ĐÃ BỎ LỆNH st.rerun() Ở ĐÂY ĐỂ POPUP KHÔNG BỊ TỰ ĐÓNG
-                
-        if st.session_state[show_answer_key]:
-            # Khi đã bấm mở, hiển thị đáp án. Cửa sổ giữ nguyên cho đến khi bạn bấm Đóng.
+                st.rerun()
+        else:
+            # Khi đã bấm mở, hiển thị đáp án. Cửa sổ giữ nguyên cho đến khi bấm ĐÓNG
             st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
             if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="primary"):
-                st.rerun() # Bấm đóng sẽ tắt popup, quay lại xem ô chữ đã lật
+                st.rerun() 
                 
     else:
         # Dạng Trắc nghiệm A B C D (Giữ nguyên: Sai báo đỏ, Đúng lật chữ luôn)
@@ -218,14 +217,14 @@ st.markdown("""
         content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
         width: 3px; height: 30px; background: #FFD700; box-shadow: 0 0 8px #FFD700;
     }
-    /* Chữ bên trong Lồng Đèn (Icon + Số 1, 2, 3) */
+    /* Chữ bên trong Lồng Đèn (Icon + Số) */
     button[kind="primary"] p { 
-        font-size: 26px !important; 
+        font-size: 24px !important; /* Chỉnh nhỏ lại xíu cho vừa 10 cột */
         font-weight: 900 !important; 
         color: #FFFDE7 !important; 
         text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; 
         margin: 0 !important;
-        letter-spacing: 1px !important;
+        letter-spacing: 0px !important;
     }
     button[kind="primary"]:hover { 
         background: radial-gradient(circle at center, #ff8a80 0%, #b71c1c 80%) !important; 
@@ -270,7 +269,8 @@ st.markdown("""
 st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
-cols = st.columns(11)
+# Chia thành 10 cột cho 10 chữ
+cols = st.columns(10)
 for i, col in enumerate(cols):
     with col:
         if st.session_state.revealed_words[i]:
@@ -281,13 +281,13 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<div style='font-size: 36px; font-weight: 900; color: #b71c1c; margin-bottom: 30px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
 
-# 11 Icon dễ thương cho 11 lồng đèn
-lantern_emojis = ['🐟', '⭐', '🦋', '💖', '🐰', '🐱', '🐯', '🐷', '🐻', '🌸', '🏮']
+# 10 Icon dễ thương cho 10 lồng đèn
+lantern_emojis = ['🐟', '⭐', '🦋', '💖', '🐰', '🐱', '🐯', '🐷', '🐻', '🌸']
 
-btn_cols = st.columns(11)
+# Chia thành 10 cột cho nút lồng đèn
+btn_cols = st.columns(10)
 for i, b_col in enumerate(btn_cols):
     with b_col:
-        # Nút lồng đèn: Dùng type="primary" để ăn CSS lồng đèn
         btn_label = f"{lantern_emojis[i]} {i+1}" if not st.session_state.revealed_words[i] else "✅"
         if st.button(btn_label, key=f"btn_{i}", disabled=st.session_state.revealed_words[i], type="primary"):
             show_question_modal(i)
@@ -296,9 +296,8 @@ st.markdown("<br><br>", unsafe_allow_html=True)
 col_empty1, col_guess, col_empty2 = st.columns([1, 2, 1])
 with col_guess:
     st.markdown("<div style='text-align: center; font-size: 32px; font-weight: 900; color: #b71c1c; margin-bottom: 15px;'>💡 Lớp mình đã tìm ra thông điệp chưa?</div>", unsafe_allow_html=True)
-    # Nút phụ trợ: Dùng type="secondary"
     if st.button("🌟 LẬT MỞ TOÀN BỘ THÔNG ĐIỆP NGAY 🌟", key="btn_reveal_all", use_container_width=True, type="secondary"):
-        st.session_state.revealed_words = [True] * 11
+        st.session_state.revealed_words = [True] * 10
         st.session_state.victory_shown = False 
         st.rerun()
 
@@ -330,10 +329,10 @@ def show_victory_modal():
     st.markdown("""
     <div style='text-align: center; padding: 20px 10px;'>
         <h1 style='color: #d32f2f; font-size: 55px; font-weight: 900; margin-bottom: 10px; line-height: 1.4; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);'>
-            CHÚC CÔ VÀ CẢ LỚP<br>MỘT NGÀY TRUNG THU TỐT LÀNH
+            THÔNG ĐIỆP TRUNG THU
         </h1>
         <p style='color: #ff9800; font-size: 40px; font-weight: 900; margin-top: 25px; text-shadow: 0 0 15px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 193, 7, 0.6);'>
-            luôn hạnh phúc và ngập tràn niềm vui 🏮🌕
+            "Trăng sáng nhất khi lòng người luôn hướng về nhau" 🏮🌕
         </p>
     </div>
     <br>
