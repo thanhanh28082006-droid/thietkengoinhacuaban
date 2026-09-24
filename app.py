@@ -4,84 +4,85 @@ import time
 st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
 
 # THÔNG ĐIỆP 10 CHỮ: TRĂNG SÁNG NHẤT KHI LÒNG NGƯỜI LUÔN HƯỚNG VỀ NHAU
+# Đã xáo trộn nội dung câu hỏi, giữ nguyên thứ tự chữ cái thông điệp
 QUESTIONS = [
     {
         "id": 1,
         "word": "TRĂNG",
-        "type": "reveal", 
-        "question": "1. Tết Trung thu là Tết đoàn viên, ai ai cũng muốn về nhà. Vậy cái gì trong đêm Trung thu càng đi xa thì lại càng gần, mà càng đứng yên thì lại càng xa?",
-        "answer": "Mặt Trăng"
-    },
-    {
-        "id": 2,
-        "word": "SÁNG",
-        "type": "choice", 
-        "question": "2. Ba linh vật trong các điệu múa đêm hội trăng rằm là gì?",
-        "options": ["A. Lân – Sư tử – Rồng", "B. Lân – Phượng hoàng – Rồng", "C. Lân – Rồng – Phụng", "D. Lân – Rồng – Rắn"],
-        "answer": "A. Lân – Sư tử – Rồng"
-    },
-    {
-        "id": 3,
-        "word": "NHẤT",
         "type": "reveal",
-        "question": "3. Mỗi năm mỗi độ thu về, Bắc Nam xuôi ngược, chợ quê thị thành. Từng đoàn người ngựa diễu hành, Rước vui trẩy hội lượn quanh ngọn đèn. Là đèn gì?",
-        "answer": "Đèn kéo quân"
-    },
-    {
-        "id": 4,
-        "word": "KHI",
-        "type": "choice",
-        "question": "4. Trong truyện cổ tích, chú Cuội vì lý do gì mà phải trốn lên mặt trăng?",
-        "options": ["A. Trốn nợ", "B. Mê chị Hằng nên theo chị", "C. Níu giữ cây Đa có phép cải tử hoàn sinh", "D. Bị Ngọc Hoàng bắt đi"],
-        "answer": "C. Níu giữ cây Đa có phép cải tử hoàn sinh"
-    },
-    {
-        "id": 5,
-        "word": "LÒNG",
-        "type": "reveal",
-        "question": "5. Khi bị kéo lên Cung Trăng, Chú Cuội mang theo vật gì?",
-        "answer": "Cây rìu"
-    },
-    {
-        "id": 6,
-        "word": "NGƯỜI",
-        "type": "reveal",
-        "question": "6. Mặt thì đỏ choét, bụng thì to<br>Đi cùng chú lân, gõ cộc cạch<br>Quạt mo phe phẩy, miệng cười toe<br>Lũ trẻ đuổi theo, reo hò thích chí?<br>(Là ai?)",
-        "answer": "Ông Địa"
-    },
-    {
-        "id": 7,
-        "word": "LUÔN",
-        "type": "reveal",
-        "question": "7. Đuổi hình bắt chữ: Đây là gì?",
+        "question": "1. Đuổi hình bắt chữ: Đây là gì?",
         "image": "anh7.png", 
         "answer": "Mâm cỗ thưởng Nguyệt"
     },
     {
-        "id": 8,
-        "word": "HƯỚNG",
-        "type": "reveal",
-        "question": "8. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh8.png", 
-        "answer": "Cây đa"
+        "id": 2,
+        "word": "SÁNG",
+        "type": "choice",
+        "question": "2. Trong truyện cổ tích, chú Cuội vì lý do gì mà phải trốn lên mặt trăng?",
+        "options": ["A. Trốn nợ", "B. Mê chị Hằng nên theo chị", "C. Níu giữ cây Đa có phép cải tử hoàn sinh", "D. Bị Ngọc Hoàng bắt đi"],
+        "answer": "C. Níu giữ cây Đa có phép cải tử hoàn sinh"
     },
     {
-        "id": 9,
-        "word": "VỀ",
+        "id": 3,
+        "word": "NHẤT",
         "type": "choice",
-        "question": "9. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
+        "question": "3. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", 
         "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buồn Trăng", "D. Vầng trăng"],
         "answer": "C. Buồn Trăng"
     },
     {
-        "id": 10,
-        "word": "NHAU",
+        "id": 4,
+        "word": "KHI",
+        "type": "reveal", 
+        "question": "4. Tết Trung thu là Tết đoàn viên, ai ai cũng muốn về nhà. Vậy cái gì trong đêm Trung thu càng đi xa thì lại càng gần, mà càng đứng yên thì lại càng xa?",
+        "answer": "Mặt Trăng"
+    },
+    {
+        "id": 5,
+        "word": "LÒNG",
+        "type": "reveal",
+        "question": "5. Đuổi hình bắt chữ: Đây là gì?",
+        "image": "anh8.png", 
+        "answer": "Cây đa"
+    },
+    {
+        "id": 6,
+        "word": "NGƯỜI",
+        "type": "choice", 
+        "question": "6. Ba linh vật trong các điệu múa đêm hội trăng rằm là gì?",
+        "options": ["A. Lân – Sư tử – Rồng", "B. Lân – Phượng hoàng – Rồng", "C. Lân – Rồng – Phụng", "D. Lân – Rồng – Rắn"],
+        "answer": "A. Lân – Sư tử – Rồng"
+    },
+    {
+        "id": 7,
+        "word": "LUÔN",
         "type": "choice",
-        "question": "10. Lắng nghe giai điệu rộn ràng sau đây. Nhạc phẩm này có tên là gì?",
+        "question": "7. Lắng nghe giai điệu rộn ràng sau đây. Nhạc phẩm này có tên là gì?",
         "audio": "hoitrangram.mp3", 
         "options": ["A. Ngày hội trăng tròn", "B. Hội Trăng Rằm", "C. Hội trăng tròn", "D. Đêm nghe hội trăng"],
         "answer": "B. Hội Trăng Rằm"
+    },
+    {
+        "id": 8,
+        "word": "HƯỚNG",
+        "type": "reveal",
+        "question": "8. Mặt thì đỏ choét, bụng thì to<br>Đi cùng chú lân, gõ cộc cạch<br>Quạt mo phe phẩy, miệng cười toe<br>Lũ trẻ đuổi theo, reo hò thích chí?<br>(Là ai?)",
+        "answer": "Ông Địa"
+    },
+    {
+        "id": 9,
+        "word": "VỀ",
+        "type": "reveal",
+        "question": "9. Khi bị kéo lên Cung Trăng, Chú Cuội mang theo vật gì?",
+        "answer": "Cây rìu"
+    },
+    {
+        "id": 10,
+        "word": "NHAU",
+        "type": "reveal",
+        "question": "10. Mỗi năm mỗi độ thu về, Bắc Nam xuôi ngược, chợ quê thị thành. Từng đoàn người ngựa diễu hành, Rước vui trẩy hội lượn quanh ngọn đèn. Là đèn gì?",
+        "answer": "Đèn kéo quân"
     }
 ]
 
