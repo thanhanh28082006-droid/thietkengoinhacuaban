@@ -59,7 +59,7 @@ QUESTIONS = [
     },
     {
         "id": 8,
-        "word": "LUÔN",
+        "word": "HƯỚNG",
         "type": "reveal",
         "question": "8. Đuổi hình bắt chữ: Đây là gì?",
         "image": "anh8.png", # Đã khớp với file trên GitHub của bạn
@@ -67,7 +67,7 @@ QUESTIONS = [
     },
     {
         "id": 9,
-        "word": "HƯỚNG",
+        "word": "VỀ",
         "type": "choice",
         "question": "9. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", # Đã ghép file âm thanh
@@ -76,7 +76,7 @@ QUESTIONS = [
     },
     {
         "id": 10,
-        "word": "VỀ",
+        "word": "NHAU",
         "type": "choice",
         "question": "10. Lắng nghe giai điệu rộn ràng sau đây. Nhạc phẩm này có tên là gì?",
         "audio": "hoitrangram.mp3", # Đã ghép file âm thanh
