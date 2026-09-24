@@ -93,7 +93,7 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
+@st.dialog("🏮 Giải mã cùng chúng mình 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
@@ -289,7 +289,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
 # Chia thành 10 cột cho 10 chữ
