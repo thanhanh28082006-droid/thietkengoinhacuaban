@@ -71,8 +71,8 @@ QUESTIONS = [
         "type": "choice",
         "question": "9. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", # Đã ghép file âm thanh
-        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buồn Trăng", "D. Vầng trăng"],
-        "answer": "C. Buồn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buôn Trăng", "D. Vầng trăng"],
+        "answer": "C. Buôn Trăng"
     },
     {
         "id": 10,
