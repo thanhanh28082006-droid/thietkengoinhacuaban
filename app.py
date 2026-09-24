@@ -54,7 +54,7 @@ QUESTIONS = [
         "word": "LUÔN",
         "type": "reveal",
         "question": "7. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh7.png", # Đã khớp với file trên GitHub của bạn
+        "image": "anh7.png", 
         "answer": "Mâm cỗ thưởng Nguyệt"
     },
     {
@@ -62,7 +62,7 @@ QUESTIONS = [
         "word": "HƯỚNG",
         "type": "reveal",
         "question": "8. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh8.png", # Đã khớp với file trên GitHub của bạn
+        "image": "anh8.png", 
         "answer": "Cây đa"
     },
     {
@@ -70,7 +70,7 @@ QUESTIONS = [
         "word": "VỀ",
         "type": "choice",
         "question": "9. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
-        "audio": "buontrang.mp3", # Đã ghép file âm thanh
+        "audio": "buontrang.mp3", 
         "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buồn Trăng", "D. Vầng trăng"],
         "answer": "C. Buồn Trăng"
     },
@@ -79,13 +79,12 @@ QUESTIONS = [
         "word": "NHAU",
         "type": "choice",
         "question": "10. Lắng nghe giai điệu rộn ràng sau đây. Nhạc phẩm này có tên là gì?",
-        "audio": "hoitrangram.mp3", # Đã ghép file âm thanh
-        "options": ["A. Ngày hội trăng tròn", "B. Hội Trăng Rằm", "C. Đêm nghe hội trăng", "D. Hội trăng tròn"],
+        "audio": "hoitrangram.mp3", 
+        "options": ["A. Ngày hội trăng tròn", "B. Hội Trăng Rằm", "C. Hội trăng tròn", "D. Đêm nghe hội trăng"],
         "answer": "B. Hội Trăng Rằm"
     }
 ]
 
-# Đổi thành 10 chữ cái tương ứng với 10 câu
 if 'revealed_words' not in st.session_state:
     st.session_state.revealed_words = [False] * 10
 if 'game_won' not in st.session_state:
@@ -93,7 +92,20 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-@st.dialog("🏮 GIẢI MÃ CÙNG CHÚNG MÌNH NHÁ 🏮", width="large")
+# Xử lý Logic không tự động tắt cửa sổ (Dùng Callbacks)
+def check_answer_callback(idx, selected_option, correct_answer):
+    if selected_option == correct_answer:
+        st.session_state[f"q_status_{idx}"] = "correct"
+        st.session_state[f"show_answer_{idx}"] = True
+        st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài màn hình
+    else:
+        st.session_state[f"q_status_{idx}"] = "wrong"
+
+def reveal_answer_callback(idx):
+    st.session_state[f"show_answer_{idx}"] = True
+    st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài màn hình
+
+@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
@@ -101,30 +113,20 @@ def show_question_modal(idx):
     if status_key not in st.session_state:
         st.session_state[status_key] = "playing"
         
-    # Key để theo dõi việc hiển thị đáp án cho câu hỏi mở
     show_answer_key = f"show_answer_{idx}"
     if show_answer_key not in st.session_state:
         st.session_state[show_answer_key] = False
     
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # Xử lý Hình ảnh
+    # Xử lý Hình ảnh & Âm thanh
     if "image" in q_data:
         try:
             st.image(q_data["image"], use_container_width=True)
         except Exception:
-            st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}').")
+            st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}'). Hãy đảm bảo ảnh nằm cùng thư mục trên GitHub!")
         st.markdown("<br>", unsafe_allow_html=True)
         
-    # Xử lý Video
-    if "video" in q_data:
-        try:
-            st.video(q_data["video"])
-        except Exception:
-            st.warning("⚠️ Lỗi không phát được video.")
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-    # Xử lý Âm thanh (Audio mp3)
     if "audio" in q_data:
         try:
             st.audio(q_data["audio"])
@@ -132,23 +134,22 @@ def show_question_modal(idx):
             st.warning(f"⚠️ Khung nhạc trống (Chưa tìm thấy file: '{q_data['audio']}').")
         st.markdown("<br>", unsafe_allow_html=True)
     
+    # Placeholder hiện thông báo Lỗi nếu chọn sai
     error_msg_placeholder = st.empty()
     if st.session_state[status_key] == "wrong":
-        error_msg_placeholder.markdown("<div class='error-message'>❌ Sai rồi! Bạn hãy thử lại nhé.</div>", unsafe_allow_html=True)
+        error_msg_placeholder.markdown("<div class='error-message'>❌ Sai rồi! Bạn hãy chọn lại nhé.</div>", unsafe_allow_html=True)
             
     # PHÂN BIỆT 2 DẠNG CÂU HỎI
     if q_data.get("type") == "reveal":
-        # Dạng Câu hỏi Mở: Hiển thị đáp án và lật chữ cùng lúc
+        # Dạng Câu hỏi Mở
         if not st.session_state[show_answer_key]:
-            if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
-                st.session_state[show_answer_key] = True
-                st.session_state.revealed_words[idx] = True # Lật ô chữ ở màn hình chính cùng lúc
-                st.rerun()
+            # Dùng on_click để chạy ngầm hàm mở đáp án, KHÔNG dùng st.rerun() để tránh tắt cửa sổ
+            st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary", on_click=reveal_answer_callback, args=(idx,))
         else:
-            # Khi đã bấm mở, hiển thị đáp án. Cửa sổ giữ nguyên cho đến khi bấm ĐÓNG
-            st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
-            if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="primary"):
-                st.rerun() 
+            # Hiện đáp án to, rõ và Nút Đóng
+            st.markdown(f"<div style='text-align: center; font-size: 38px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
+            if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="secondary"):
+                st.rerun() # Lệnh st.rerun() ở đây sẽ TẮT cửa sổ
                 
     else:
         # Dạng Trắc nghiệm A B C D
@@ -156,22 +157,14 @@ def show_question_modal(idx):
             ans_cols = st.columns(2)
             for i, option in enumerate(q_data['options']):
                 with ans_cols[i % 2]:
-                    if st.button(option, key=f"opt_{idx}_{i}", use_container_width=True, type="secondary"):
-                        if option == q_data['answer']:
-                            # Trả lời đúng -> Hiện thông báo thành công và nút Đóng
-                            st.session_state[status_key] = "playing" # Xóa thông báo lỗi nếu có
-                            st.session_state[show_answer_key] = True
-                            st.session_state.revealed_words[idx] = True
-                            st.rerun() 
-                        else:
-                            st.session_state[status_key] = "wrong"
-                            st.rerun()
+                    # Nút đáp án gọi callback kiểm tra đúng/sai ngầm
+                    st.button(option, key=f"opt_{idx}_{i}", use_container_width=True, type="secondary", on_click=check_answer_callback, args=(idx, option, q_data['answer']))
         else:
-            # Khi đã trả lời đúng, hiển thị màn hình chúc mừng
-            st.markdown("<div style='text-align: center; font-size: 32px; font-weight: 900; color: #2e7d32; margin: 20px 0; padding: 20px; background-color: #e8f5e9; border-radius: 15px; border: 2px dashed #4caf50;'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
-            st.markdown(f"<div style='text-align: center; font-size: 28px; font-weight: 700; color: #d32f2f; margin-bottom: 20px;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
-            if st.button("❌ ĐÓNG", key=f"btn_close_correct_{idx}", use_container_width=True, type="primary"):
-                st.rerun()
+            # Chọn đúng: Hiện thông báo Xanh và Nút Đóng, cửa sổ ĐỨNG IM chờ cô giáo bấm tắt
+            st.markdown("<div style='text-align: center; font-size: 36px; font-weight: 900; color: #2e7d32; margin-bottom: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 15px; border: 2px dashed #4caf50;'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 700; color: #d32f2f; margin-bottom: 25px;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
+            if st.button("❌ ĐÓNG", key=f"btn_close_correct_{idx}", use_container_width=True, type="secondary"):
+                st.rerun() # Lệnh st.rerun() ở đây sẽ TẮT cửa sổ
 
 st.markdown("""
 <style>
@@ -197,28 +190,23 @@ st.markdown("""
     .question-text { font-size: 38px; color: #b71c1c; text-align: center; margin-bottom: 30px; font-weight: 900; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
     .error-message { background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; padding: 15px; border-radius: 15px; text-align: center; font-size: 28px; font-weight: 900; margin-bottom: 25px; border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
     
-    /* Chữ cái thông điệp lật mở */
+    /* Chữ cái thông điệp lật mở - ĐÃ CHỈNH THÀNH VIÊN KẸO DÀI, KO RỚT DÒNG */
     .word-box { 
         display: flex; justify-content: center; align-items: center; height: 85px; 
         background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; 
-        border-radius: 40px; /* Làm ô tròn tròn giống viên thuốc/viên kẹo */
-        font-size: 19px; /* Thu nhỏ chữ để vừa khít 1 dòng, không bị tràn mép */
+        border-radius: 40px; /* Bo góc siêu tròn (Pill Shape) */
+        font-size: 28px; /* Chữ nhỏ lại một chút */
         font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
         text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; 
-        margin: 5px 0px; 
-        white-space: nowrap; /* Lệnh cấm tuyệt đối chữ rớt dòng */
+        margin: 5px 2px; /* Thêm khoảng cách giữa các ô */
+        white-space: nowrap; /* CẤM TUYỆT ĐỐI RỚT DÒNG */
         overflow: visible;
         text-align: center;
-        padding: 0;
-        letter-spacing: -0.5px; /* Ép khoảng cách các chữ lại gần nhau 1 chút */
+        padding: 0 10px; /* Nới lề hai bên cho vừa chữ */
+        letter-spacing: -0.5px; 
     }
     .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
     
-    /* Khoảng cách giữa các cột trong Streamlit */
-    div[data-testid="column"] {
-        padding: 0 5px; /* Tạo khoảng trống giữa các cột */
-    }
-
     /* ============================================== */
     /* 1. LỒNG ĐÈN THÚ CƯNG DỄ THƯƠNG (Type Primary) */
     /* ============================================== */
@@ -230,7 +218,7 @@ st.markdown("""
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; 
         height: 80px !important;
         position: relative !important;
-        overflow: visible !important; /* CẤM CẮT CHỮ */
+        overflow: visible !important; /* CẤM CẮT CHỮ ... */
         white-space: nowrap !important; /* CẤM XUỐNG DÒNG */
         padding: 0 !important;
         margin-top: 20px !important;
@@ -240,14 +228,13 @@ st.markdown("""
         content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
         width: 3px; height: 30px; background: #FFD700; box-shadow: 0 0 8px #FFD700;
     }
-    /* Chữ bên trong Lồng Đèn (Icon + Số) */
     button[kind="primary"] p { 
-        font-size: 24px !important; /* Chỉnh nhỏ lại xíu cho vừa 10 cột */
+        font-size: 26px !important; 
         font-weight: 900 !important; 
         color: #FFFDE7 !important; 
         text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; 
         margin: 0 !important;
-        letter-spacing: 0px !important;
+        letter-spacing: 1px !important;
     }
     button[kind="primary"]:hover { 
         background: radial-gradient(circle at center, #ff8a80 0%, #b71c1c 80%) !important; 
@@ -260,7 +247,7 @@ st.markdown("""
     }
     
     /* ============================================== */
-    /* 2. NÚT ĐÁP ÁN DỄ THƯƠNG (Type Secondary) */
+    /* 2. NÚT ĐÁP ÁN / ĐÓNG DỄ THƯƠNG (Type Secondary) */
     /* ============================================== */
     button[kind="secondary"] {
         border-radius: 40px !important; /* Tròn như viên kẹo */
@@ -289,10 +276,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
-# Chia thành 10 cột cho 10 chữ
+
 cols = st.columns(10)
 for i, col in enumerate(cols):
     with col:
@@ -307,7 +294,6 @@ st.markdown("<div style='font-size: 36px; font-weight: 900; color: #b71c1c; marg
 # 10 Icon dễ thương cho 10 lồng đèn
 lantern_emojis = ['🐟', '⭐', '🦋', '💖', '🐰', '🐱', '🐯', '🐷', '🐻', '🌸']
 
-# Chia thành 10 cột cho nút lồng đèn
 btn_cols = st.columns(10)
 for i, b_col in enumerate(btn_cols):
     with b_col:
