@@ -93,7 +93,7 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-@st.dialog("🏮 Giải mã cùng chúng mình 🏮", width="large")
+@st.dialog("🏮 GIẢI MÃ CÙNG CHÚNG MÌNH NHÁ 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
