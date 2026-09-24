@@ -59,7 +59,7 @@ QUESTIONS = [
     },
     {
         "id": 8,
-        "word": "HƯỚNG",
+        "word": "LUÔN",
         "type": "reveal",
         "question": "8. Đuổi hình bắt chữ: Đây là gì?",
         "image": "anh8.png", # Đã khớp với file trên GitHub của bạn
@@ -67,20 +67,20 @@ QUESTIONS = [
     },
     {
         "id": 9,
-        "word": "VỀ",
+        "word": "HƯỚNG",
         "type": "choice",
         "question": "9. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", # Đã ghép file âm thanh
-        "options": ["A. Buồn Trăng", "B. Thằng Cuội", "C. Chiếc đèn ông sao", "D. Rước đèn tháng tám"],
-        "answer": "A. Buồn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buồn Trăng", "D. Vầng trăng"],
+        "answer": "C. Buồn Trăng"
     },
     {
         "id": 10,
-        "word": "NHAU",
+        "word": "VỀ",
         "type": "choice",
-        "question": "10. Lắng nghe giai điệu rộn ràng sau đây. Nhạc phẩm này gắn liền với đêm hội nào?",
+        "question": "10. Lắng nghe giai điệu rộn ràng sau đây. Nhạc phẩm này có tên là gì?",
         "audio": "hoitrangram.mp3", # Đã ghép file âm thanh
-        "options": ["A. Lễ Giáng Sinh", "B. Hội Trăng Rằm", "C. Tết Nguyên Đán", "D. Tết Đoan Ngọ"],
+        "options": ["A. Ngày hội trăng tròn", "B. Hội Trăng Rằm", "C. Đêm nghe hội trăng", "D. Hội trăng tròn"],
         "answer": "B. Hội Trăng Rằm"
     }
 ]
