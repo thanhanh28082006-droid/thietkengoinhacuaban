@@ -199,17 +199,20 @@ st.markdown("""
     
     /* Chữ cái thông điệp lật mở */
     .word-box { 
-        display: flex; justify-content: center; align-items: center; height: 110px; 
-        background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; border-radius: 15px; 
-        font-size: 28px; /* Giảm cỡ chữ xuống để không bị tràn */
+        display: flex; justify-content: center; align-items: center; height: 85px; 
+        background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; 
+        border-radius: 40px; /* Làm ô tròn tròn giống viên thuốc/viên kẹo */
+        font-size: 19px; /* Thu nhỏ chữ để vừa khít 1 dòng, không bị tràn mép */
         font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
         text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; 
-        margin: 5px 2px; /* Thêm margin nhỏ ở hai bên */
-        word-break: break-word; /* Đảm bảo chữ dài tự rớt dòng hoặc co lại */
+        margin: 5px 0px; 
+        white-space: nowrap; /* Lệnh cấm tuyệt đối chữ rớt dòng */
+        overflow: visible;
         text-align: center;
-        padding: 5px;
+        padding: 0;
+        letter-spacing: -0.5px; /* Ép khoảng cách các chữ lại gần nhau 1 chút */
     }
-    .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 42px;}
+    .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
     
     /* Khoảng cách giữa các cột trong Streamlit */
     div[data-testid="column"] {
@@ -286,7 +289,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
 # Chia thành 10 cột cho 10 chữ
