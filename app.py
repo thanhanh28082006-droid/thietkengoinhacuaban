@@ -71,8 +71,8 @@ QUESTIONS = [
         "type": "choice",
         "question": "9. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", # Đã ghép file âm thanh
-        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buôn Trăng", "D. Vầng trăng"],
-        "answer": "C. Buôn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buồn Trăng", "D. Vầng trăng"],
+        "answer": "C. Buồn Trăng"
     },
     {
         "id": 10,
@@ -151,17 +151,27 @@ def show_question_modal(idx):
                 st.rerun() 
                 
     else:
-        # Dạng Trắc nghiệm A B C D (Giữ nguyên: Sai báo đỏ, Đúng lật chữ luôn)
-        ans_cols = st.columns(2)
-        for i, option in enumerate(q_data['options']):
-            with ans_cols[i % 2]:
-                if st.button(option, key=f"opt_{idx}_{i}", use_container_width=True, type="secondary"):
-                    if option == q_data['answer']:
-                        st.session_state.revealed_words[idx] = True
-                        st.rerun() 
-                    else:
-                        st.session_state[status_key] = "wrong"
-                        st.rerun()
+        # Dạng Trắc nghiệm A B C D
+        if not st.session_state[show_answer_key]:
+            ans_cols = st.columns(2)
+            for i, option in enumerate(q_data['options']):
+                with ans_cols[i % 2]:
+                    if st.button(option, key=f"opt_{idx}_{i}", use_container_width=True, type="secondary"):
+                        if option == q_data['answer']:
+                            # Trả lời đúng -> Hiện thông báo thành công và nút Đóng
+                            st.session_state[status_key] = "playing" # Xóa thông báo lỗi nếu có
+                            st.session_state[show_answer_key] = True
+                            st.session_state.revealed_words[idx] = True
+                            st.rerun() 
+                        else:
+                            st.session_state[status_key] = "wrong"
+                            st.rerun()
+        else:
+            # Khi đã trả lời đúng, hiển thị màn hình chúc mừng
+            st.markdown("<div style='text-align: center; font-size: 32px; font-weight: 900; color: #2e7d32; margin: 20px 0; padding: 20px; background-color: #e8f5e9; border-radius: 15px; border: 2px dashed #4caf50;'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 28px; font-weight: 700; color: #d32f2f; margin-bottom: 20px;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
+            if st.button("❌ ĐÓNG", key=f"btn_close_correct_{idx}", use_container_width=True, type="primary"):
+                st.rerun()
 
 st.markdown("""
 <style>
@@ -191,11 +201,21 @@ st.markdown("""
     .word-box { 
         display: flex; justify-content: center; align-items: center; height: 110px; 
         background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; border-radius: 15px; 
-        font-size: 42px; font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; margin: 5px; 
+        font-size: 28px; /* Giảm cỡ chữ xuống để không bị tràn */
+        font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; 
+        margin: 5px 2px; /* Thêm margin nhỏ ở hai bên */
+        word-break: break-word; /* Đảm bảo chữ dài tự rớt dòng hoặc co lại */
+        text-align: center;
+        padding: 5px;
     }
-    .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; }
+    .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 42px;}
     
+    /* Khoảng cách giữa các cột trong Streamlit */
+    div[data-testid="column"] {
+        padding: 0 5px; /* Tạo khoảng trống giữa các cột */
+    }
+
     /* ============================================== */
     /* 1. LỒNG ĐÈN THÚ CƯNG DỄ THƯƠNG (Type Primary) */
     /* ============================================== */
@@ -266,7 +286,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
 # Chia thành 10 cột cho 10 chữ
