@@ -106,7 +106,7 @@ def reveal_answer_callback(idx):
     st.session_state[f"show_answer_{idx}"] = True
     st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài màn hình
 
-@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
+@st.dialog(" GIẢI MÃ CÙNG CHÚNG MÌNH NHÁ 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
@@ -277,7 +277,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
 
