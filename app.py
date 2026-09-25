@@ -39,8 +39,8 @@ QUESTIONS = [
         "type": "choice",
         "question": "3. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", 
-        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buôn Trăng"],
-        "answer": "D. Buôn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buồn Trăng"],
+        "answer": "D. Buồn Trăng"
     },
     {
         "id": 4,
@@ -326,7 +326,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(10)
@@ -391,20 +391,11 @@ if all(st.session_state.revealed_words):
     else:
         st.success("🎉 XUẤT SẮC! CẢ LỚP ĐÃ GIẢI MÃ THÀNH CÔNG THÔNG ĐIỆP TRUNG THU!")
 
-# TRÌNH PHÁT NHẠC NỀN MP3 LOCAL
+# TRÌNH PHÁT NHẠC NỀN MP3 LOCAL (ẨN TÀNG HÌNH)
 audio_b64 = get_audio_base64("nhacnen.mp3")
 if audio_b64:
     st.markdown(f"""
-    <div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #e91e63; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-        <p style="margin: 0 0 5px 0; font-weight: 900; color: #e91e63; font-size: 14px; text-align: center;">🎵 Nhạc Nền TT</p>
-        <audio controls autoplay loop style="width: 220px; height: 40px; border-radius: 10px;">
-            <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
-        </audio>
-    </div>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 20px; border: 3px solid #e91e63;">
-        <p style="margin: 0; color: #e91e63; font-size: 14px; text-align: center;">⚠️ Đang thiếu file nhacnen.mp3</p>
-    </div>
+    <audio autoplay loop style="display: none;">
+        <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
+    </audio>
     """, unsafe_allow_html=True)
