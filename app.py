@@ -1,8 +1,19 @@
 import streamlit as st
 import time
 import streamlit.components.v1 as components
+import base64
 
 st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
+
+# ĐỌC VÀ LƯU BỘ NHỚ ĐỆM FILE NHẠC ĐỂ CHẠY MƯỢT MÀ
+@st.cache_data
+def get_audio_base64(file_path):
+    try:
+        with open(file_path, "rb") as f:
+            data = f.read()
+            return base64.b64encode(data).decode()
+    except Exception:
+        return None
 
 # XÁO TRỘN CÂU HỎI (Ghép thành: TRĂNG SÁNG NHẤT KHI LÒNG NGƯỜI LUÔN HƯỚNG VỀ NHAU)
 QUESTIONS = [
@@ -380,10 +391,20 @@ if all(st.session_state.revealed_words):
     else:
         st.success("🎉 XUẤT SẮC! CẢ LỚP ĐÃ GIẢI MÃ THÀNH CÔNG THÔNG ĐIỆP TRUNG THU!")
 
-# Chèn Nhạc Nền YouTube chạy ngầm ở góc, tự động lặp lại (autoplay)
-st.markdown("""
-<div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #e91e63; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-    <p style="margin: 0 0 5px 0; font-weight: 900; color: #e91e63; font-size: 14px; text-align: center;">🎵 Nhạc Nền TT</p>
-    <iframe width="220" height="60" src="https://www.youtube.com/embed/qrjEvxT9apU?autoplay=1&loop=1&playlist=qrjEvxT9apU" title="Nhạc Nền" frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" style="border-radius: 10px;"></iframe>
-</div>
-""", unsafe_allow_html=True)
+# TRÌNH PHÁT NHẠC NỀN MP3 LOCAL
+audio_b64 = get_audio_base64("nhacnen.mp3")
+if audio_b64:
+    st.markdown(f"""
+    <div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #e91e63; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+        <p style="margin: 0 0 5px 0; font-weight: 900; color: #e91e63; font-size: 14px; text-align: center;">🎵 Nhạc Nền TT</p>
+        <audio controls autoplay loop style="width: 220px; height: 40px; border-radius: 10px;">
+            <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
+        </audio>
+    </div>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 20px; border: 3px solid #e91e63;">
+        <p style="margin: 0; color: #e91e63; font-size: 14px; text-align: center;">⚠️ Đang thiếu file nhacnen.mp3</p>
+    </div>
+    """, unsafe_allow_html=True)
