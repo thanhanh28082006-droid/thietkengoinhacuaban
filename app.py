@@ -184,7 +184,7 @@ def show_question_modal(idx):
                 st.session_state.revealed_words[idx] = True
                 st.rerun()
 
-    # 4. KHU VỰC ĐỒNG HỒ 40 GIÂY
+    # 4. KHU VỰC ĐỒNG HỒ 40 GIÂY NÂNG CẤP
     needs_timer = ("audio" not in q_data) and ("video" not in q_data)
     if needs_timer:
         if not is_answered:
@@ -197,7 +197,17 @@ def show_question_modal(idx):
                 if (existing) {{ clearInterval(existing.dataset.intervalId); existing.remove(); }}
                 const wrapper = parent.createElement("div"); wrapper.id = "custom-timer-wrapper";
                 wrapper.innerHTML = `
-                    <div id="cute-timer-box" style="position: absolute; top: 15px; left: 15px; width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 5px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 999999;">{remaining}</div>
+                    <style>
+                        @keyframes pulseRed {{
+                            0% {{ transform: scale(1); box-shadow: 0 0 0 0 rgba(211,47,47,0.7); }}
+                            70% {{ transform: scale(1.1); box-shadow: 0 0 0 15px rgba(211,47,47,0); }}
+                            100% {{ transform: scale(1); box-shadow: 0 0 0 0 rgba(211,47,47,0); }}
+                        }}
+                    </style>
+                    <div id="timer-container" style="position: absolute; top: 15px; left: 15px; z-index: 999999; display: flex; flex-direction: column; align-items: center;">
+                        <div id="cute-timer-box" style="width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 5px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s;">{remaining}</div>
+                        <div id="timer-warning" style="display: none; background: #d32f2f; color: white; font-size: 14px; font-weight: 900; padding: 4px 10px; border-radius: 12px; margin-top: 8px; box-shadow: 0 4px 10px rgba(211,47,47,0.4); text-transform: uppercase;">Sắp hết giờ!</div>
+                    </div>
                     <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;"><span style="font-size: 80px; margin-bottom: 20px;">⏰</span><h1 style="color: #d32f2f; font-size: 55px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1><p style="font-size: 26px; color: #424242; font-weight: bold; text-align: center; margin-top: 20px;">Hãy bấm dấu <b>X</b> ở góc trên bên phải để thoát.</p></div>
                 `;
                 const modalDialog = parent.querySelector('[data-testid="stModal"] > div');
@@ -205,7 +215,21 @@ def show_question_modal(idx):
                     let timeLeft = {remaining};
                     const timerInterval = setInterval(() => {{
                         if (!parent.querySelector('[data-testid="stModal"]')) {{ clearInterval(timerInterval); if(wrapper.parentNode) wrapper.remove(); return; }}
-                        timeLeft--; const display = parent.getElementById("cute-timer-box"); if (display) display.innerText = timeLeft;
+                        timeLeft--; 
+                        const display = parent.getElementById("cute-timer-box"); 
+                        const warning = parent.getElementById("timer-warning");
+                        if (display) display.innerText = timeLeft;
+                        
+                        // KHI CÒN DƯỚI 10 GIÂY: ĐỔI MÀU ĐỎ, NHẤP NHÁY VÀ HIỆN CẢNH BÁO
+                        if (timeLeft <= 10 && timeLeft > 0) {{
+                            if(display) {{
+                                display.style.borderColor = "#d32f2f";
+                                display.style.color = "#d32f2f";
+                                display.style.animation = "pulseRed 1s infinite";
+                            }}
+                            if(warning) warning.style.display = "block";
+                        }}
+                        
                         if (timeLeft <= 0) {{ clearInterval(timerInterval); const blocker = parent.getElementById("timeout-blocker"); if (blocker) blocker.style.display = "flex"; }}
                     }}, 1000); wrapper.dataset.intervalId = timerInterval;
                 }}
