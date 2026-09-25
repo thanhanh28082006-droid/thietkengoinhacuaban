@@ -1,17 +1,16 @@
 import streamlit as st
 import time
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
 
-# THÔNG ĐIỆP 10 CHỮ: TRĂNG SÁNG NHẤT KHI LÒNG NGƯỜI LUÔN HƯỚNG VỀ NHAU
-# Đã xáo trộn nội dung câu hỏi, giữ nguyên thứ tự chữ cái thông điệp
 QUESTIONS = [
     {
         "id": 1,
         "word": "TRĂNG",
         "type": "reveal",
         "question": "1. Đuổi hình bắt chữ: Đây là gì?",
-        "image": "anh7.png", 
+        "image": "anh7.png",
         "answer": "Mâm cỗ thưởng Nguyệt"
     },
     {
@@ -93,39 +92,31 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-# Xử lý Logic không tự động tắt cửa sổ (Dùng Callbacks)
-def check_answer_callback(idx, selected_option, correct_answer):
-    if selected_option == correct_answer:
-        st.session_state[f"q_status_{idx}"] = "correct"
-        st.session_state[f"show_answer_{idx}"] = True
-        st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài màn hình
-    else:
-        st.session_state[f"q_status_{idx}"] = "wrong"
-
-def reveal_answer_callback(idx):
-    st.session_state[f"show_answer_{idx}"] = True
-    st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài màn hình
-
-@st.dialog(" GIẢI MÃ CÙNG CHÚNG MÌNH NHÁ 🏮", width="large")
+@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
     status_key = f"q_status_{idx}"
+    timer_key = f"timer_end_{idx}"
+    
+    # Thiết lập trạng thái và bắt đầu tính giờ 40s khi mở câu hỏi lần đầu
     if status_key not in st.session_state:
         st.session_state[status_key] = "playing"
+        st.session_state[timer_key] = time.time() + 40
         
     show_answer_key = f"show_answer_{idx}"
     if show_answer_key not in st.session_state:
         st.session_state[show_answer_key] = False
     
+    # In câu hỏi
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # Xử lý Hình ảnh & Âm thanh
+    # Chèn ảnh và Audio an toàn
     if "image" in q_data:
         try:
             st.image(q_data["image"], use_container_width=True)
         except Exception:
-            st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}'). Hãy đảm bảo ảnh nằm cùng thư mục trên GitHub!")
+            st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}').")
         st.markdown("<br>", unsafe_allow_html=True)
         
     if "audio" in q_data:
@@ -135,51 +126,127 @@ def show_question_modal(idx):
             st.warning(f"⚠️ Khung nhạc trống (Chưa tìm thấy file: '{q_data['audio']}').")
         st.markdown("<br>", unsafe_allow_html=True)
     
-    # Placeholder hiện thông báo Lỗi nếu chọn sai
+    # Placeholder cho tin nhắn báo sai
     error_msg_placeholder = st.empty()
     if st.session_state[status_key] == "wrong":
         error_msg_placeholder.markdown("<div class='error-message'>❌ Sai rồi! Bạn hãy chọn lại nhé.</div>", unsafe_allow_html=True)
             
-    # PHÂN BIỆT 2 DẠNG CÂU HỎI
-    if q_data.get("type") == "reveal":
-        # Dạng Câu hỏi Mở
-        if not st.session_state[show_answer_key]:
-            # Dùng on_click để chạy ngầm hàm mở đáp án, KHÔNG dùng st.rerun() để tránh tắt cửa sổ
-            st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary", on_click=reveal_answer_callback, args=(idx,))
+    # Xác định xem câu hỏi đã được giải chưa
+    is_answered = st.session_state[show_answer_key] or (st.session_state[status_key] == "correct")
+    
+    # Chỉ bật 40s cho câu hỏi không có Nhạc/Video
+    needs_timer = ("audio" not in q_data) and ("video" not in q_data)
+    
+    if needs_timer:
+        if not is_answered:
+            # Tính thời gian còn lại, nếu < 0 thì cho = 0
+            remaining = int(st.session_state[timer_key] - time.time())
+            if remaining < 0: remaining = 0
+            
+            # Chèn JS Đồng hồ đếm ngược
+            components.html(f"""
+            <script>
+                const parent = window.parent.document;
+                let existing = parent.getElementById("custom-timer-wrapper");
+                if (existing) {{ clearInterval(existing.dataset.intervalId); existing.remove(); }}
+                
+                const wrapper = parent.createElement("div");
+                wrapper.id = "custom-timer-wrapper";
+                wrapper.innerHTML = `
+                    <div id="cute-timer-box" style="position: absolute; top: 15px; left: 15px; width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #ffecb3); border: 5px solid #ff9800; color: #d32f2f; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 999999;">
+                        {remaining}
+                    </div>
+                    <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;">
+                        <span style="font-size: 80px; margin-bottom: 20px;">⏰</span>
+                        <h1 style="color: #d32f2f; font-size: 55px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1>
+                        <p style="font-size: 26px; color: #424242; font-weight: bold; text-align: center; margin-top: 20px;">Hãy bấm dấu <b>X</b> ở góc trên bên phải để thoát.</p>
+                    </div>
+                `;
+                
+                const modalDialog = parent.querySelector('[data-testid="stModal"] > div');
+                if (modalDialog) {{
+                    modalDialog.style.position = 'relative'; 
+                    modalDialog.appendChild(wrapper);
+                    
+                    let timeLeft = {remaining};
+                    const timerInterval = setInterval(() => {{
+                        if (!parent.querySelector('[data-testid="stModal"]')) {{
+                            clearInterval(timerInterval);
+                            if(wrapper.parentNode) wrapper.remove();
+                            return;
+                        }}
+                        timeLeft--;
+                        const display = parent.getElementById("cute-timer-box");
+                        if (display) display.innerText = timeLeft;
+                        if (timeLeft <= 0) {{
+                            clearInterval(timerInterval);
+                            const blocker = parent.getElementById("timeout-blocker");
+                            if (blocker) blocker.style.display = "flex";
+                        }}
+                    }}, 1000);
+                    wrapper.dataset.intervalId = timerInterval;
+                }}
+            </script>
+            """, height=0)
         else:
-            # Hiện đáp án to, rõ và Nút Đóng
+            # Gỡ bỏ Đồng hồ khi đã có đáp án
+            components.html("""
+            <script>
+                const parent = window.parent.document;
+                const existing = parent.getElementById("custom-timer-wrapper");
+                if (existing) { clearInterval(existing.dataset.intervalId); existing.remove(); }
+            </script>
+            """, height=0)
+
+    if q_data.get("type") == "reveal":
+        # Câu Hỏi Mở
+        if not st.session_state[show_answer_key]:
+            if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
+                st.session_state[show_answer_key] = True
+                st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài
+                st.rerun()
+        else:
             st.markdown(f"<div style='text-align: center; font-size: 38px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
+            # Phát video Meme nếu là lồng đèn số 5 (idx == 4)
+            if idx == 4:
+                try:
+                    st.video("meme.mp4")
+                except:
+                    st.warning("⚠️ Không tìm thấy file 'meme.mp4'.")
             if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="secondary"):
-                st.rerun() # Lệnh st.rerun() ở đây sẽ TẮT cửa sổ
+                st.rerun()
                 
     else:
-        # Dạng Trắc nghiệm A B C D
+        # Câu Trắc Nghiệm
         if not st.session_state[show_answer_key]:
             ans_cols = st.columns(2)
             for i, option in enumerate(q_data['options']):
                 with ans_cols[i % 2]:
-                    # Nút đáp án gọi callback kiểm tra đúng/sai ngầm
-                    st.button(option, key=f"opt_{idx}_{i}", use_container_width=True, type="secondary", on_click=check_answer_callback, args=(idx, option, q_data['answer']))
+                    if st.button(option, key=f"opt_{idx}_{i}", use_container_width=True, type="secondary"):
+                        if option == q_data['answer']:
+                            st.session_state[status_key] = "correct"
+                            st.session_state[show_answer_key] = True
+                            st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài
+                            st.rerun() 
+                        else:
+                            st.session_state[status_key] = "wrong"
+                            st.rerun()
         else:
-            # Chọn đúng: Hiện thông báo Xanh và Nút Đóng, cửa sổ ĐỨNG IM chờ cô giáo bấm tắt
             st.markdown("<div style='text-align: center; font-size: 36px; font-weight: 900; color: #2e7d32; margin-bottom: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 15px; border: 2px dashed #4caf50;'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
             st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 700; color: #d32f2f; margin-bottom: 25px;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
+            # Phát video Meme nếu là lồng đèn số 5 (idx == 4)
+            if idx == 4:
+                try:
+                    st.video("meme.mp4")
+                except:
+                    st.warning("⚠️ Không tìm thấy file 'meme.mp4'.")
             if st.button("❌ ĐÓNG", key=f"btn_close_correct_{idx}", use_container_width=True, type="secondary"):
-                st.rerun() # Lệnh st.rerun() ở đây sẽ TẮT cửa sổ
+                st.rerun()
 
 st.markdown("""
 <style>
     /* Nền Đỏ - Hồng Trung Thu */
     .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
-    
-    /* Trang trí Lồng đèn & Ngôi sao */
-    .lantern-decor { position: absolute; font-size: 50px; opacity: 0.2; animation: float 4s ease-in-out infinite; z-index: 0; }
-    .star-decor { position: absolute; font-size: 30px; opacity: 0.4; animation: twinkle 2s infinite; z-index: 0; }
-    .l1 { top: 10px; left: 5%; } .l2 { top: 30px; right: 5%; animation-delay: 1s; } .l3 { bottom: 20px; left: 10%; animation-delay: 2s; }
-    .s1 { top: 15%; left: 15%; } .s2 { top: 50%; right: 10%; animation-delay: 1s; } .s3 { bottom: 10%; right: 20%; animation-delay: 0.5s; }
-    
-    @keyframes float { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
-    @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 0.8; transform: scale(1.2); } }
     
     /* Khung nội dung trắng */
     .white-container { 
@@ -191,96 +258,47 @@ st.markdown("""
     .question-text { font-size: 38px; color: #b71c1c; text-align: center; margin-bottom: 30px; font-weight: 900; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
     .error-message { background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; padding: 15px; border-radius: 15px; text-align: center; font-size: 28px; font-weight: 900; margin-bottom: 25px; border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
     
-    /* Chữ cái thông điệp lật mở - ĐÃ CHỈNH THÀNH VIÊN KẸO DÀI, KO RỚT DÒNG */
+    /* Chữ cái thông điệp lật mở - Dạng viên kẹo chữ bé lại 28px */
     .word-box { 
         display: flex; justify-content: center; align-items: center; height: 85px; 
         background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; 
-        border-radius: 40px; /* Bo góc siêu tròn (Pill Shape) */
-        font-size: 28px; /* Chữ nhỏ lại một chút */
-        font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
+        border-radius: 40px; 
+        font-size: 28px; font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
         text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; 
-        margin: 5px 2px; /* Thêm khoảng cách giữa các ô */
-        white-space: nowrap; /* CẤM TUYỆT ĐỐI RỚT DÒNG */
-        overflow: visible;
-        text-align: center;
-        padding: 0 10px; /* Nới lề hai bên cho vừa chữ */
-        letter-spacing: -0.5px; 
+        margin: 5px 2px; 
+        white-space: nowrap; overflow: visible; text-align: center; padding: 0 10px; letter-spacing: -0.5px; 
     }
     .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
     
-    /* ============================================== */
-    /* 1. LỒNG ĐÈN THÚ CƯNG DỄ THƯƠNG (Type Primary) */
-    /* ============================================== */
+    /* 1. LỒNG ĐÈN THÚ CƯNG DỄ THƯƠNG */
     button[kind="primary"] { 
         border-radius: 50% !important; 
         border: 4px solid #FFD700 !important; 
         background: radial-gradient(circle at center, #ff7961 0%, #d32f2f 80%) !important; 
         box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.5), inset 0 -10px 15px rgba(0,0,0,0.6), 0 0 15px #FFD700 !important; 
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; 
-        height: 80px !important;
-        position: relative !important;
-        overflow: visible !important; /* CẤM CẮT CHỮ ... */
-        white-space: nowrap !important; /* CẤM XUỐNG DÒNG */
-        padding: 0 !important;
-        margin-top: 20px !important;
+        height: 80px !important; position: relative !important; overflow: visible !important; white-space: nowrap !important; padding: 0 !important; margin-top: 20px !important;
     }
-    /* Dây treo lồng đèn tỏa sáng */
-    button[kind="primary"]::before {
-        content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
-        width: 3px; height: 30px; background: #FFD700; box-shadow: 0 0 8px #FFD700;
-    }
-    button[kind="primary"] p { 
-        font-size: 26px !important; 
-        font-weight: 900 !important; 
-        color: #FFFDE7 !important; 
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; 
-        margin: 0 !important;
-        letter-spacing: 1px !important;
-    }
-    button[kind="primary"]:hover { 
-        background: radial-gradient(circle at center, #ff8a80 0%, #b71c1c 80%) !important; 
-        transform: translateY(-8px) scale(1.1) !important; 
-        box-shadow: 0 15px 30px rgba(183, 28, 28, 0.8), 0 0 25px rgba(255, 215, 0, 1) !important;
-    }
-    button[kind="primary"]:disabled {
-        background: radial-gradient(circle at center, #e0e0e0 0%, #9e9e9e 80%) !important;
-        border-color: #bdbdbd !important; transform: none !important; box-shadow: none !important;
-    }
+    button[kind="primary"]::before { content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 3px; height: 30px; background: #FFD700; box-shadow: 0 0 8px #FFD700; }
+    button[kind="primary"] p { font-size: 26px !important; font-weight: 900 !important; color: #FFFDE7 !important; text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; margin: 0 !important; letter-spacing: 1px !important; }
+    button[kind="primary"]:hover { background: radial-gradient(circle at center, #ff8a80 0%, #b71c1c 80%) !important; transform: translateY(-8px) scale(1.1) !important; box-shadow: 0 15px 30px rgba(183, 28, 28, 0.8), 0 0 25px rgba(255, 215, 0, 1) !important; }
+    button[kind="primary"]:disabled { background: radial-gradient(circle at center, #e0e0e0 0%, #9e9e9e 80%) !important; border-color: #bdbdbd !important; transform: none !important; box-shadow: none !important; }
     
-    /* ============================================== */
-    /* 2. NÚT ĐÁP ÁN / ĐÓNG DỄ THƯƠNG (Type Secondary) */
-    /* ============================================== */
+    /* 2. NÚT ĐÁP ÁN DỄ THƯƠNG (Viên Kẹo) */
     button[kind="secondary"] {
-        border-radius: 40px !important; /* Tròn như viên kẹo */
-        border: 3px solid #ffcc80 !important;
-        background: linear-gradient(145deg, #fff3e0, #ffe0b2) !important;
-        color: #e65100 !important;
-        box-shadow: 0 6px 15px rgba(230, 81, 0, 0.15) !important;
-        transition: all 0.3s ease !important;
-        min-height: 80px !important;
-        white-space: normal !important; /* Cho phép rớt dòng nếu đáp án dài */
+        border-radius: 40px !important; border: 3px solid #ffcc80 !important; background: linear-gradient(145deg, #fff3e0, #ffe0b2) !important; color: #e65100 !important;
+        box-shadow: 0 6px 15px rgba(230, 81, 0, 0.15) !important; transition: all 0.3s ease !important; min-height: 80px !important; white-space: normal !important; 
     }
-    button[kind="secondary"] p {
-        font-size: 26px !important;
-        font-weight: 900 !important;
-        margin: 0 !important;
-    }
-    button[kind="secondary"]:hover {
-        transform: translateY(-5px) !important;
-        box-shadow: 0 10px 20px rgba(230, 81, 0, 0.3) !important;
-        background: linear-gradient(145deg, #ffe0b2, #ffcc80) !important;
-        border-color: #ff9800 !important;
-        color: #d84315 !important;
-    }
+    button[kind="secondary"] p { font-size: 26px !important; font-weight: 900 !important; margin: 0 !important; }
+    button[kind="secondary"]:hover { transform: translateY(-5px) !important; box-shadow: 0 10px 20px rgba(230, 81, 0, 0.3) !important; background: linear-gradient(145deg, #ffe0b2, #ffcc80) !important; border-color: #ff9800 !important; color: #d84315 !important; }
 
     .main-title { text-align: center; font-size: 55px; font-weight: 900; margin-bottom: 40px; text-transform: uppercase; background: linear-gradient(to right, #b71c1c, #ff9800, #b71c1c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 3px 3px 8px rgba(0,0,0,0.15); }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="white-container"><div class="lantern-decor l1">🏮</div><div class="lantern-decor l2">🏮</div><div class="lantern-decor l3">🌕</div><div class="star-decor s1">✨</div><div class="star-decor s2">⭐</div><div class="star-decor s3">✨</div>', unsafe_allow_html=True)
-
+st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(10)
 for i, col in enumerate(cols):
     with col:
@@ -292,9 +310,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<div style='font-size: 36px; font-weight: 900; color: #b71c1c; margin-bottom: 30px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
 
-# 10 Icon dễ thương cho 10 lồng đèn
 lantern_emojis = ['🐟', '⭐', '🦋', '💖', '🐰', '🐱', '🐯', '🐷', '🐻', '🌸']
-
 btn_cols = st.columns(10)
 for i, b_col in enumerate(btn_cols):
     with b_col:
@@ -316,36 +332,22 @@ def show_victory_modal():
     st.balloons()
     st.markdown("""
     <style>
-    @keyframes fall {
-        0% { transform: translateY(-10vh) rotate(0deg); opacity: 1;}
-        100% { transform: translateY(100vh) rotate(360deg); opacity: 0;}
-    }
+    @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1;} 100% { transform: translateY(100vh) rotate(360deg); opacity: 0;} }
     .flower { position: fixed; font-size: 40px; z-index: 9999; top: -10vh; animation: fall linear forwards; }
     </style>
     <script>
     const flowers = ['🏮', '🌕', '⭐', '✨', '🥮', '🐇']; 
     for(let i=0; i<70; i++) {
-        let f = document.createElement('div');
-        f.className = 'flower';
-        f.innerText = flowers[Math.floor(Math.random() * flowers.length)];
-        f.style.left = Math.random() * 100 + 'vw';
-        f.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        f.style.animationDelay = Math.random() * 2 + 's';
-        window.parent.document.body.appendChild(f);
+        let f = document.createElement('div'); f.className = 'flower'; f.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+        f.style.left = Math.random() * 100 + 'vw'; f.style.animationDuration = (Math.random() * 3 + 2) + 's'; f.style.animationDelay = Math.random() * 2 + 's'; window.parent.document.body.appendChild(f);
     }
     </script>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
     <div style='text-align: center; padding: 20px 10px;'>
-        <h1 style='color: #d32f2f; font-size: 55px; font-weight: 900; margin-bottom: 10px; line-height: 1.4; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);'>
-            THÔNG ĐIỆP TRUNG THU
-        </h1>
+        <h1 style='color: #d32f2f; font-size: 55px; font-weight: 900; margin-bottom: 10px; line-height: 1.4; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);'>THÔNG ĐIỆP TRUNG THU</h1>
         <p style='color: #ff9800; font-size: 40px; font-weight: 900; margin-top: 25px; text-shadow: 0 0 15px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 193, 7, 0.6);'>
             "Trăng sáng nhất khi lòng người luôn hướng về nhau" 🏮🌕
         </p>
-    </div>
-    <br>
+    </div><br>
     """, unsafe_allow_html=True)
     
     if st.button("🌟 Tuyệt vời!", use_container_width=True, type="secondary"):
@@ -357,3 +359,11 @@ if all(st.session_state.revealed_words):
         show_victory_modal() 
     else:
         st.success("🎉 XUẤT SẮC! CẢ LỚP ĐÃ GIẢI MÃ THÀNH CÔNG THÔNG ĐIỆP TRUNG THU!")
+
+# Chèn Nhạc Nền YouTube chạy ngầm toàn màn hình
+st.markdown("""
+<div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #ffb300; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+    <p style="margin: 0 0 5px 0; font-weight: 900; color: #d32f2f; font-size: 14px; text-align: center;">🎵 Nhạc Nền Trung Thu</p>
+    <iframe width="220" height="60" src="https://www.youtube.com/embed/qrjEvxT9apU?autoplay=1&loop=1&playlist=qrjEvxT9apU" title="Nhạc Nền" frameborder="0" allow="autoplay" style="border-radius: 10px;"></iframe>
+</div>
+""", unsafe_allow_html=True)
