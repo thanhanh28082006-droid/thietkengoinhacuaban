@@ -3,7 +3,7 @@ import time
 import streamlit.components.v1 as components
 import base64
 
-st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
+st.set_page_config(page_title="Giải Mã Đêm Trăng", page_icon="🏮", layout="wide")
 
 # ĐỌC VÀ LƯU BỘ NHỚ ĐỆM FILE NHẠC ĐỂ CHẠY MƯỢT MÀ
 @st.cache_data
@@ -104,7 +104,7 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-@st.dialog("🏮    GIẢI MÃ CÙNG CHÚNG MÌNH NHAAAA 🏮", width="large")
+@st.dialog("🏮 GIẢI MÃ CÙNG CHÚNG MÌNH NHAAAA 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
@@ -113,6 +113,7 @@ def show_question_modal(idx):
     show_answer_key = f"show_answer_{idx}"
     last_clicked_key = f"last_clicked_{idx}"
     
+    # Dự phòng khởi tạo (thực tế đã được reset lúc bấm nút ngoài màn hình chính)
     if status_key not in st.session_state:
         st.session_state[status_key] = "playing"
         st.session_state[timer_key] = time.time() + 40
@@ -287,6 +288,14 @@ def show_question_modal(idx):
 # =========================================================================
 st.markdown("""
 <style>
+    /* Canh giữa tiêu đề Dialog để không bị đồng hồ che khuất */
+    div[data-testid="stDialog"] h2, div[data-testid="stModal"] h2 {
+        text-align: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        padding-top: 10px;
+    }
+
     /* Nền Đỏ - Hồng Trung Thu */
     .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
     
@@ -342,7 +351,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(10)
@@ -363,6 +372,11 @@ for i, b_col in enumerate(btn_cols):
     with b_col:
         btn_label = f"{lantern_emojis[i]} {i+1}" if not st.session_state.revealed_words[i] else "✅"
         if st.button(btn_label, key=f"btn_{i}", disabled=st.session_state.revealed_words[i], type="primary"):
+            # RESET TRẠNG THÁI ĐỂ ĐỒNG HỒ LUÔN CHẠY LẠI TỪ 40S MỖI LẦN MỞ LỒNG ĐÈN
+            st.session_state[f"q_status_{i}"] = "playing"
+            st.session_state[f"timer_end_{i}"] = time.time() + 40
+            st.session_state[f"show_answer_{i}"] = False
+            st.session_state[f"last_clicked_{i}"] = ""
             show_question_modal(i)
 
 st.markdown("<br><br>", unsafe_allow_html=True)
