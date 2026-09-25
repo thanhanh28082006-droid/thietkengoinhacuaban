@@ -122,27 +122,72 @@ def show_question_modal(idx):
         st.session_state[status_key] = "correct"
     # =======================================================
     
-    # NẾU CHƯA CÓ ĐÁP ÁN -> HIỆN CÂU HỎI BÌNH THƯỜNG
-    if not st.session_state[show_answer_key]:
-        st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
-        if "image" in q_data:
-            try: st.image(q_data["image"], use_container_width=True)
-            except Exception: st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}').")
-            st.markdown("<br>", unsafe_allow_html=True)
-        if "audio" in q_data:
-            try: st.audio(q_data["audio"])
-            except Exception: st.warning(f"⚠️ Khung nhạc trống (Chưa tìm thấy file: '{q_data['audio']}').")
-            st.markdown("<br>", unsafe_allow_html=True)
-        
-        # BÁO SAI VÀ CHO CHỌN LẠI
-        error_msg_placeholder = st.empty()
-        if st.session_state[status_key] == "wrong":
-            last_choice = st.session_state[last_clicked_key]
-            error_msg_placeholder.markdown(f"<div class='error-message'>❌ Bạn vừa chọn: <b>{last_choice}</b><br>SAI RỒI! Hãy suy nghĩ và chọn lại nhé.</div>", unsafe_allow_html=True)
+    is_answered = st.session_state[show_answer_key] or (st.session_state[status_key] == "correct")
+    
+    # 1. CÂU HỎI (Luôn luôn hiển thị ở trên cùng)
+    st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
+    
+    # 2. KHU VỰC HÌNH ẢNH / MEDIA (Sẽ tráo đổi hình cây đa thành Video nếu là câu 5)
+    media_placeholder = st.empty()
+    with media_placeholder.container():
+        if is_answered and idx == 4:
+            # Nếu câu 5 ĐÃ MỞ: Hiện Video Meme, Ẩn hình ảnh cây đa đi
+            try: 
+                st.video("meme.mp4", autoplay=True)
+            except: 
+                st.warning("⚠️ Không tìm thấy file 'meme.mp4'.")
+        else:
+            # Nếu chưa mở hoặc là câu khác: Hiện hình ảnh/âm thanh bình thường
+            if "image" in q_data:
+                try: st.image(q_data["image"], use_container_width=True)
+                except Exception: st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy: '{q_data['image']}').")
+            if "audio" in q_data:
+                try: st.audio(q_data["audio"])
+                except Exception: st.warning(f"⚠️ Khung nhạc trống (Chưa tìm thấy: '{q_data['audio']}').")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 3. KHU VỰC ĐÁP ÁN VÀ NÚT BẤM
+    interaction_placeholder = st.empty()
+    with interaction_placeholder.container():
+        if not is_answered:
+            # --- TRƯỚC KHI MỞ ĐÁP ÁN ---
+            if st.session_state[status_key] == "wrong":
+                last_choice = st.session_state[last_clicked_key]
+                st.markdown(f"<div class='error-message'>❌ Bạn vừa chọn: <b>{last_choice}</b><br>SAI RỒI! Hãy suy nghĩ và chọn lại nhé.</div>", unsafe_allow_html=True)
                 
-        # XỬ LÝ ĐỒNG HỒ 40S
-        needs_timer = ("audio" not in q_data) and ("video" not in q_data)
-        if needs_timer:
+            if q_data.get("type") == "reveal":
+                st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", on_click=handle_reveal, use_container_width=True, type="secondary")
+            else:
+                ans_cols = st.columns(2)
+                for i, option in enumerate(q_data['options']):
+                    with ans_cols[i % 2]:
+                        st.button(option, key=f"opt_{idx}_{i}", on_click=handle_choice, args=(option,), use_container_width=True, type="secondary")
+        else:
+            # --- SAU KHI MỞ ĐÁP ÁN ---
+            if idx != 4: # Chỉ in chữ đáp án cho CÁC CÂU KHÁC (Câu 5 Meme chỉ cần xem video)
+                st.markdown("""
+                <style>
+                @keyframes popIn { 0% { transform: scale(0.3); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+                .answer-box { background-color: #ffebee; border-radius: 20px; border: 5px dashed #f44336; padding: 30px; text-align: center; color: #d32f2f; font-size: 38px; font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; margin-bottom: 25px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+                </style>
+                """, unsafe_allow_html=True)
+                
+                if q_data.get("type") == "reveal":
+                    st.markdown(f"<div class='answer-box'>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<div class='answer-box'><span style='color: #2e7d32; font-size: 45px;'>✅ CHÍNH XÁC!</span><br><br>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
+            
+            # Nút đóng
+            btn_text = "❌ ĐÓNG VÀ LẬT CHỮ" if q_data.get("type") == "choice" else "❌ ĐÓNG"
+            if st.button(btn_text, key=f"btn_close_final_{idx}", use_container_width=True, type="primary"):
+                st.session_state.revealed_words[idx] = True
+                st.rerun()
+
+    # 4. KHU VỰC ĐỒNG HỒ 40 GIÂY NÂNG CẤP
+    needs_timer = ("audio" not in q_data) and ("video" not in q_data)
+    if needs_timer:
+        if not is_answered:
             remaining = int(st.session_state[timer_key] - time.time())
             if remaining < 0: remaining = 0
             components.html(f"""
@@ -212,68 +257,6 @@ def show_question_modal(idx):
                 }}
             </script>
             """, height=0)
-
-        # CÁC NÚT BẤM (CHỌN ĐÁP ÁN / MỞ ĐÁP ÁN)
-        if q_data.get("type") == "reveal":
-            st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", on_click=handle_reveal, use_container_width=True, type="secondary")
-        else:
-            ans_cols = st.columns(2)
-            for i, option in enumerate(q_data['options']):
-                with ans_cols[i % 2]:
-                    st.button(option, key=f"opt_{idx}_{i}", on_click=handle_choice, args=(option,), use_container_width=True, type="secondary")
-
-    # =========================================================================
-    # NẾU ĐÃ CÓ ĐÁP ÁN -> XÓA HẾT CÂU HỎI VÀ CHỈ HIỆN ĐÁP ÁN HOẶC VIDEO
-    # =========================================================================
-    else:
-        # Gỡ bỏ Đồng hồ chạy ngầm
-        components.html("""<script>const p = window.parent.document; const e = p.getElementById("custom-timer-wrapper"); if(e){clearInterval(e.dataset.intervalId); e.remove();}</script>""", height=0)
-
-        # CSS Hiệu ứng nổ ra giữa màn hình
-        st.markdown("""
-        <style>
-        @keyframes popIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            70% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .pop-container {
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; margin-top: 10px; margin-bottom: 30px;
-        }
-        .answer-box {
-            background-color: #ffebee; border-radius: 20px; border: 5px dashed #f44336;
-            padding: 40px; text-align: center; color: #d32f2f; font-size: 42px; font-weight: 900;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3); width: 100%;
-        }
-        [data-testid="stVideo"] {
-            border: 8px dashed #ff9800 !important; border-radius: 20px !important;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-        st.markdown('<div class="pop-container">', unsafe_allow_html=True)
-        
-        # NẾU LÀ CÂU 5 (MEME TROLL): CHỈ HIỆN VIDEO, KHÔNG CÓ CHỮ ĐÁP ÁN NÀO HẾT!
-        if idx == 4:
-            try: st.video("meme.mp4", autoplay=True)
-            except: st.warning("⚠️ Không tìm thấy file 'meme.mp4'")
-        # CÁC CÂU CÒN LẠI: HIỆN CHỮ ĐÁP ÁN TO ĐÙNG
-        else:
-            if q_data.get("type") == "reveal":
-                st.markdown(f"<div class='answer-box'>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div class='answer-box'><span style='color: #2e7d32; font-size: 50px;'>✅ CHÍNH XÁC!</span><br><br>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # NÚT ĐÓNG (Nằm ngay bên dưới gọn gàng)
-        btn_text = "❌ ĐÓNG VÀ LẬT CHỮ" if q_data.get("type") == "choice" else "❌ ĐÓNG"
-        if st.button(btn_text, key=f"btn_close_final_{idx}", use_container_width=True, type="primary"):
-            st.session_state.revealed_words[idx] = True
-            st.rerun() 
 
 
 # =========================================================================
@@ -396,3 +379,11 @@ if all(st.session_state.revealed_words):
         show_victory_modal() 
     else:
         st.success("🎉 XUẤT SẮC! CẢ LỚP ĐÃ GIẢI MÃ THÀNH CÔNG THÔNG ĐIỆP TRUNG THU!")
+
+# Chèn Nhạc Nền YouTube chạy ngầm ở góc, tự động lặp lại (autoplay)
+st.markdown("""
+<div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #e91e63; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+    <p style="margin: 0 0 5px 0; font-weight: 900; color: #e91e63; font-size: 14px; text-align: center;">🎵 Nhạc Nền TT</p>
+    <iframe width="220" height="60" src="https://www.youtube.com/embed/qrjEvxT9apU?autoplay=1&loop=1&playlist=qrjEvxT9apU" title="Nhạc Nền" frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" style="border-radius: 10px;"></iframe>
+</div>
+""", unsafe_allow_html=True)
