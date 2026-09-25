@@ -39,8 +39,8 @@ QUESTIONS = [
         "type": "choice",
         "question": "3. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", 
-        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buôn Trăng"],
-        "answer": "D. Buôn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buồn Trăng"],
+        "answer": "D. Buồn Trăng"
     },
     {
         "id": 4,
@@ -104,7 +104,7 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-@st.dialog("          🏮 GIẢI MÃ CÙNG CHÚNG MÌNH NHAAA 🏮", width="large")
+@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
@@ -195,7 +195,7 @@ def show_question_modal(idx):
                 st.session_state.revealed_words[idx] = True
                 st.rerun()
 
-    # 4. KHU VỰC ĐỒNG HỒ 40 GIÂY NÂNG CẤP (Thu nhỏ)
+    # 4. KHU VỰC ĐỒNG HỒ 40 GIÂY NÂNG CẤP VÀ NÚT THOÁT KHẨN CẤP
     needs_timer = ("audio" not in q_data) and ("video" not in q_data)
     if needs_timer:
         if not is_answered:
@@ -216,12 +216,17 @@ def show_question_modal(idx):
                             70% {{ transform: scale(1.1); box-shadow: 0 0 0 10px rgba(211,47,47,0); }}
                             100% {{ transform: scale(1); box-shadow: 0 0 0 0 rgba(211,47,47,0); }}
                         }}
+                        #force-close-btn:hover {{ transform: scale(1.05); box-shadow: 0 10px 20px rgba(211,47,47,0.6); }}
                     </style>
                     <div id="timer-container" style="position: absolute; top: 10px; left: 10px; z-index: 999999; display: flex; flex-direction: column; align-items: center;">
                         <div id="cute-timer-box" style="width: 65px; height: 65px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 4px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s;">{remaining}</div>
                         <div id="timer-warning" style="display: none; background: #d32f2f; color: white; font-size: 13px; font-weight: 900; padding: 2px 8px; border-radius: 8px; margin-top: 6px; box-shadow: 0 4px 8px rgba(211,47,47,0.3); text-transform: uppercase;">Sắp hết giờ!</div>
                     </div>
-                    <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;"><span style="font-size: 60px; margin-bottom: 15px;">⏰</span><h1 style="color: #d32f2f; font-size: 40px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1><p style="font-size: 22px; color: #424242; font-weight: bold; text-align: center; margin-top: 15px;">Hãy bấm dấu <b>X</b> ở góc trên bên phải để thoát.</p></div>
+                    <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;">
+                        <span style="font-size: 60px; margin-bottom: 15px;">⏰</span>
+                        <h1 style="color: #d32f2f; font-size: 40px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1>
+                        <button id="force-close-btn" style="margin-top: 30px; padding: 15px 40px; background: #d32f2f; color: white; font-size: 20px; font-weight: 900; border: 3px solid #b71c1c; border-radius: 40px; cursor: pointer; box-shadow: 0 6px 15px rgba(211,47,47,0.4); transition: 0.2s;">❌ ĐÓNG LẠI</button>
+                    </div>
                 `;
                 
                 const modalDialog = parent.querySelector('[data-testid="stDialog"] > div, [data-testid="stModal"] > div');
@@ -229,6 +234,17 @@ def show_question_modal(idx):
                 if (modalDialog) {{ 
                     modalDialog.style.position = 'relative'; 
                     modalDialog.appendChild(wrapper);
+                    
+                    // Xử lý nút bấm ĐÓNG LẠI khi hiển thị HẾT THỜI GIAN
+                    const forceCloseBtn = parent.getElementById("force-close-btn");
+                    if (forceCloseBtn) {{
+                        forceCloseBtn.addEventListener("click", () => {{
+                            // Tìm nút X mặc định của Streamlit và mô phỏng thao tác Click
+                            const stCloseBtn = parent.querySelector('button[aria-label="Close"]') || parent.querySelector('[data-testid="stModalCloseButton"]');
+                            if (stCloseBtn) {{ stCloseBtn.click(); }}
+                            else {{ wrapper.remove(); }}
+                        }});
+                    }}
                     
                     let timeLeft = {remaining};
                     const timerInterval = setInterval(() => {{
@@ -326,7 +342,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(10)
