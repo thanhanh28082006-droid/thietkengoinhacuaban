@@ -99,10 +99,10 @@ def show_question_modal(idx):
     status_key = f"q_status_{idx}"
     timer_key = f"timer_end_{idx}"
     
-    # Thiết lập trạng thái và bắt đầu tính giờ 40s khi mở câu hỏi lần đầu
+    # Thiết lập trạng thái và bắt đầu tính giờ 45s khi mở câu hỏi lần đầu
     if status_key not in st.session_state:
         st.session_state[status_key] = "playing"
-        st.session_state[timer_key] = time.time() + 40
+        st.session_state[timer_key] = time.time() + 45
         
     show_answer_key = f"show_answer_{idx}"
     if show_answer_key not in st.session_state:
@@ -153,7 +153,7 @@ def show_question_modal(idx):
                 const wrapper = parent.createElement("div");
                 wrapper.id = "custom-timer-wrapper";
                 wrapper.innerHTML = `
-                    <div id="cute-timer-box" style="position: absolute; top: 15px; left: 15px; width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #ffecb3); border: 5px solid #ff9800; color: #d32f2f; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 999999;">
+                    <div id="cute-timer-box" style="position: absolute; top: 15px; left: 15px; width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 5px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 999999;">
                         {remaining}
                     </div>
                     <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;">
@@ -362,8 +362,8 @@ if all(st.session_state.revealed_words):
 
 # Chèn Nhạc Nền YouTube chạy ngầm toàn màn hình
 st.markdown("""
-<div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #ffb300; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-    <p style="margin: 0 0 5px 0; font-weight: 900; color: #d32f2f; font-size: 14px; text-align: center;">🎵 Nhạc Nền Trung Thu</p>
-    <iframe width="220" height="60" src="https://www.youtube.com/embed/qrjEvxT9apU?autoplay=1&loop=1&playlist=qrjEvxT9apU" title="Nhạc Nền" frameborder="0" allow="autoplay" style="border-radius: 10px;"></iframe>
+<div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #e91e63; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+    <p style="margin: 0 0 5px 0; font-weight: 900; color: #e91e63; font-size: 14px; text-align: center;">🎵 Nhạc Nền (Bấm Play nếu chưa chạy)</p>
+    <iframe width="220" height="60" src="https://www.youtube.com/embed/qrjEvxT9apU?autoplay=1&loop=1&playlist=qrjEvxT9apU" title="Nhạc Nền" frameborder="0" allow="autoplay; encrypted-media" style="border-radius: 10px;"></iframe>
 </div>
 """, unsafe_allow_html=True)
