@@ -102,7 +102,6 @@ def show_question_modal(idx):
     show_answer_key = f"show_answer_{idx}"
     last_clicked_key = f"last_clicked_{idx}"
     
-    # Thiết lập trạng thái ban đầu
     if status_key not in st.session_state:
         st.session_state[status_key] = "playing"
         st.session_state[timer_key] = time.time() + 40
@@ -123,187 +122,141 @@ def show_question_modal(idx):
         st.session_state[status_key] = "correct"
     # =======================================================
     
-    # In câu hỏi
+    # LUÔN IN CÂU HỎI VÀ HÌNH ẢNH Ở DƯỚI (Nhưng sẽ bị che mờ khi có đáp án)
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
-    
     if "image" in q_data:
-        try:
-            st.image(q_data["image"], use_container_width=True)
-        except Exception:
-            st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}').")
+        try: st.image(q_data["image"], use_container_width=True)
+        except Exception: st.warning(f"🏮 Khung ảnh trống (Chưa tìm thấy file: '{q_data['image']}').")
         st.markdown("<br>", unsafe_allow_html=True)
-        
     if "audio" in q_data:
-        try:
-            st.audio(q_data["audio"])
-        except Exception:
-            st.warning(f"⚠️ Khung nhạc trống (Chưa tìm thấy file: '{q_data['audio']}').")
+        try: st.audio(q_data["audio"])
+        except Exception: st.warning(f"⚠️ Khung nhạc trống (Chưa tìm thấy file: '{q_data['audio']}').")
         st.markdown("<br>", unsafe_allow_html=True)
     
-    # BÁO SAI VÀ CHO CHỌN LẠI (NẾU CHỌN SAI)
+    # BÁO SAI VÀ CHO CHỌN LẠI
     error_msg_placeholder = st.empty()
     if st.session_state[status_key] == "wrong":
         last_choice = st.session_state[last_clicked_key]
         error_msg_placeholder.markdown(f"<div class='error-message'>❌ Bạn vừa chọn: <b>{last_choice}</b><br>SAI RỒI! Hãy suy nghĩ và chọn lại nhé.</div>", unsafe_allow_html=True)
             
-    # Kiểm tra xem câu hỏi đã giải xong chưa
     is_answered = st.session_state[show_answer_key] or (st.session_state[status_key] == "correct")
-    
-    # Đồng hồ 40s chỉ áp dụng cho câu hỏi thường (không có âm thanh/video)
     needs_timer = ("audio" not in q_data) and ("video" not in q_data)
     
     if needs_timer:
         if not is_answered:
-            # Tính thời gian còn lại
             remaining = int(st.session_state[timer_key] - time.time())
             if remaining < 0: remaining = 0
-            
-            # JS Đồng hồ
             components.html(f"""
             <script>
                 const parent = window.parent.document;
                 let existing = parent.getElementById("custom-timer-wrapper");
                 if (existing) {{ clearInterval(existing.dataset.intervalId); existing.remove(); }}
-                
-                const wrapper = parent.createElement("div");
-                wrapper.id = "custom-timer-wrapper";
+                const wrapper = parent.createElement("div"); wrapper.id = "custom-timer-wrapper";
                 wrapper.innerHTML = `
-                    <div id="cute-timer-box" style="position: absolute; top: 15px; left: 15px; width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 5px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 999999;">
-                        {remaining}
-                    </div>
-                    <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;">
-                        <span style="font-size: 80px; margin-bottom: 20px;">⏰</span>
-                        <h1 style="color: #d32f2f; font-size: 55px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1>
-                        <p style="font-size: 26px; color: #424242; font-weight: bold; text-align: center; margin-top: 20px;">Hãy bấm dấu <b>X</b> ở góc trên bên phải để thoát.</p>
-                    </div>
+                    <div id="cute-timer-box" style="position: absolute; top: 15px; left: 15px; width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 5px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 999999;">{remaining}</div>
+                    <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;"><span style="font-size: 80px; margin-bottom: 20px;">⏰</span><h1 style="color: #d32f2f; font-size: 55px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1><p style="font-size: 26px; color: #424242; font-weight: bold; text-align: center; margin-top: 20px;">Hãy bấm dấu <b>X</b> ở góc trên bên phải để thoát.</p></div>
                 `;
-                
                 const modalDialog = parent.querySelector('[data-testid="stModal"] > div');
-                if (modalDialog) {{
-                    modalDialog.style.position = 'relative'; 
-                    modalDialog.appendChild(wrapper);
-                    
+                if (modalDialog) {{ modalDialog.style.position = 'relative'; modalDialog.appendChild(wrapper);
                     let timeLeft = {remaining};
                     const timerInterval = setInterval(() => {{
-                        if (!parent.querySelector('[data-testid="stModal"]')) {{
-                            clearInterval(timerInterval);
-                            if(wrapper.parentNode) wrapper.remove();
-                            return;
-                        }}
-                        timeLeft--;
-                        const display = parent.getElementById("cute-timer-box");
-                        if (display) display.innerText = timeLeft;
-                        if (timeLeft <= 0) {{
-                            clearInterval(timerInterval);
-                            const blocker = parent.getElementById("timeout-blocker");
-                            if (blocker) blocker.style.display = "flex";
-                        }}
-                    }}, 1000);
-                    wrapper.dataset.intervalId = timerInterval;
+                        if (!parent.querySelector('[data-testid="stModal"]')) {{ clearInterval(timerInterval); if(wrapper.parentNode) wrapper.remove(); return; }}
+                        timeLeft--; const display = parent.getElementById("cute-timer-box"); if (display) display.innerText = timeLeft;
+                        if (timeLeft <= 0) {{ clearInterval(timerInterval); const blocker = parent.getElementById("timeout-blocker"); if (blocker) blocker.style.display = "flex"; }}
+                    }}, 1000); wrapper.dataset.intervalId = timerInterval;
                 }}
             </script>
             """, height=0)
         else:
-            # Gỡ bỏ Đồng hồ khi đã trả lời xong để dừng đếm
-            components.html("""
-            <script>
-                const parent = window.parent.document;
-                const existing = parent.getElementById("custom-timer-wrapper");
-                if (existing) { clearInterval(existing.dataset.intervalId); existing.remove(); }
-            </script>
-            """, height=0)
+            components.html("""<script>const p = window.parent.document; const e = p.getElementById("custom-timer-wrapper"); if(e){clearInterval(e.dataset.intervalId); e.remove();}</script>""", height=0)
 
-    # ==========================================
-    # LOGIC CÂU HỎI & TRẢ LỜI
-    # ==========================================
-    if q_data.get("type") == "reveal":
-        # DẠNG 1: CÂU HỎI MỞ (TỰ LUẬN/HÌNH ẢNH)
-        if not st.session_state[show_answer_key]:
-            # Dùng Callbacks on_click để mở đáp án
+    # =========================================================================
+    # LOGIC KHI HIỆN ĐÁP ÁN - ÉP NÓ THÀNH MỘT CỬA SỔ OVERLAY NẰM GIỮA MÀN HÌNH
+    # =========================================================================
+    if st.session_state[show_answer_key]:
+        # Tính toán vị trí chữ để nhường chỗ cho Video (nếu là câu 5)
+        top_position = "15%" if idx == 4 else "35%"
+        
+        st.markdown(f"""
+        <style>
+        /* 1. Lớp kính đen mờ che đè lên hình ảnh cây đa và câu hỏi */
+        .glass-overlay {{
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+            z-index: 99990; animation: fadeIn 0.3s forwards;
+        }}
+        /* 2. Khung Đáp Án cố định giữa màn hình */
+        .answer-popup-center {{
+            position: fixed !important; top: {top_pos} !important; left: 50% !important;
+            transform: translate(-50%, 0) scale(0.1); z-index: 99999 !important;
+            width: 90% !important; max-width: 600px;
+            background-color: #ffebee; border-radius: 20px; border: 5px dashed #f44336;
+            padding: 25px; text-align: center; color: #d32f2f; font-size: 38px; font-weight: 900;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            animation: pop-drop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+        }}
+        /* 3. Khung Video cố định giữa màn hình (Dành cho câu 5) */
+        [data-testid="stModal"] [data-testid="stVideo"] {{
+            position: fixed !important; top: 40% !important; left: 50% !important;
+            transform: translate(-50%, 0) scale(0.1) !important; z-index: 99999 !important;
+            width: 90% !important; max-width: 650px !important;
+            border: 8px dashed #ff9800 !important; border-radius: 20px !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important;
+            animation: pop-drop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards !important;
+        }}
+        /* 4. Nút ĐÓNG cố định ở góc dưới cùng */
+        [data-testid="stModal"] [data-testid="stButton"] button[kind="primary"] {{
+            position: fixed !important; bottom: 5% !important; left: 50% !important;
+            transform: translate(-50%, 0) !important; z-index: 99999 !important;
+            width: 250px !important; height: 80px !important;
+            animation: fade-up-btn 0.5s forwards !important;
+        }}
+        
+        @keyframes fadeIn {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
+        @keyframes pop-drop {{
+            0% {{ transform: translate(-50%, 0) scale(0.1); opacity: 0; }}
+            80% {{ transform: translate(-50%, 0) scale(1.05); opacity: 1; }}
+            100% {{ transform: translate(-50%, 0) scale(1); opacity: 1; }}
+        }}
+        @keyframes fade-up-btn {{
+            from {{ opacity: 0; bottom: -50px; }}
+            to {{ opacity: 1; bottom: 5%; }}
+        }}
+        </style>
+        <div class="glass-overlay"></div>
+        """, unsafe_allow_html=True)
+        
+        # IN NỘI DUNG ĐÁP ÁN (Sẽ bị CSS kéo thẳng ra giữa màn hình)
+        if q_data.get("type") == "reveal":
+            st.markdown(f"<div class='answer-popup-center'>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='answer-popup-center'><span style='color: #2e7d32; font-size: 45px;'>✅ CHÍNH XÁC!</span><br>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
+            
+        # IN VIDEO MEME (Sẽ bị CSS kéo ra giữa màn hình và tự động play)
+        if idx == 4:
+            try: st.video("meme.mp4", autoplay=True)
+            except: pass
+            
+        # NÚT ĐÓNG BẬT NẢY
+        btn_text = "❌ ĐÓNG VÀ LẬT CHỮ" if q_data.get("type") == "choice" else "❌ ĐÓNG"
+        if st.button(btn_text, key=f"btn_close_final_{idx}", use_container_width=True, type="primary"):
+            st.session_state.revealed_words[idx] = True
+            st.rerun() 
+
+    # =========================================================================
+    # NẾU CHƯA CÓ ĐÁP ÁN -> HIỆN NÚT ĐỂ CHỌN HOẶC MỞ
+    # =========================================================================
+    else:
+        if q_data.get("type") == "reveal":
             st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", on_click=handle_reveal, use_container_width=True, type="secondary")
         else:
-            # HIỆN ĐÁP ÁN BẬT NẢY NHƯ CỬA SỔ POP-UP
-            st.markdown(f"<div class='answer-popup'>Đáp án là: {q_data['answer']}</div>", unsafe_allow_html=True)
-            
-            # Video Meme tự động nhảy đập vào màn hình
-            if idx == 4:
-                # CSS đặc biệt biến khung video thành 1 cửa sổ bung ra
-                st.markdown("""
-                <style>
-                [data-testid="stVideo"] {
-                    animation: pop-window 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
-                    border: 8px dashed #ff9800 !important;
-                    border-radius: 20px !important;
-                    box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
-                    margin-bottom: 20px;
-                }
-                </style>
-                """, unsafe_allow_html=True)
-                try:
-                    st.video("meme.mp4", autoplay=True)
-                except:
-                    st.warning("⚠️ Không tìm thấy file 'meme.mp4'.")
-                    
-            if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="primary"):
-                st.session_state.revealed_words[idx] = True
-                st.rerun() 
-                
-    else:
-        # DẠNG 2: CÂU HỎI TRẮC NGHIỆM (A B C D)
-        if not st.session_state[show_answer_key]:
             ans_cols = st.columns(2)
             for i, option in enumerate(q_data['options']):
                 with ans_cols[i % 2]:
-                    # Gắn callback on_click để kiểm tra đúng sai mà không bị thoát popup
                     st.button(option, key=f"opt_{idx}_{i}", on_click=handle_choice, args=(option,), use_container_width=True, type="secondary")
-        else:
-            # HIỆN KẾT QUẢ ĐÚNG (CŨNG CÓ HIỆU ỨNG BẬT NẢY) VÀ CHỜ ĐÓNG
-            st.markdown("<div class='correct-popup'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
-            st.markdown(f"<div class='answer-popup'>Đáp án đúng là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
-            
-            # Đề phòng nếu sau này đổi câu 5 thành trắc nghiệm thì vẫn có hiệu ứng nhảy video
-            if idx == 4:
-                st.markdown("""
-                <style>
-                [data-testid="stVideo"] {
-                    animation: pop-window 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
-                    border: 8px dashed #ff9800 !important;
-                    border-radius: 20px !important;
-                    box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
-                    margin-bottom: 20px;
-                }
-                </style>
-                """, unsafe_allow_html=True)
-                try:
-                    st.video("meme.mp4", autoplay=True)
-                except:
-                    pass
-                    
-            if st.button("❌ ĐÓNG VÀ LẬT CHỮ", key=f"btn_close_correct_{idx}", use_container_width=True, type="primary"):
-                st.session_state.revealed_words[idx] = True
-                st.rerun()
 
 st.markdown("""
 <style>
-    /* HIỆU ỨNG CỬA SỔ BẬT NẢY (POP-UP ĐẬP VÀO MẮT) */
-    @keyframes pop-window {
-        0% { transform: scale(0.1); opacity: 0; }
-        60% { transform: scale(1.05); opacity: 1; }
-        100% { transform: scale(1); }
-    }
-    
-    .answer-popup {
-        text-align: center; font-size: 38px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; 
-        background-color: #ffebee; border-radius: 15px; border: 4px dashed #f44336;
-        animation: pop-window 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        box-shadow: 0 10px 30px rgba(244, 67, 54, 0.3);
-    }
-    .correct-popup {
-        text-align: center; font-size: 36px; font-weight: 900; color: #2e7d32; margin-bottom: 10px; padding: 15px; 
-        background-color: #e8f5e9; border-radius: 15px; border: 4px dashed #4caf50;
-        animation: pop-window 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
     /* Nền Đỏ - Hồng Trung Thu */
     .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
     
@@ -329,7 +282,7 @@ st.markdown("""
     }
     .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
     
-    /* NÚT ĐÓNG / NÚT LỒNG ĐÈN */
+    /* NÚT LỒNG ĐÈN Ở MÀN HÌNH CHÍNH (Nút đóng đã được CSS tách riêng ở trên) */
     button[kind="primary"] { 
         border-radius: 50% !important; border: 4px solid #FFD700 !important; background: radial-gradient(circle at center, #ff7961 0%, #d32f2f 80%) !important; 
         box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.5), inset 0 -10px 15px rgba(0,0,0,0.6), 0 0 15px #FFD700 !important; 
