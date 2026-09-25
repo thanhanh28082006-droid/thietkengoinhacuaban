@@ -39,8 +39,8 @@ QUESTIONS = [
         "type": "choice",
         "question": "3. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", 
-        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buồn Trăng"],
-        "answer": "D. Buồn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buôn Trăng"],
+        "answer": "D. Buôn Trăng"
     },
     {
         "id": 4,
@@ -326,7 +326,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(10)
