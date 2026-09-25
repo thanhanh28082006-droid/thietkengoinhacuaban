@@ -391,13 +391,13 @@ if all(st.session_state.revealed_words):
     else:
         st.success("🎉 XUẤT SẮC! CẢ LỚP ĐÃ GIẢI MÃ THÀNH CÔNG THÔNG ĐIỆP TRUNG THU!")
 
-# TRÌNH PHÁT NHẠC NỀN MP3 LOCAL (ĐÃ THU NHỎ LẠI THEO YÊU CẦU)
+# TRÌNH PHÁT NHẠC NỀN MP3 LOCAL KÍCH THƯỚC CHUẨN, NHỎ GỌN
 audio_b64 = get_audio_base64("nhacnen.mp3")
 if audio_b64:
     st.markdown(f"""
-    <div style="position: fixed; bottom: 15px; left: 15px; z-index: 9999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 5px 10px; border-radius: 15px; border: 2px solid #e91e63; box-shadow: 0 3px 10px rgba(0,0,0,0.2);">
-        <p style="margin: 0 0 3px 0; font-weight: 900; color: #e91e63; font-size: 12px; text-align: center;">🎵 Nhạc Nền</p>
-        <audio controls autoplay loop style="width: 160px; height: 30px; border-radius: 8px;">
+    <div style="position: fixed; bottom: 15px; left: 15px; z-index: 99999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 8px 12px; border-radius: 15px; border: 2px solid #e91e63; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <p style="margin: 0 0 5px 0; font-weight: 900; color: #e91e63; font-size: 13px; text-align: center;">🎵 Nhạc Nền</p>
+        <audio controls autoplay loop style="width: 200px; height: 40px; outline: none;">
             <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
         </audio>
     </div>
