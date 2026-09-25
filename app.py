@@ -5,6 +5,61 @@ import base64
 
 st.set_page_config(page_title="Giải Mã Đêm Trăng", page_icon="🏮", layout="wide")
 
+# =========================================================================
+# HIỆU ỨNG DÀN LỒNG ĐÈN TREO RỰC RỠ TRÊN CÙNG MÀN HÌNH
+# =========================================================================
+st.markdown("""
+<style>
+@keyframes swing {
+    0% { transform: rotate(8deg); }
+    100% { transform: rotate(-8deg); }
+}
+.hanging-lantern {
+    position: fixed;
+    top: -10px;
+    transform-origin: top center;
+    animation: swing 3s ease-in-out infinite alternate;
+    z-index: 99998;
+    pointer-events: none; /* Không cản trở click chuột */
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.9), 0 0 40px #FFD700, 0 0 60px #ff9800; /* Phát sáng rực rỡ */
+}
+.hanging-lantern::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 60px;
+    background: linear-gradient(to bottom, #FFD700, #ff9800);
+    box-shadow: 0 0 10px #FFD700;
+    z-index: -1;
+}
+.hl1 { left: 2%; font-size: 55px; animation-duration: 3.2s; }
+.hl2 { left: 10%; font-size: 45px; top: -5px; animation-duration: 2.8s; animation-delay: 0.3s; }
+.hl3 { left: 20%; font-size: 60px; top: -15px; animation-duration: 3.5s; animation-delay: 0.1s; }
+.hl4 { left: 30%; font-size: 50px; animation-duration: 3.0s; animation-delay: 0.5s; }
+.hl5 { left: 40%; font-size: 55px; top: -10px; animation-duration: 3.8s; animation-delay: 0.2s; }
+.hl6 { left: 50%; font-size: 65px; top: -20px; animation-duration: 4.0s; animation-delay: 0.7s; }
+.hl7 { left: 60%; font-size: 50px; top: -5px; animation-duration: 3.1s; animation-delay: 0.4s; }
+.hl8 { left: 70%; font-size: 55px; top: -15px; animation-duration: 3.6s; animation-delay: 0.8s; }
+.hl9 { left: 80%; font-size: 45px; animation-duration: 2.9s; animation-delay: 0.2s; }
+.hl10 { left: 90%; font-size: 60px; top: -10px; animation-duration: 3.4s; animation-delay: 0.6s; }
+.hl11 { left: 96%; font-size: 50px; animation-duration: 3.3s; animation-delay: 0.1s; }
+</style>
+<div class="hanging-lantern hl1">🏮</div>
+<div class="hanging-lantern hl2">🏮</div>
+<div class="hanging-lantern hl3">🏮</div>
+<div class="hanging-lantern hl4">🏮</div>
+<div class="hanging-lantern hl5">🏮</div>
+<div class="hanging-lantern hl6">🏮</div>
+<div class="hanging-lantern hl7">🏮</div>
+<div class="hanging-lantern hl8">🏮</div>
+<div class="hanging-lantern hl9">🏮</div>
+<div class="hanging-lantern hl10">🏮</div>
+<div class="hanging-lantern hl11">🏮</div>
+""", unsafe_allow_html=True)
+
 # ĐỌC VÀ LƯU BỘ NHỚ ĐỆM FILE NHẠC ĐỂ CHẠY MƯỢT MÀ
 @st.cache_data
 def get_audio_base64(file_path):
