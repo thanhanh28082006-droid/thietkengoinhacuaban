@@ -122,7 +122,7 @@ def show_question_modal(idx):
         st.session_state[status_key] = "correct"
     # =======================================================
     
-    # LUÔN IN CÂU HỎI VÀ HÌNH ẢNH Ở DƯỚI (Nhưng sẽ bị che mờ khi có đáp án)
+    # LUÔN IN CÂU HỎI VÀ HÌNH ẢNH Ở DƯỚI
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     if "image" in q_data:
         try: st.image(q_data["image"], use_container_width=True)
@@ -171,73 +171,70 @@ def show_question_modal(idx):
             components.html("""<script>const p = window.parent.document; const e = p.getElementById("custom-timer-wrapper"); if(e){clearInterval(e.dataset.intervalId); e.remove();}</script>""", height=0)
 
     # =========================================================================
-    # LOGIC KHI HIỆN ĐÁP ÁN - ÉP NÓ THÀNH MỘT CỬA SỔ OVERLAY NẰM GIỮA MÀN HÌNH
+    # LOGIC KHI HIỆN ĐÁP ÁN (OVERLAY CHÍNH GIỮA)
     # =========================================================================
     if st.session_state[show_answer_key]:
-        # Tính toán vị trí chữ để nhường chỗ cho Video (nếu là câu 5)
-        top_pos = "15%" if idx == 4 else "35%"
-        
-        st.markdown(f"""
+        st.markdown("""
         <style>
-        /* 1. Lớp kính đen mờ che đè lên hình ảnh cây đa và câu hỏi */
-        .glass-overlay {{
+        /* 1. Lớp kính đen mờ che toàn bộ màn hình */
+        .glass-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
             z-index: 99990; animation: fadeIn 0.3s forwards;
-        }}
-        /* 2. Khung Đáp Án cố định giữa màn hình */
-        .answer-popup-center {{
-            position: fixed !important; top: {top_pos} !important; left: 50% !important;
-            transform: translate(-50%, 0) scale(0.1); z-index: 99999 !important;
+        }
+        /* 2. Khung Đáp Án / Video căn giữa hoàn hảo */
+        .answer-popup-center {
+            position: fixed !important; top: 45% !important; left: 50% !important;
+            transform: translate(-50%, -50%) scale(0.1); z-index: 99999 !important;
             width: 90% !important; max-width: 600px;
             background-color: #ffebee; border-radius: 20px; border: 5px dashed #f44336;
             padding: 25px; text-align: center; color: #d32f2f; font-size: 38px; font-weight: 900;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            animation: pop-drop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
-        }}
-        /* 3. Khung Video cố định giữa màn hình (Dành cho câu 5) */
-        [data-testid="stModal"] [data-testid="stVideo"] {{
-            position: fixed !important; top: 40% !important; left: 50% !important;
-            transform: translate(-50%, 0) scale(0.1) !important; z-index: 99999 !important;
+            animation: pop-drop-center 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+        }
+        /* 3. Style riêng cho Video để nó bật nảy to đùng giữa màn hình */
+        [data-testid="stModal"] [data-testid="stVideo"] {
+            position: fixed !important; top: 45% !important; left: 50% !important;
+            transform: translate(-50%, -50%) scale(0.1) !important; z-index: 99999 !important;
             width: 90% !important; max-width: 650px !important;
             border: 8px dashed #ff9800 !important; border-radius: 20px !important;
             box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important;
-            animation: pop-drop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards !important;
-        }}
+            animation: pop-drop-center 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+        }
         /* 4. Nút ĐÓNG cố định ở góc dưới cùng */
-        [data-testid="stModal"] [data-testid="stButton"] button[kind="primary"] {{
+        [data-testid="stModal"] [data-testid="stButton"] button[kind="primary"] {
             position: fixed !important; bottom: 5% !important; left: 50% !important;
             transform: translate(-50%, 0) !important; z-index: 99999 !important;
             width: 250px !important; height: 80px !important;
             animation: fade-up-btn 0.5s forwards !important;
-        }}
+        }
         
-        @keyframes fadeIn {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
-        @keyframes pop-drop {{
-            0% {{ transform: translate(-50%, 0) scale(0.1); opacity: 0; }}
-            80% {{ transform: translate(-50%, 0) scale(1.05); opacity: 1; }}
-            100% {{ transform: translate(-50%, 0) scale(1); opacity: 1; }}
-        }}
-        @keyframes fade-up-btn {{
-            from {{ opacity: 0; bottom: -50px; }}
-            to {{ opacity: 1; bottom: 5%; }}
-        }}
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pop-drop-center {
+            0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+            80% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        @keyframes fade-up-btn {
+            from { opacity: 0; bottom: -50px; }
+            to { opacity: 1; bottom: 5%; }
+        }
         </style>
         <div class="glass-overlay"></div>
         """, unsafe_allow_html=True)
         
-        # IN NỘI DUNG ĐÁP ÁN (Sẽ bị CSS kéo thẳng ra giữa màn hình)
-        if q_data.get("type") == "reveal":
-            st.markdown(f"<div class='answer-popup-center'>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<div class='answer-popup-center'><span style='color: #2e7d32; font-size: 45px;'>✅ CHÍNH XÁC!</span><br>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
-            
-        # IN VIDEO MEME (Sẽ bị CSS kéo ra giữa màn hình và tự động play)
+        # NẾU LÀ CÂU 5 (MEME TROLL): CHỈ HIỆN VIDEO, KHÔNG HIỆN CHỮ ĐÁP ÁN
         if idx == 4:
             try: st.video("meme.mp4", autoplay=True)
-            except: pass
+            except: st.warning("⚠️ Không tìm thấy file 'meme.mp4'")
+        # CÁC CÂU CÒN LẠI: HIỆN CHỮ ĐÁP ÁN BÌNH THƯỜNG
+        else:
+            if q_data.get("type") == "reveal":
+                st.markdown(f"<div class='answer-popup-center'>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div class='answer-popup-center'><span style='color: #2e7d32; font-size: 45px;'>✅ CHÍNH XÁC!</span><br>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
             
-        # NÚT ĐÓNG BẬT NẢY
+        # NÚT ĐÓNG
         btn_text = "❌ ĐÓNG VÀ LẬT CHỮ" if q_data.get("type") == "choice" else "❌ ĐÓNG"
         if st.button(btn_text, key=f"btn_close_final_{idx}", use_container_width=True, type="primary"):
             st.session_state.revealed_words[idx] = True
@@ -282,7 +279,7 @@ st.markdown("""
     }
     .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
     
-    /* NÚT LỒNG ĐÈN Ở MÀN HÌNH CHÍNH (Nút đóng đã được CSS tách riêng ở trên) */
+    /* NÚT LỒNG ĐÈN Ở MÀN HÌNH CHÍNH */
     button[kind="primary"] { 
         border-radius: 50% !important; border: 4px solid #FFD700 !important; background: radial-gradient(circle at center, #ff7961 0%, #d32f2f 80%) !important; 
         box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.5), inset 0 -10px 15px rgba(0,0,0,0.6), 0 0 15px #FFD700 !important; 
