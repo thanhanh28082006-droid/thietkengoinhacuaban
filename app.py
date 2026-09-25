@@ -104,6 +104,7 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
+# Đã chuyển modal size sang kích thước mặc định thay vì quá to
 @st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
@@ -138,7 +139,7 @@ def show_question_modal(idx):
     # 1. CÂU HỎI (Luôn luôn hiển thị ở trên cùng)
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # 2. KHU VỰC HÌNH ẢNH / MEDIA (Sẽ tráo đổi hình cây đa thành Video nếu là câu 5)
+    # 2. KHU VỰC HÌNH ẢNH / MEDIA (Đã giới hạn chiều cao trong CSS)
     media_placeholder = st.empty()
     with media_placeholder.container():
         if is_answered and idx == 4:
@@ -176,18 +177,18 @@ def show_question_modal(idx):
                         st.button(option, key=f"opt_{idx}_{i}", on_click=handle_choice, args=(option,), use_container_width=True, type="secondary")
         else:
             # --- SAU KHI MỞ ĐÁP ÁN ---
-            if idx != 4: # Chỉ in chữ đáp án cho CÁC CÂU KHÁC (Câu 5 Meme chỉ cần xem video)
+            if idx != 4: # Chỉ in chữ đáp án cho CÁC CÂU KHÁC
                 st.markdown("""
                 <style>
                 @keyframes popIn { 0% { transform: scale(0.3); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-                .answer-box { background-color: #ffebee; border-radius: 20px; border: 5px dashed #f44336; padding: 30px; text-align: center; color: #d32f2f; font-size: 38px; font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; margin-bottom: 25px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+                .answer-box { background-color: #ffebee; border-radius: 15px; border: 4px dashed #f44336; padding: 20px; text-align: center; color: #d32f2f; font-size: 28px; font-weight: 900; box-shadow: 0 8px 20px rgba(0,0,0,0.2); width: 100%; margin-bottom: 20px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
                 </style>
                 """, unsafe_allow_html=True)
                 
                 if q_data.get("type") == "reveal":
                     st.markdown(f"<div class='answer-box'>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div class='answer-box'><span style='color: #2e7d32; font-size: 45px;'>✅ CHÍNH XÁC!</span><br><br>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div class='answer-box'><span style='color: #2e7d32; font-size: 32px;'>✅ CHÍNH XÁC!</span><br><br>Đáp án là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
             
             # Nút đóng
             btn_text = "❌ ĐÓNG VÀ LẬT CHỮ" if q_data.get("type") == "choice" else "❌ ĐÓNG"
@@ -195,7 +196,7 @@ def show_question_modal(idx):
                 st.session_state.revealed_words[idx] = True
                 st.rerun()
 
-    # 4. KHU VỰC ĐỒNG HỒ 40 GIÂY NÂNG CẤP
+    # 4. KHU VỰC ĐỒNG HỒ 40 GIÂY NÂNG CẤP (Thu nhỏ)
     needs_timer = ("audio" not in q_data) and ("video" not in q_data)
     if needs_timer:
         if not is_answered:
@@ -213,18 +214,17 @@ def show_question_modal(idx):
                     <style>
                         @keyframes pulseRed {{
                             0% {{ transform: scale(1); box-shadow: 0 0 0 0 rgba(211,47,47,0.7); }}
-                            70% {{ transform: scale(1.1); box-shadow: 0 0 0 15px rgba(211,47,47,0); }}
+                            70% {{ transform: scale(1.1); box-shadow: 0 0 0 10px rgba(211,47,47,0); }}
                             100% {{ transform: scale(1); box-shadow: 0 0 0 0 rgba(211,47,47,0); }}
                         }}
                     </style>
-                    <div id="timer-container" style="position: absolute; top: 15px; left: 15px; z-index: 999999; display: flex; flex-direction: column; align-items: center;">
-                        <div id="cute-timer-box" style="width: 75px; height: 75px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 5px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s;">{remaining}</div>
-                        <div id="timer-warning" style="display: none; background: #d32f2f; color: white; font-size: 14px; font-weight: 900; padding: 4px 10px; border-radius: 12px; margin-top: 8px; box-shadow: 0 4px 10px rgba(211,47,47,0.4); text-transform: uppercase;">Sắp hết giờ!</div>
+                    <div id="timer-container" style="position: absolute; top: 10px; left: 10px; z-index: 999999; display: flex; flex-direction: column; align-items: center;">
+                        <div id="cute-timer-box" style="width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, #ffffff, #fce4ec); border: 4px solid #e91e63; color: #c2185b; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s;">{remaining}</div>
+                        <div id="timer-warning" style="display: none; background: #d32f2f; color: white; font-size: 12px; font-weight: 900; padding: 2px 8px; border-radius: 8px; margin-top: 6px; box-shadow: 0 4px 8px rgba(211,47,47,0.3); text-transform: uppercase;">Sắp hết giờ!</div>
                     </div>
-                    <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;"><span style="font-size: 80px; margin-bottom: 20px;">⏰</span><h1 style="color: #d32f2f; font-size: 55px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1><p style="font-size: 26px; color: #424242; font-weight: bold; text-align: center; margin-top: 20px;">Hãy bấm dấu <b>X</b> ở góc trên bên phải để thoát.</p></div>
+                    <div id="timeout-blocker" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 999998; flex-direction: column; align-items: center; justify-content: center; border-radius: 1rem;"><span style="font-size: 60px; margin-bottom: 15px;">⏰</span><h1 style="color: #d32f2f; font-size: 40px; font-weight: 900; margin: 0; text-align: center;">HẾT THỜI GIAN!</h1><p style="font-size: 20px; color: #424242; font-weight: bold; text-align: center; margin-top: 15px;">Hãy bấm dấu <b>X</b> ở góc trên bên phải để thoát.</p></div>
                 `;
                 
-                // Giải pháp tìm đúng vùng chứa trên mọi phiên bản Streamlit Web
                 const modalDialog = parent.querySelector('[data-testid="stDialog"] > div, [data-testid="stModal"] > div');
                 
                 if (modalDialog) {{ 
@@ -244,7 +244,6 @@ def show_question_modal(idx):
                         const warning = parent.getElementById("timer-warning");
                         if (display) display.innerText = timeLeft;
                         
-                        // KHI CÒN DƯỚI 10 GIÂY: ĐỔI MÀU ĐỎ, NHẤP NHÁY VÀ HIỆN CẢNH BÁO
                         if (timeLeft <= 10 && timeLeft > 0) {{
                             if(display) {{
                                 display.style.borderColor = "#d32f2f";
@@ -254,7 +253,6 @@ def show_question_modal(idx):
                             if(warning) warning.style.display = "block";
                         }}
                         
-                        // HẾT GIỜ
                         if (timeLeft <= 0) {{ 
                             clearInterval(timerInterval); 
                             const blocker = parent.getElementById("timeout-blocker"); 
@@ -263,7 +261,6 @@ def show_question_modal(idx):
                     }}, 1000); 
                     wrapper.dataset.intervalId = timerInterval;
                 }} else {{
-                    // Fallback cực mạnh nếu không tìm thấy thẻ dialog, ép nó hiện thẳng trên trang
                     parent.body.appendChild(wrapper);
                 }}
             </script>
@@ -278,51 +275,55 @@ st.markdown("""
     /* Nền Đỏ - Hồng Trung Thu */
     .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
     
-    /* Khung nội dung trắng */
+    /* Khung nội dung trắng - Thu nhỏ padding */
     .white-container { 
-        background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border-radius: 25px; 
-        padding: 35px; box-shadow: 0 20px 40px rgba(211, 47, 47, 0.2); border: 3px solid #ffcdd2; 
-        margin-bottom: 25px; position: relative; overflow: hidden; 
+        background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border-radius: 20px; 
+        padding: 20px; box-shadow: 0 15px 30px rgba(211, 47, 47, 0.15); border: 2px solid #ffcdd2; 
+        margin-bottom: 20px; position: relative; overflow: hidden; 
     }
     
-    .question-text { font-size: 38px; color: #b71c1c; text-align: center; margin-bottom: 20px; font-weight: 900; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
-    .error-message { background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; padding: 15px; border-radius: 15px; text-align: center; font-size: 26px; font-weight: 900; margin-bottom: 25px; border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
+    /* Giảm font chữ câu hỏi và lỗi */
+    .question-text { font-size: 26px; color: #b71c1c; text-align: center; margin-bottom: 15px; font-weight: 900; line-height: 1.4; }
+    .error-message { background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; padding: 10px; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 900; margin-bottom: 20px; border-left: 6px solid #d32f2f; box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2); }
     
-    /* Chữ cái thông điệp lật mở */
+    /* Chữ cái thông điệp lật mở - Làm gọn lại */
     .word-box { 
-        display: flex; justify-content: center; align-items: center; height: 90px; 
+        display: flex; justify-content: center; align-items: center; height: 60px; 
         background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; 
-        border-radius: 40px; 
-        font-size: 28px; font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; 
-        margin: 5px 2px; 
+        border-radius: 25px; 
+        font-size: 20px; font-weight: 900; box-shadow: inset 0px 4px 8px rgba(255,255,255,0.3), 0px 6px 12px rgba(183, 28, 28, 0.4); 
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.4); border: 2px solid #ff8a80; 
+        margin: 5px 1px; 
         white-space: nowrap; overflow: visible; text-align: center; padding: 0 5px; letter-spacing: -0.5px; 
     }
-    .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
+    .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 3px 6px rgba(255,255,255,0.8), 0px 5px 10px rgba(0,0,0,0.1); border: 2px solid #e0e0e0; text-shadow: none; font-size: 26px;}
     
-    /* NÚT LỒNG ĐÈN & NÚT ĐÓNG */
+    /* NÚT LỒNG ĐÈN & NÚT ĐÓNG - Thu nhỏ kích thước */
     button[kind="primary"] { 
-        border-radius: 50% !important; border: 4px solid #FFD700 !important; background: radial-gradient(circle at center, #ff7961 0%, #d32f2f 80%) !important; 
-        box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.5), inset 0 -10px 15px rgba(0,0,0,0.6), 0 0 15px #FFD700 !important; 
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; height: 80px !important; position: relative !important; white-space: nowrap !important; padding: 0 !important; margin-top: 20px !important;
+        border-radius: 50% !important; border: 3px solid #FFD700 !important; background: radial-gradient(circle at center, #ff7961 0%, #d32f2f 80%) !important; 
+        box-shadow: 0 6px 12px rgba(183, 28, 28, 0.4), inset 0 6px 10px rgba(255,255,255,0.4), inset 0 -6px 10px rgba(0,0,0,0.5), 0 0 10px #FFD700 !important; 
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; height: 60px !important; position: relative !important; white-space: nowrap !important; padding: 0 !important; margin-top: 15px !important;
     }
-    button[kind="primary"]::before { content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 3px; height: 30px; background: #FFD700; box-shadow: 0 0 8px #FFD700; }
-    button[kind="primary"] p { font-size: 26px !important; font-weight: 900 !important; color: #FFFDE7 !important; text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; margin: 0 !important; }
-    button[kind="primary"]:hover { background: radial-gradient(circle at center, #ff8a80 0%, #b71c1c 80%) !important; transform: translateY(-8px) scale(1.1) !important; box-shadow: 0 15px 30px rgba(183, 28, 28, 0.8), 0 0 25px rgba(255, 215, 0, 1) !important; }
+    button[kind="primary"]::before { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 3px; height: 20px; background: #FFD700; box-shadow: 0 0 6px #FFD700; }
+    button[kind="primary"] p { font-size: 18px !important; font-weight: 900 !important; color: #FFFDE7 !important; text-shadow: 1px 1px 3px rgba(0,0,0,0.8), 0 0 8px #FFD700 !important; margin: 0 !important; }
+    button[kind="primary"]:hover { background: radial-gradient(circle at center, #ff8a80 0%, #b71c1c 80%) !important; transform: translateY(-5px) scale(1.05) !important; box-shadow: 0 10px 20px rgba(183, 28, 28, 0.6), 0 0 15px rgba(255, 215, 0, 0.8) !important; }
     button[kind="primary"]:disabled { background: radial-gradient(circle at center, #e0e0e0 0%, #9e9e9e 80%) !important; border-color: #bdbdbd !important; transform: none !important; box-shadow: none !important; }
     
     /* NÚT ĐÁP ÁN (A B C D & MỞ ĐÁP ÁN) */
     button[kind="secondary"] {
-        border-radius: 40px !important; border: 3px solid #ffcc80 !important; background: linear-gradient(145deg, #fff3e0, #ffe0b2) !important; color: #e65100 !important;
-        box-shadow: 0 6px 15px rgba(230, 81, 0, 0.15) !important; transition: all 0.3s ease !important; min-height: 80px !important; white-space: normal !important; 
+        border-radius: 30px !important; border: 2px solid #ffcc80 !important; background: linear-gradient(145deg, #fff3e0, #ffe0b2) !important; color: #e65100 !important;
+        box-shadow: 0 4px 10px rgba(230, 81, 0, 0.1) !important; transition: all 0.3s ease !important; min-height: 60px !important; white-space: normal !important; 
     }
-    button[kind="secondary"] p { font-size: 26px !important; font-weight: 900 !important; margin: 0 !important; }
-    button[kind="secondary"]:hover { transform: translateY(-5px) !important; box-shadow: 0 10px 20px rgba(230, 81, 0, 0.3) !important; background: linear-gradient(145deg, #ffe0b2, #ffcc80) !important; border-color: #ff9800 !important; color: #d84315 !important; }
+    button[kind="secondary"] p { font-size: 20px !important; font-weight: 900 !important; margin: 0 !important; }
+    button[kind="secondary"]:hover { transform: translateY(-3px) !important; box-shadow: 0 6px 15px rgba(230, 81, 0, 0.2) !important; background: linear-gradient(145deg, #ffe0b2, #ffcc80) !important; border-color: #ff9800 !important; color: #d84315 !important; }
 
-    .main-title { text-align: center; font-size: 55px; font-weight: 900; margin-bottom: 40px; text-transform: uppercase; background: linear-gradient(to right, #b71c1c, #ff9800, #b71c1c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 3px 3px 8px rgba(0,0,0,0.15); }
+    /* Tiêu đề chính */
+    .main-title { text-align: center; font-size: 40px; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; background: linear-gradient(to right, #b71c1c, #ff9800, #b71c1c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
     
-    /* Làm nổi bật video Meme */
-    [data-testid="stVideo"] { border: 8px dashed #ff9800 !important; border-radius: 20px !important; box-shadow: 0 15px 40px rgba(0,0,0,0.4) !important; }
+    /* Khống chế kích thước hình ảnh và video không bị tràn màn hình */
+    [data-testid="stImage"] img { max-height: 40vh !important; object-fit: contain !important; border-radius: 10px; }
+    [data-testid="stVideo"] video { max-height: 40vh !important; object-fit: contain !important; }
+    [data-testid="stVideo"] { border: 6px dashed #ff9800 !important; border-radius: 15px !important; box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important; margin: 0 auto; text-align: center; display: flex; justify-content: center; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -338,7 +339,7 @@ for i, col in enumerate(cols):
             st.markdown(f'<div class="word-box word-hidden">?</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown("<div style='font-size: 36px; font-weight: 900; color: #b71c1c; margin-bottom: 30px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
+st.markdown("<div style='font-size: 28px; font-weight: 900; color: #b71c1c; margin-bottom: 20px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
 
 # 10 Lồng đèn tương ứng 10 chữ
 lantern_emojis = ['🐟', '⭐', '🦋', '💖', '🐰', '🐱', '🐯', '🐷', '🐻', '🌸']
@@ -352,7 +353,7 @@ for i, b_col in enumerate(btn_cols):
 st.markdown("<br><br>", unsafe_allow_html=True)
 col_empty1, col_guess, col_empty2 = st.columns([1, 2, 1])
 with col_guess:
-    st.markdown("<div style='text-align: center; font-size: 32px; font-weight: 900; color: #b71c1c; margin-bottom: 15px;'>💡 Lớp mình đã tìm ra thông điệp chưa?</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; font-size: 24px; font-weight: 900; color: #b71c1c; margin-bottom: 15px;'>💡 Lớp mình đã tìm ra thông điệp chưa?</div>", unsafe_allow_html=True)
     if st.button("🌟 LẬT MỞ TOÀN BỘ THÔNG ĐIỆP NGAY 🌟", key="btn_reveal_all", use_container_width=True, type="secondary"):
         st.session_state.revealed_words = [True] * 10
         st.session_state.victory_shown = False 
@@ -364,7 +365,7 @@ def show_victory_modal():
     st.markdown("""
     <style>
     @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1;} 100% { transform: translateY(100vh) rotate(360deg); opacity: 0;} }
-    .flower { position: fixed; font-size: 40px; z-index: 9999; top: -10vh; animation: fall linear forwards; }
+    .flower { position: fixed; font-size: 35px; z-index: 9999; top: -10vh; animation: fall linear forwards; }
     </style>
     <script>
     const flowers = ['🏮', '🌕', '⭐', '✨', '🥮', '🐇']; 
@@ -373,9 +374,9 @@ def show_victory_modal():
         f.style.left = Math.random() * 100 + 'vw'; f.style.animationDuration = (Math.random() * 3 + 2) + 's'; f.style.animationDelay = Math.random() * 2 + 's'; window.parent.document.body.appendChild(f);
     }
     </script>
-    <div style='text-align: center; padding: 20px 10px;'>
-        <h1 style='color: #d32f2f; font-size: 55px; font-weight: 900; margin-bottom: 10px; line-height: 1.4; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);'>THÔNG ĐIỆP TRUNG THU</h1>
-        <p style='color: #ff9800; font-size: 40px; font-weight: 900; margin-top: 25px; text-shadow: 0 0 15px rgba(255, 152, 0, 0.8), 0 0 30px rgba(255, 193, 7, 0.6);'>
+    <div style='text-align: center; padding: 15px 10px;'>
+        <h1 style='color: #d32f2f; font-size: 45px; font-weight: 900; margin-bottom: 10px; line-height: 1.3; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);'>THÔNG ĐIỆP TRUNG THU</h1>
+        <p style='color: #ff9800; font-size: 32px; font-weight: 900; margin-top: 20px; text-shadow: 0 0 10px rgba(255, 152, 0, 0.6), 0 0 20px rgba(255, 193, 7, 0.4);'>
             "Trăng sáng nhất khi lòng người luôn hướng về nhau" 🏮🌕
         </p>
     </div><br>
