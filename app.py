@@ -225,10 +225,10 @@ def show_question_modal(idx):
             # HIỆN ĐÁP ÁN VÀ CHỜ ĐÓNG
             st.markdown(f"<div style='text-align: center; font-size: 38px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án là: {q_data['answer']}</div>", unsafe_allow_html=True)
             
-            # Video Meme đặc biệt cho Lồng đèn số 5 (Chữ LÒNG - idx == 4)
+            # Video Meme tự động nhảy đập vào màn hình
             if idx == 4:
                 try:
-                    st.video("meme.mp4")
+                    st.video("meme.mp4", autoplay=True)
                 except:
                     st.warning("⚠️ Không tìm thấy file 'meme.mp4'.")
                     
@@ -249,10 +249,10 @@ def show_question_modal(idx):
             st.markdown("<div style='text-align: center; font-size: 36px; font-weight: 900; color: #2e7d32; margin-bottom: 10px; padding: 15px; background-color: #e8f5e9; border-radius: 15px; border: 2px dashed #4caf50;'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
             st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 700; color: #d32f2f; margin-bottom: 25px;'>Đáp án đúng là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
             
-            # Xử lý video meme cho câu 5 nếu đổi sang dạng trắc nghiệm
+            # Tự động nhảy meme nếu câu 5 bị đổi thành trắc nghiệm
             if idx == 4:
                 try:
-                    st.video("meme.mp4")
+                    st.video("meme.mp4", autoplay=True)
                 except:
                     pass
                     
