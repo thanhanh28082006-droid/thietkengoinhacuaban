@@ -4,6 +4,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Vui Tết Trung Thu", page_icon="🏮", layout="wide")
 
+# XÁO TRỘN CÂU HỎI (Ghép thành: TRĂNG SÁNG NHẤT KHI LÒNG NGƯỜI LUÔN HƯỚNG VỀ NHAU)
 QUESTIONS = [
     {
         "id": 1,
@@ -27,8 +28,8 @@ QUESTIONS = [
         "type": "choice",
         "question": "3. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", 
-        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Buồn Trăng", "D. Vầng trăng"],
-        "answer": "C. Buồn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buồn Trăng"],
+        "answer": "D. Buồn Trăng"
     },
     {
         "id": 4,
@@ -98,20 +99,17 @@ def show_question_modal(idx):
     
     status_key = f"q_status_{idx}"
     timer_key = f"timer_end_{idx}"
+    show_answer_key = f"show_answer_{idx}"
     
-    # Thiết lập trạng thái và bắt đầu tính giờ 45s khi mở câu hỏi lần đầu
+    # Thiết lập trạng thái và bắt đầu tính giờ 40s khi mở câu hỏi lần đầu
     if status_key not in st.session_state:
         st.session_state[status_key] = "playing"
-        st.session_state[timer_key] = time.time() + 45
-        
-    show_answer_key = f"show_answer_{idx}"
-    if show_answer_key not in st.session_state:
+        st.session_state[timer_key] = time.time() + 40
         st.session_state[show_answer_key] = False
     
     # In câu hỏi
     st.markdown(f"<div class='question-text'>{q_data['question']}</div>", unsafe_allow_html=True)
     
-    # Chèn ảnh và Audio an toàn
     if "image" in q_data:
         try:
             st.image(q_data["image"], use_container_width=True)
@@ -143,7 +141,7 @@ def show_question_modal(idx):
             remaining = int(st.session_state[timer_key] - time.time())
             if remaining < 0: remaining = 0
             
-            # Chèn JS Đồng hồ đếm ngược
+            # Chèn JS Đồng hồ đếm ngược (Màu hồng)
             components.html(f"""
             <script>
                 const parent = window.parent.document;
@@ -189,7 +187,7 @@ def show_question_modal(idx):
             </script>
             """, height=0)
         else:
-            # Gỡ bỏ Đồng hồ khi đã có đáp án
+            # Gỡ bỏ Đồng hồ khi đã có đáp án (Tránh chạy ngầm)
             components.html("""
             <script>
                 const parent = window.parent.document;
@@ -199,25 +197,33 @@ def show_question_modal(idx):
             """, height=0)
 
     if q_data.get("type") == "reveal":
-        # Câu Hỏi Mở
+        # ==========================================
+        # DẠNG 1: CÂU HỎI MỞ (TỰ LUẬN)
+        # ==========================================
         if not st.session_state[show_answer_key]:
             if st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", use_container_width=True, type="secondary"):
                 st.session_state[show_answer_key] = True
-                st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài
-                st.rerun()
+                st.rerun() # Rerun để load màn hình đáp án
         else:
+            # Hiện đáp án to đùng
             st.markdown(f"<div style='text-align: center; font-size: 38px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
-            # Phát video Meme nếu là lồng đèn số 5 (idx == 4)
+            
+            # Video Meme đặc biệt cho Lồng đèn số 5 (Chữ LÒNG - idx == 4)
             if idx == 4:
                 try:
                     st.video("meme.mp4")
                 except:
-                    st.warning("⚠️ Không tìm thấy file 'meme.mp4'.")
-            if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="secondary"):
+                    st.warning("⚠️ Không tìm thấy file 'meme.mp4'. Bạn nhớ Upload lên GitHub nhé!")
+                    
+            # Nút đóng thủ công
+            if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="primary"):
+                st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài khi đóng
                 st.rerun()
                 
     else:
-        # Câu Trắc Nghiệm
+        # ==========================================
+        # DẠNG 2: CÂU HỎI TRẮC NGHIỆM (A B C D)
+        # ==========================================
         if not st.session_state[show_answer_key]:
             ans_cols = st.columns(2)
             for i, option in enumerate(q_data['options']):
@@ -225,22 +231,27 @@ def show_question_modal(idx):
                     if st.button(option, key=f"opt_{idx}_{i}", use_container_width=True, type="secondary"):
                         if option == q_data['answer']:
                             st.session_state[status_key] = "correct"
-                            st.session_state[show_answer_key] = True
-                            st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài
+                            st.session_state[show_answer_key] = True 
+                            # Lưu ý: KHÔNG lật chữ ở đây, để nó không tự đóng cửa sổ
                             st.rerun() 
                         else:
                             st.session_state[status_key] = "wrong"
                             st.rerun()
         else:
+            # HIỆN KẾT QUẢ ĐÚNG VÀ CHỜ ĐÓNG THỦ CÔNG
             st.markdown("<div style='text-align: center; font-size: 36px; font-weight: 900; color: #2e7d32; margin-bottom: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 15px; border: 2px dashed #4caf50;'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
             st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 700; color: #d32f2f; margin-bottom: 25px;'>Đáp án: {q_data['answer']}</div>", unsafe_allow_html=True)
-            # Phát video Meme nếu là lồng đèn số 5 (idx == 4)
+            
+            # Video Meme đặc biệt cho Lồng đèn số 5 (Chữ LÒNG - idx == 4)
             if idx == 4:
                 try:
                     st.video("meme.mp4")
                 except:
-                    st.warning("⚠️ Không tìm thấy file 'meme.mp4'.")
-            if st.button("❌ ĐÓNG", key=f"btn_close_correct_{idx}", use_container_width=True, type="secondary"):
+                    st.warning("⚠️ Không tìm thấy file 'meme.mp4'. Bạn nhớ Upload lên GitHub nhé!")
+                    
+            # Nút đóng thủ công
+            if st.button("❌ ĐÓNG", key=f"btn_close_correct_{idx}", use_container_width=True, type="primary"):
+                st.session_state.revealed_words[idx] = True # Lật chữ bên ngoài khi đóng
                 st.rerun()
 
 st.markdown("""
@@ -258,15 +269,15 @@ st.markdown("""
     .question-text { font-size: 38px; color: #b71c1c; text-align: center; margin-bottom: 30px; font-weight: 900; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
     .error-message { background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; padding: 15px; border-radius: 15px; text-align: center; font-size: 28px; font-weight: 900; margin-bottom: 25px; border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
     
-    /* Chữ cái thông điệp lật mở - Dạng viên kẹo chữ bé lại 28px */
+    /* Chữ cái thông điệp lật mở - Dạng viên kẹo chữ */
     .word-box { 
-        display: flex; justify-content: center; align-items: center; height: 85px; 
+        display: flex; justify-content: center; align-items: center; height: 90px; 
         background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; 
-        border-radius: 40px; 
+        border-radius: 40px; /* Bo tròn mạnh thành viên kẹo */
         font-size: 28px; font-weight: 900; box-shadow: inset 0px 6px 12px rgba(255,255,255,0.4), 0px 10px 20px rgba(183, 28, 28, 0.5); 
         text-shadow: 2px 2px 6px rgba(0,0,0,0.5); border: 3px solid #ff8a80; 
         margin: 5px 2px; 
-        white-space: nowrap; overflow: visible; text-align: center; padding: 0 10px; letter-spacing: -0.5px; 
+        white-space: nowrap; overflow: visible; text-align: center; padding: 0 5px; letter-spacing: -0.5px; 
     }
     .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
     
@@ -310,6 +321,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<div style='font-size: 36px; font-weight: 900; color: #b71c1c; margin-bottom: 30px; text-align: center; text-transform: uppercase;'>✨ CHỌN LỒNG ĐÈN ĐỂ GIẢI MÃ ✨</div>", unsafe_allow_html=True)
 
+# 10 Lồng đèn tương ứng 10 chữ
 lantern_emojis = ['🐟', '⭐', '🦋', '💖', '🐰', '🐱', '🐯', '🐷', '🐻', '🌸']
 btn_cols = st.columns(10)
 for i, b_col in enumerate(btn_cols):
@@ -360,7 +372,7 @@ if all(st.session_state.revealed_words):
     else:
         st.success("🎉 XUẤT SẮC! CẢ LỚP ĐÃ GIẢI MÃ THÀNH CÔNG THÔNG ĐIỆP TRUNG THU!")
 
-# Chèn Nhạc Nền YouTube chạy ngầm toàn màn hình
+# Chèn Nhạc Nền YouTube chạy ngầm ở góc
 st.markdown("""
 <div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 15px; border-radius: 20px; border: 3px solid #e91e63; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
     <p style="margin: 0 0 5px 0; font-weight: 900; color: #e91e63; font-size: 14px; text-align: center;">🎵 Nhạc Nền (Bấm Play nếu chưa chạy)</p>
