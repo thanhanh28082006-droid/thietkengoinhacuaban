@@ -222,11 +222,23 @@ def show_question_modal(idx):
             # Dùng Callbacks on_click để mở đáp án
             st.button("🎁 MỞ ĐÁP ÁN", key=f"btn_reveal_first_{idx}", on_click=handle_reveal, use_container_width=True, type="secondary")
         else:
-            # HIỆN ĐÁP ÁN VÀ CHỜ ĐÓNG
-            st.markdown(f"<div style='text-align: center; font-size: 38px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; background-color: #ffebee; border-radius: 15px; border: 2px dashed #f44336;'>Đáp án là: {q_data['answer']}</div>", unsafe_allow_html=True)
+            # HIỆN ĐÁP ÁN BẬT NẢY NHƯ CỬA SỔ POP-UP
+            st.markdown(f"<div class='answer-popup'>Đáp án là: {q_data['answer']}</div>", unsafe_allow_html=True)
             
             # Video Meme tự động nhảy đập vào màn hình
             if idx == 4:
+                # CSS đặc biệt biến khung video thành 1 cửa sổ bung ra
+                st.markdown("""
+                <style>
+                [data-testid="stVideo"] {
+                    animation: pop-window 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+                    border: 8px dashed #ff9800 !important;
+                    border-radius: 20px !important;
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
+                    margin-bottom: 20px;
+                }
+                </style>
+                """, unsafe_allow_html=True)
                 try:
                     st.video("meme.mp4", autoplay=True)
                 except:
@@ -234,7 +246,7 @@ def show_question_modal(idx):
                     
             if st.button("❌ ĐÓNG", key=f"btn_reveal_final_{idx}", use_container_width=True, type="primary"):
                 st.session_state.revealed_words[idx] = True
-                st.rerun() # Nút đóng MỚI CÓ RERUN để thoát cửa sổ
+                st.rerun() 
                 
     else:
         # DẠNG 2: CÂU HỎI TRẮC NGHIỆM (A B C D)
@@ -245,24 +257,53 @@ def show_question_modal(idx):
                     # Gắn callback on_click để kiểm tra đúng sai mà không bị thoát popup
                     st.button(option, key=f"opt_{idx}_{i}", on_click=handle_choice, args=(option,), use_container_width=True, type="secondary")
         else:
-            # HIỆN KẾT QUẢ ĐÚNG VÀ CHỜ NGƯỜI DÙNG BẤM TẮT THỦ CÔNG
-            st.markdown("<div style='text-align: center; font-size: 36px; font-weight: 900; color: #2e7d32; margin-bottom: 10px; padding: 15px; background-color: #e8f5e9; border-radius: 15px; border: 2px dashed #4caf50;'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
-            st.markdown(f"<div style='text-align: center; font-size: 32px; font-weight: 700; color: #d32f2f; margin-bottom: 25px;'>Đáp án đúng là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
+            # HIỆN KẾT QUẢ ĐÚNG (CŨNG CÓ HIỆU ỨNG BẬT NẢY) VÀ CHỜ ĐÓNG
+            st.markdown("<div class='correct-popup'>✅ CHÍNH XÁC!</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='answer-popup'>Đáp án đúng là:<br>{q_data['answer']}</div>", unsafe_allow_html=True)
             
-            # Tự động nhảy meme nếu câu 5 bị đổi thành trắc nghiệm
+            # Đề phòng nếu sau này đổi câu 5 thành trắc nghiệm thì vẫn có hiệu ứng nhảy video
             if idx == 4:
+                st.markdown("""
+                <style>
+                [data-testid="stVideo"] {
+                    animation: pop-window 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+                    border: 8px dashed #ff9800 !important;
+                    border-radius: 20px !important;
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
+                    margin-bottom: 20px;
+                }
+                </style>
+                """, unsafe_allow_html=True)
                 try:
                     st.video("meme.mp4", autoplay=True)
                 except:
                     pass
                     
-            # Nút ĐÓNG thủ công - Chỉ khi bấm nút này mới gọi rerun để thoát
             if st.button("❌ ĐÓNG VÀ LẬT CHỮ", key=f"btn_close_correct_{idx}", use_container_width=True, type="primary"):
                 st.session_state.revealed_words[idx] = True
                 st.rerun()
 
 st.markdown("""
 <style>
+    /* HIỆU ỨNG CỬA SỔ BẬT NẢY (POP-UP ĐẬP VÀO MẮT) */
+    @keyframes pop-window {
+        0% { transform: scale(0.1); opacity: 0; }
+        60% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); }
+    }
+    
+    .answer-popup {
+        text-align: center; font-size: 38px; font-weight: 900; color: #d32f2f; margin: 20px 0; padding: 20px; 
+        background-color: #ffebee; border-radius: 15px; border: 4px dashed #f44336;
+        animation: pop-window 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        box-shadow: 0 10px 30px rgba(244, 67, 54, 0.3);
+    }
+    .correct-popup {
+        text-align: center; font-size: 36px; font-weight: 900; color: #2e7d32; margin-bottom: 10px; padding: 15px; 
+        background-color: #e8f5e9; border-radius: 15px; border: 4px dashed #4caf50;
+        animation: pop-window 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
     /* Nền Đỏ - Hồng Trung Thu */
     .stApp { background: linear-gradient(135deg, #ffebee, #ffcdd2, #ef9a9a); font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; }
     
@@ -276,7 +317,7 @@ st.markdown("""
     .question-text { font-size: 38px; color: #b71c1c; text-align: center; margin-bottom: 30px; font-weight: 900; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
     .error-message { background: linear-gradient(90deg, #ffeb3b, #ffc107); color: #b71c1c; padding: 15px; border-radius: 15px; text-align: center; font-size: 26px; font-weight: 900; margin-bottom: 25px; border-left: 8px solid #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
     
-    /* Chữ cái thông điệp lật mở - Dạng viên kẹo chữ */
+    /* Chữ cái thông điệp lật mở */
     .word-box { 
         display: flex; justify-content: center; align-items: center; height: 90px; 
         background: linear-gradient(145deg, #f44336, #c62828); color: #fffde7; 
@@ -288,21 +329,18 @@ st.markdown("""
     }
     .word-hidden { background: linear-gradient(145deg, #ffffff, #eeeeee); color: #bdbdbd; box-shadow: inset 0px 5px 10px rgba(255,255,255,1), 0px 8px 15px rgba(0,0,0,0.1); border: 3px solid #e0e0e0; text-shadow: none; font-size: 38px;}
     
-    /* 1. NÚT ĐÓNG / NÚT LỒNG ĐÈN */
+    /* NÚT ĐÓNG / NÚT LỒNG ĐÈN */
     button[kind="primary"] { 
-        border-radius: 50% !important; 
-        border: 4px solid #FFD700 !important; 
-        background: radial-gradient(circle at center, #ff7961 0%, #d32f2f 80%) !important; 
+        border-radius: 50% !important; border: 4px solid #FFD700 !important; background: radial-gradient(circle at center, #ff7961 0%, #d32f2f 80%) !important; 
         box-shadow: 0 10px 20px rgba(183, 28, 28, 0.5), inset 0 10px 15px rgba(255,255,255,0.5), inset 0 -10px 15px rgba(0,0,0,0.6), 0 0 15px #FFD700 !important; 
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; 
-        height: 80px !important; position: relative !important; overflow: visible !important; white-space: nowrap !important; padding: 0 !important; margin-top: 20px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; height: 80px !important; position: relative !important; white-space: nowrap !important; padding: 0 !important; margin-top: 20px !important;
     }
     button[kind="primary"]::before { content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 3px; height: 30px; background: #FFD700; box-shadow: 0 0 8px #FFD700; }
-    button[kind="primary"] p { font-size: 26px !important; font-weight: 900 !important; color: #FFFDE7 !important; text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; margin: 0 !important; letter-spacing: 1px !important; }
+    button[kind="primary"] p { font-size: 26px !important; font-weight: 900 !important; color: #FFFDE7 !important; text-shadow: 2px 2px 5px rgba(0,0,0,0.8), 0 0 10px #FFD700 !important; margin: 0 !important; }
     button[kind="primary"]:hover { background: radial-gradient(circle at center, #ff8a80 0%, #b71c1c 80%) !important; transform: translateY(-8px) scale(1.1) !important; box-shadow: 0 15px 30px rgba(183, 28, 28, 0.8), 0 0 25px rgba(255, 215, 0, 1) !important; }
     button[kind="primary"]:disabled { background: radial-gradient(circle at center, #e0e0e0 0%, #9e9e9e 80%) !important; border-color: #bdbdbd !important; transform: none !important; box-shadow: none !important; }
     
-    /* 2. NÚT ĐÁP ÁN (A B C D) */
+    /* NÚT ĐÁP ÁN (A B C D) */
     button[kind="secondary"] {
         border-radius: 40px !important; border: 3px solid #ffcc80 !important; background: linear-gradient(145deg, #fff3e0, #ffe0b2) !important; color: #e65100 !important;
         box-shadow: 0 6px 15px rgba(230, 81, 0, 0.15) !important; transition: all 0.3s ease !important; min-height: 80px !important; white-space: normal !important; 
