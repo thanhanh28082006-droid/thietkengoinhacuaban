@@ -175,7 +175,7 @@ def show_question_modal(idx):
     # =========================================================================
     if st.session_state[show_answer_key]:
         # Tính toán vị trí chữ để nhường chỗ cho Video (nếu là câu 5)
-        top_position = "15%" if idx == 4 else "35%"
+        top_pos = "15%" if idx == 4 else "35%"
         
         st.markdown(f"""
         <style>
