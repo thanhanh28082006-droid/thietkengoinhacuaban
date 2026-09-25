@@ -39,8 +39,8 @@ QUESTIONS = [
         "type": "choice",
         "question": "3. Lắng nghe giai điệu sau đây. Theo bạn, bài hát này mang tên là gì?",
         "audio": "buontrang.mp3", 
-        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buồn Trăng"],
-        "answer": "D. Buồn Trăng"
+        "options": ["A. Trăng vàng", "B. Đêm trăng", "C. Vầng trăng", "D. Buôn Trăng"],
+        "answer": "D. Buôn Trăng"
     },
     {
         "id": 4,
@@ -104,7 +104,7 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
+@st.dialog("🏮    GIẢI MÃ CÙNG CHÚNG MÌNH NHAAAA 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
@@ -342,7 +342,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(10)
