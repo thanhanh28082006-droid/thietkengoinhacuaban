@@ -104,7 +104,7 @@ if 'game_won' not in st.session_state:
 if 'victory_shown' not in st.session_state:
     st.session_state.victory_shown = False
 
-@st.dialog("🏮 THỬ THÁCH TRUNG THU 🏮", width="large")
+@st.dialog("🏮 GIẢI MÃ CÙNG CHÚNG MÌNH NHAAA 🏮", width="large")
 def show_question_modal(idx):
     q_data = QUESTIONS[idx]
     
@@ -326,7 +326,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🌕 LẬT MỞ ĐÊM HỘI TRĂNG RẰM 🏮</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🌕 GIẢI MÃ ĐÊM TRĂNG 🏮</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="white-container">', unsafe_allow_html=True)
 cols = st.columns(10)
